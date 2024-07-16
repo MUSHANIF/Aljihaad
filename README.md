@@ -1,1 +1,2 @@
-Website Untuk sebuah Musholla Al jihaad
+Website Untuk sebuah Musholla Al jihaad menggunakan inertia react
+ 
