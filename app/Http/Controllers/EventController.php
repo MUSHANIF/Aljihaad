@@ -9,6 +9,7 @@ use App\Http\Requests\StoreEventRequest;
 use App\Http\Requests\UpdateEventRequest;
 use App\Http\Resources\EventResource;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class EventController extends Controller
 {
@@ -61,12 +62,14 @@ class EventController extends Controller
         $data['created_by'] = Auth::id();
         $data['updated_by'] = Auth::id();
         if ($image) {
-            $data['image_path'] = $image->store('events/' . Str::random(), 'public');
+            $path = $image->store('events/' . Str::random(), 'public');
+            // $data['image_path'] = Storage::url($path);
+            $data['image_path'] = $path;
         }
         Event::create($data);
 
         return to_route('event.index')
-            ->with('success', 'Project was created');
+            ->with('success', 'Event was created!');
     }
 
     /**
@@ -93,7 +96,19 @@ class EventController extends Controller
      */
     public function update(UpdateEventRequest $request, Event $event)
     {
-        //
+        $data = $request->validated();
+        $image = $data['image'] ?? null;
+        $data['updated_by'] = Auth::id();
+        if ($image) {
+            if ($event->image_path) {
+                Storage::disk('public')->deleteDirectory(dirname($event->image_path));
+            }
+            $data['image_path'] = $image->store('event/' . Str::random(), 'public');
+        }
+        $event->update($data);
+
+        return to_route('event.index')
+            ->with('success', "Event \"$event->name\" was updated");
     }
 
     /**
@@ -101,6 +116,12 @@ class EventController extends Controller
      */
     public function destroy(Event $event)
     {
-        //
+        $name = $event->name;
+        $event->delete();
+        if ($event->image_path) {
+            Storage::disk('public')->deleteDirectory(dirname($event->image_path));
+        }
+        return to_route('event.index')
+            ->with('success', "Event \"$name\" was deleted");
     }
 }

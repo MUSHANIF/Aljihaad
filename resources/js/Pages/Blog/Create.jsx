@@ -1,24 +1,27 @@
 import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
-import SelectInput from "@/Components/SelectInput";
-import TextAreaInput from "@/Components/TextAreaInput";
+import TextAreaInput  from "@/Components/TextAreaInput";
 import TextInput from "@/Components/TextInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
-export default function Create({ auth, event }) {
+export default function Create({ auth }) {
   const { data, setData, post, errors, reset } = useForm({
-    name: event.name || "",
-    description: event.description || "",
-    date: event.date,
-    
-    _method: "PUT",
+    name: "",
+    description: "",
+    date: "",
+    image: "",
   });
 
   const onSubmit = (e) => {
     e.preventDefault();
 
-    post(route("event.update", event.id));
+    post(route("blog.store"));
+  };
+  const handleDescriptionChange = (value) => {
+    setData("description", value);
   };
 
   return (
@@ -27,12 +30,12 @@ export default function Create({ auth, event }) {
       header={
         <div className="flex justify-between items-center">
           <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            Edit event "{event.name}"
+            Create New Blog
           </h2>
         </div>
       }
     >
-      <Head title="Event" />
+      <Head title="Users" />
 
       <div className="py-12">
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -42,10 +45,10 @@ export default function Create({ auth, event }) {
               className="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg"
             >
               <div className="mt-4">
-                <InputLabel htmlFor="event_name" value="Name" />
+                <InputLabel htmlFor="user_name" value="Name" />
 
                 <TextInput
-                  id="event_name"
+                  id="user_name"
                   type="text"
                   name="name"
                   value={data.name}
@@ -59,14 +62,29 @@ export default function Create({ auth, event }) {
               <div className="mt-4">
                 <InputLabel htmlFor="event_description" value="description" />
 
-                <TextAreaInput
-                  id="event_description"
-                  type="text"
-                  name="description"
-                  value={data.description}
-                  className="mt-1 block w-full"
-                  onChange={(e) => setData("description", e.target.value)}
-                />
+                <ReactQuill
+                    value={data.description}
+                    onChange={handleDescriptionChange}
+                    modules={{
+                      toolbar: [
+                        [{ 'header': '1'}, {'header': '2'}, { 'font': [] }],
+                        [{size: []}],
+                        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                        [{'list': 'ordered'}, {'list': 'bullet'}, 
+                        {'indent': '-1'}, {'indent': '+1'}],
+                        ['link', 'image', 'video'],
+                        ['clean']                                        
+                      ],
+                    }}
+                    formats={[
+                      'header', 'font', 'size',
+                      'bold', 'italic', 'underline', 'strike', 'blockquote',
+                      'list', 'bullet', 'indent',
+                      'link', 'image', 'video'
+                    ]}
+                    className="mt-1 block w-full"
+                  />
+
 
                 <InputError message={errors.description} className="mt-2" />
               </div>
@@ -84,16 +102,12 @@ export default function Create({ auth, event }) {
                 />
 
                 <InputError message={errors.date} className="mt-2" />
-              </div>              
-              {event.image_path && (
-                <div className="my-5">
-                  <img src={event.image_path} className="w-64" />
-                </div>
-              )}
+              </div>
+
               <div className="mt-4">
                 <InputLabel
                   htmlFor="project_image_path"
-                  value="Event New Image"
+                  value="Project Image"
                 />
                 <TextInput
                   id="project_image_path"
@@ -102,11 +116,12 @@ export default function Create({ auth, event }) {
                   className="mt-1 block w-full"
                   onChange={(e) => setData("image", e.target.files[0])}
                 />
-                <InputError message={errors.image} className="mt-2" />              
+                <InputError message={errors.image} className="mt-2" />
               </div>
+
               <div className="mt-4 text-right">
                 <Link
-                  href={route("event.index")}
+                  href={route("user.index")}
                   className="bg-gray-100 py-1 px-3 text-gray-800 rounded shadow transition-all hover:bg-gray-200 mr-2"
                 >
                   Cancel

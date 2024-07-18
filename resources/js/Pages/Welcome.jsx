@@ -9,7 +9,7 @@ import Blog from '@/Layouts/Home/Blog';
 import Pengurus from '@/Layouts/Home/Pengurus';
 import Footer from '@/Layouts/Home/Footer';
 
-export default function Welcome({ auth, status, waktu, fajr, Sunrise, Dhuhr, Asr, Maghrib, Isha, event}) {
+export default function Welcome({ auth,blog, status, waktu, fajr, Sunrise, Dhuhr, Asr, Maghrib, Isha, event}) {
     return (
         <>
              <Header 
@@ -29,8 +29,8 @@ export default function Welcome({ auth, status, waktu, fajr, Sunrise, Dhuhr, Asr
             <About />
             <Aktivitas />
             <Event event={event}/>
-            <Artikel />
-            <Blog />
+            {/* <Artikel /> */}
+            <Blog blog={blog}/>
             <Pengurus />
             <Footer />
             <style>{`

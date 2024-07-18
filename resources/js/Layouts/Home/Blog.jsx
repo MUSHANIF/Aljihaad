@@ -1,34 +1,6 @@
 import React, { useState, useEffect } from 'react';
-export default function Event() {
-  const blogs = [
-    {
-      date: '01 Jan 2045',
-      title: 'Importance of “Piller” of Islam',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, aliquip ex ea commodo consequat.',
-      image: '/assets/img/blog-1.jpg',
-      author: 'Admin',
-      comments: 12,
-    },
-    {
-      date: '01 Jan 2045',
-      title: 'How to get closer to Allah',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, aliquip ex ea commodo consequat.',
-      image: '/assets/img/blog-2.jpg',
-      author: 'Admin',
-      comments: 12,
-    },
-    {
-      date: '01 Jan 2045',
-      title: 'Importance of Hajj in Islam',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, aliquip ex ea commodo consequat.',
-      image: '/assets/img/blog-3.jpg',
-      author: 'Admin',
-      comments: 12,
-    },
-      ];
+export default function Event({blog}) {
+  
     return (
       <div className="container-fluid py-5">
       <div className="container py-5">
@@ -39,7 +11,7 @@ export default function Event() {
           Latest From <span className="text-primary">Our Blog</span>
         </h1>
         <div className="row g-4 justify-content-center">
-          {blogs.map((blog, index) => (
+          {blog.map((key, index) => (
             <div
               className="col-lg-6 col-xl-4"
               key={index}
@@ -50,12 +22,12 @@ export default function Event() {
               >
                 <div className="blog-img position-relative overflow-hidden">
                   <img
-                    src={blog.image}
+                       src={`/storage/${key.image_path}`}
                     className="img-fluid w-100"
-                    alt={blog.title}
+                    alt={key.title}
                   />
                   <div className="bg-primary d-inline px-3 py-2 text-center text-white position-absolute top-0 end-0">
-                    {blog.date}
+                    {key.date}
                   </div>
                 </div>
                 <div className="p-4">
@@ -64,13 +36,14 @@ export default function Event() {
                       <small>
                         <i className="fas fa-user me-2 text-muted"></i>
                         <a href="#" className="text-muted me-2">
-                          By {blog.author}
+                          
+                          By {key.created_by_user.name}
                         </a>
                       </small>
                       <small>
                         <i className="fa fa-comment-alt me-2 text-muted"></i>
                         <a href="#" className="text-muted me-2">
-                          {blog.comments} Comments
+                          {key.comments} Comments
                         </a>
                       </small>
                     </div>
@@ -81,9 +54,12 @@ export default function Event() {
                     </div>
                   </div>
                   <a href="#" className="d-inline-block h4 lh-sm mb-3">
-                    {blog.title}
+                    {key.title}
                   </a>
-                  <p className="mb-4">{blog.description}</p>
+                  <p className="mb-4"> <div
+                    className="whitespace-pre-wrap break-words"
+                    dangerouslySetInnerHTML={{ __html: key.description}}
+                  ></div></p>
                   <a href="#" className="btn btn-primary px-3">
                     More Details
                   </a>

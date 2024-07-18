@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\TaskResource;
+use App\Models\blog;
 use App\Models\Event;
 use App\Models\Task;
 use Illuminate\Http\Request;
@@ -82,10 +83,13 @@ class DashboardController extends Controller
             ->orderBy('date', 'asc')
             ->limit(5)
             ->get();
-
+        $blog =  Blog::with('createdByUser')
+            ->orderBy('created_at', 'desc')
+            ->limit(5)
+            ->get();
         return inertia(
             'Welcome',
-            compact('fajr', 'event', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha', 'waktu')
+            compact('fajr', 'event', 'Sunrise', 'blog', 'Dhuhr', 'Asr', 'Maghrib', 'Isha', 'waktu')
         );
     }
 }

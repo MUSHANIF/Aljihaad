@@ -8,9 +8,9 @@ export default function About({  }) {
        
         <div className="container-fluid py-5 bg-gray-100">
         <div className="container py-5">
-            <div className="flex max-[576]:flex-wrap mb-5 gap-5">
+            <div className="flex max-[768px]:flex-wrap mb-5 gap-5">
                 <div className="w-full xl:w-1/2">
-                    <div className="flex max-[576]:flex-wrap gap-4">
+                    <div className="flex max-[768px]:flex-wrap gap-4">
                         <div className="w-1/2">
                             <img src={about1} className="w-full h-full object-cover animate-zoomIn" alt="About 1" />
                         </div>

@@ -10,13 +10,20 @@ export default {
         './resources/views/**/*.blade.php',
         './resources/js/**/*.jsx',
     ],
-
+ 
     theme: {
         extend: {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
         },
+        // screens: {
+        //     'max-768': {'max': '768px'},
+
+        //     'min-768': {'min': '768px'},
+        //     'max-576': {'max': '576px'},
+
+        //   },
     },
 
     plugins: [forms],

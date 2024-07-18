@@ -28,7 +28,7 @@ export default function AuthenticatedLayout({ user, header, children }) {
                 >
                   Dashboard
                 </NavLink>
-                <NavLink
+                {/* <NavLink
                   href={route("project.index")}
                   active={route().current("project.index")}
                 >
@@ -45,12 +45,12 @@ export default function AuthenticatedLayout({ user, header, children }) {
                   active={route().current("user.index")}
                 >
                   Users
-                </NavLink>
-                <NavLink
-                  href={route("task.myTasks")}
-                  active={route().current("task.myTasks")}
+                </NavLink> */}
+                 <NavLink
+                  href={route("project.index")}
+                  active={route().current("project.index")}
                 >
-                  My Tasks
+                  Projects
                 </NavLink>
                 <NavLink
                   href={route("event.index")}
@@ -58,6 +58,13 @@ export default function AuthenticatedLayout({ user, header, children }) {
                 >
                   Events
                 </NavLink>
+                <NavLink
+                  href={route("blog.index")}
+                  active={route().current("blog.index")}
+                >
+                  Blog
+                </NavLink>
+                
               </div>
             </div>
 
