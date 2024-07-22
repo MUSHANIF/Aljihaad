@@ -3,10 +3,10 @@ import TextInput from "@/Components/TextInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router } from "@inertiajs/react";
 import TableHeading from "@/Components/TableHeading";
-import DOMPurify from 'dompurify';
-import { format } from 'date-fns';
+import DOMPurify from "dompurify";
+import { format } from "date-fns";
 
-export default function Index({ auth, blogs, queryParams = null, success }) {
+export default function Index({ auth, pengurus, queryParams = null, success }) {
   queryParams = queryParams || {};
   const searchFieldChanged = (name, value) => {
     if (value) {
@@ -15,7 +15,7 @@ export default function Index({ auth, blogs, queryParams = null, success }) {
       delete queryParams[name];
     }
 
-    router.get(route("blog.index"), queryParams);
+    router.get(route("Pengurus.index"), queryParams);
   };
 
   const onKeyPress = (name, e) => {
@@ -35,14 +35,14 @@ export default function Index({ auth, blogs, queryParams = null, success }) {
       queryParams.sort_field = name;
       queryParams.sort_direction = "asc";
     }
-    router.get(route("blog.index"), queryParams);
+    router.get(route("Pengurus.index"), queryParams);
   };
 
-  const deleteblog = (blogs) => {
-    if (!window.confirm("Are you sure you want to delete the Blog?")) {
+  const deletePengurus = (pengurus) => {
+    if (!window.confirm("Are you sure you want to delete the Pengurus?")) {
       return;
     }
-    router.delete(route("blog.destroy", blogs.id));
+    router.delete(route("Pengurus.destroy", pengurus.id));
   };
 
   return (
@@ -51,10 +51,10 @@ export default function Index({ auth, blogs, queryParams = null, success }) {
       header={
         <div className="flex justify-between items-center">
           <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            blog
+            Pengurus
           </h2>
           <Link
-            href={route("blog.create")}
+            href={route("Pengurus.create")}
             className="bg-emerald-500 py-1 px-3 text-white rounded shadow transition-all hover:bg-emerald-600"
           >
             Add new
@@ -62,7 +62,7 @@ export default function Index({ auth, blogs, queryParams = null, success }) {
         </div>
       }
     >
-      <Head title="Blog" />
+      <Head title="Pengurus" />
 
       <div className="py-12">
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -85,14 +85,14 @@ export default function Index({ auth, blogs, queryParams = null, success }) {
                       >
                         ID
                       </TableHeading>
-                      <th className="py-3">Image</th> 
+                      <th className="py-3">Image</th>
                       <TableHeading
                         name="name"
                         sort_field={queryParams.sort_field}
                         sort_direction={queryParams.sort_direction}
                         sortChanged={sortChanged}
                       >
-                        Name Blog
+                        Name Pengurus
                       </TableHeading>
 
                       <TableHeading
@@ -101,7 +101,7 @@ export default function Index({ auth, blogs, queryParams = null, success }) {
                         sort_direction={queryParams.sort_direction}
                         sortChanged={sortChanged}
                       >
-                        Detail Waktu
+                        Status
                       </TableHeading>
 
                       <TableHeading
@@ -110,7 +110,7 @@ export default function Index({ auth, blogs, queryParams = null, success }) {
                         sort_direction={queryParams.sort_direction}
                         sortChanged={sortChanged}
                       >
-                        Keterangan 
+                        No telepon
                       </TableHeading>
 
                       <th className="px-3 py-3 text-right">Actions</th>
@@ -120,62 +120,73 @@ export default function Index({ auth, blogs, queryParams = null, success }) {
                     <tr className="text-nowrap">
                       <th className="px-3 py-3"></th>
                       <th className="px-3 py-3"></th>
-                      
+
                       <th className="px-3 py-3">
                         <TextInput
                           className="w-full"
                           defaultValue={queryParams.name}
-                          placeholder="Blog Name"
+                          placeholder="Pengurus Name"
                           onBlur={(e) =>
                             searchFieldChanged("name", e.target.value)
                           }
                           onKeyPress={(e) => onKeyPress("name", e)}
                         />
                       </th>
+                      <th className="px-3 py-3"></th>
                       <th className="px-3 py-3">
-                       
-                      </th>
-                      <th className="px-3 py-3"> <TextInput
+                        {" "}
+                        <TextInput
                           className="w-full"
                           defaultValue={queryParams.description}
-                          placeholder="Blog description"
+                          placeholder="Pengurus description"
                           onBlur={(e) =>
                             searchFieldChanged("description", e.target.value)
                           }
                           onKeyPress={(e) => onKeyPress("description", e)}
-                        /></th>
+                        />
+                      </th>
                       <th className="px-3 py-3"></th>
                     </tr>
                   </thead>
                   <tbody>
-                    {blogs.data.map((blog) => (
+                    {pengurus.data.map((key) => (
                       <tr
                         className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                        key={blog.id}
+                        key={key.id}
                       >
-                        <td className="px-3 py-2 text-black">{blog.id}</td>
-                        <td className="px-3 py-2">
-                        <img src={blog.image_path} style={{ width: 250, height: '100%' }} />
+                        <td className="px-3 py-2 text-black">{key.id}</td>
+                        <td className="px-3 py-2 ">
+                          <img
+                            className="w-full sm:w-80 sm:h-auto"
+                            src={key.image_path}
+                            alt="Image"
+                          />
                         </td>
-                        <th className="px-3 py-2 text-black  text-nowrap">
-                          {blog.name}
+
+                        <th className="px-3 py-2 text-black text-nowrap hover:underline ">
+                          <Link
+                            className="hover:text-blue-700"
+                            href={route("Pengurus.show", key.id)}
+                          >
+                            {key.name}
+                          </Link>
                         </th>
-                        <td className="px-3 py-2 text-black">{ format(new Date(blog.created_at), 'dd MMM yyyy, HH:mm')}</td>
+                        <td className="px-3 py-2 text-black"> {key.status} </td>
                         <td className="px-3 py-2 text-black text-nowrap">
-                        <div
-                    className="whitespace-pre-wrap break-words"
-                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(blog.description)}}
-                  ></div>
+                          <div className="whitespace-pre-wrap break-words">
+                            {key.no_telp}
+                          </div>
                         </td>
+
                         <td className="px-3 py-2 text-black text-nowrap">
                           <Link
-                            href={route("blog.edit", blog.id)}
+                            href={route("Pengurus.edit", key.id)}
                             className="font-medium text-blue-600 dark:text-blue-500 hover:underline mx-1"
                           >
                             Edit
                           </Link>
                           <button
-                            onClick={(e) => deleteblog(blog)}
+                            onClick={(e) => deletePengurus(key)}
                             className="font-medium text-red-600 dark:text-red-500 hover:underline mx-1"
                           >
                             Delete
@@ -186,7 +197,7 @@ export default function Index({ auth, blogs, queryParams = null, success }) {
                   </tbody>
                 </table>
               </div>
-              <Pagination links={blogs.meta.links} />
+              <Pagination links={pengurus.meta.links} />
             </div>
           </div>
         </div>

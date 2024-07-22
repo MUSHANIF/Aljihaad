@@ -81,6 +81,7 @@ class BlogController extends Controller
      */
     public function edit(Blog $blog)
     {
+
         return inertia('Blog/Edit', [
             'blog' => new BlogResource($blog),
         ]);

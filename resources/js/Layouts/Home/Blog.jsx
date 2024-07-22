@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { format } from 'date-fns';
 export default function Event({blog}) {
+
+    
   
     return (
       <div className="container-fluid py-5">
@@ -26,9 +29,9 @@ export default function Event({blog}) {
                     className="img-fluid w-100"
                     alt={key.title}
                   />
-                  <div className="bg-primary d-inline px-3 py-2 text-center text-white position-absolute top-0 end-0">
-                    {key.date}
-                  </div>
+                <div className="bg-primary d-inline px-3 py-2 text-center text-white position-absolute top-0 end-0">
+                  { format(new Date(key.created_at), 'dd MMM yyyy, HH:mm')}
+                </div>
                 </div>
                 <div className="p-4">
                   <div className="blog-meta d-flex justify-content-between pb-2">

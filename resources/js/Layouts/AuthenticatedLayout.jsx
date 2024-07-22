@@ -64,6 +64,12 @@ export default function AuthenticatedLayout({ user, header, children }) {
                 >
                   Blog
                 </NavLink>
+                <NavLink
+                  href={route("Pengurus.index")}
+                  active={route().current("Pengurus.index")}
+                >
+                  Pengurus
+                </NavLink>
                 
               </div>
             </div>

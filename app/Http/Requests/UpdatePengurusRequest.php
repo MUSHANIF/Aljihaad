@@ -11,7 +11,7 @@ class UpdatePengurusRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,13 @@ class UpdatePengurusRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "name" => ['required', 'max:255'],
+            'image' => ['nullable', 'image'],
+            "description" => ['nullable', 'string'],
+            "no_telp" => ['nullable', 'string'],
+            "gender" => ['nullable', 'string'],
+            "status" => ['nullable', 'string'],
+            "umur" => ['nullable', 'string'],
         ];
     }
 }

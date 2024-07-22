@@ -3,10 +3,12 @@
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\PengurusController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
+use App\Models\Pengurus;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -24,6 +26,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('task.myTasks');
     Route::resource('task', TaskController::class);
     Route::resource('blog', BlogController::class);
+    Route::resource('Pengurus', PengurusController::class);
     Route::resource('user', UserController::class);
     Route::resource('event', EventController::class);
 });

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
 
-class BlogResource extends JsonResource
+class PengurusResource extends JsonResource
 {
     public static $wrap = false;
     /**
@@ -20,9 +20,11 @@ class BlogResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'umur' => $this->umur,
+            'no_telp' => $this->no_telp,
+            'gender' => $this->gender,
+            'status' => $this->status,
             'description' => $this->description,
-            'date' => (new Carbon($this->created_at))->format('Y-m-d'),
-            'created_at' => $this->created_at,
             'image_path' => $this->image_path && !(str_starts_with($this->image_path, 'http')) ?
                 Storage::url($this->image_path) : $this->image_path,
         ];

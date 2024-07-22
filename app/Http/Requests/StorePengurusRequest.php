@@ -6,12 +6,9 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StorePengurusRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +19,13 @@ class StorePengurusRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "name" => ['required', 'max:255'],
+            'image' => ['nullable', 'image'],
+            "description" => ['nullable', 'string'],
+            "no_telp" => ['nullable', 'string'],
+            "gender" => ['nullable', 'string'],
+            "status" => ['nullable', 'string'],
+            "umur" => ['nullable', 'string'],
         ];
     }
 }
