@@ -25,6 +25,8 @@
         "date-fns": "^3.6.0",
         "dompurify": "^3.1.6",
         "react-quill": "^2.0.0",
-        "swiper": "^11.1.5"
+        "react-text-loop": "^2.3.0",
+        "swiper": "^11.1.5",
+        "tailwindcss-textshadow": "^2.1.3"
     }
 }

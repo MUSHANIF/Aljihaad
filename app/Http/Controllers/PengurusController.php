@@ -70,6 +70,7 @@ class PengurusController extends Controller
     public function show($Pengurus)
     {
         $Pengurus = Pengurus::find($Pengurus);
+
         return inertia('Pengurus/Show', [
             'Pengurus' => new PengurusResource($Pengurus),
         ]);

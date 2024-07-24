@@ -16,6 +16,9 @@ export default {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            textShadow: {
+                'glow': '15px 5px 15px rgba(255, 255, 255, 0.8), 15px 5px 15px rgba(255, 255, 255, 0.9)',
+              },
         },
         // screens: {
         //     'max-768': {'max': '768px'},
@@ -26,5 +29,5 @@ export default {
         //   },
     },
 
-    plugins: [forms],
+    plugins: [ require('tailwindcss-textshadow'),forms],
 };

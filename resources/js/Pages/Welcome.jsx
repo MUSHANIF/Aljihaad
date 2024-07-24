@@ -2,6 +2,7 @@ import { Link, Head } from "@inertiajs/react";
 import Header from "@/Layouts/Home/Header";
 import Hero from "@/Layouts/Home/Hero";
 import About from "@/Layouts/Home/About";
+import React, { useRef } from "react";
 import Aktivitas from "@/Layouts/Home/Aktivitas";
 import Event from "@/Layouts/Home/Event";
 import Artikel from "@/Layouts/Home/Artikel";
@@ -23,6 +24,11 @@ export default function Welcome({
   event,
   pengurus,
 }) {
+  const targetRef = useRef(null);
+
+  const handleScrollToTarget = () => {
+    targetRef.current.scrollIntoView({ behavior: "smooth" });
+  };
   return (
     <>
       <Header
@@ -38,10 +44,10 @@ export default function Welcome({
         Isha={Isha}
       />
 
-      <Hero />
+      <Hero handleScrollToTarget={handleScrollToTarget} />
       <About />
       <Aktivitas />
-      <Event event={event} />
+      <Event ref={targetRef} event={event} />
       {/* <Artikel /> */}
       <Blog blog={blog} />
       <Pengurus pengurus={pengurus} />

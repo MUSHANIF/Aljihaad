@@ -43,34 +43,24 @@ export default function Show({ auth, Pengurus }) {
                     <p className="mt-1">{Pengurus.id}</p>
                   </div>
                   <div className="mt-4">
-                    <label className="font-bold text-lg">Task Name</label>
+                    <label className="font-bold text-lg">Name</label>
                     <p className="mt-1">{Pengurus.name}</p>
                   </div>
 
                   <div className="mt-4">
-                    <label className="font-bold text-lg">Task Status</label>
+                    <label className="font-bold text-lg">Status</label>
                     <p className="mt-1">
-                      <span
-                        className={
-                          "px-2 py-1 rounded text-white " +
-                          TASK_STATUS_CLASS_MAP[Pengurus.status]
-                        }
-                      >
-                        {TASK_STATUS_TEXT_MAP[Pengurus.status]}
+                      <span className="px-2 py-1 rounded ">
+                        {Pengurus.status}
                       </span>
                     </p>
                   </div>
 
                   <div className="mt-4">
-                    <label className="font-bold text-lg">Task Priority</label>
+                    <label className="font-bold text-lg">No telepon</label>
                     <p className="mt-1">
-                      <span
-                        className={
-                          "px-2 py-1 rounded text-white " +
-                          TASK_PRIORITY_CLASS_MAP[Pengurus.priority]
-                        }
-                      >
-                        {TASK_PRIORITY_TEXT_MAP[Pengurus.priority]}
+                      <span className="px-2 py-1 rounded  ">
+                        {Pengurus.no_telp}
                       </span>
                     </p>
                   </div>
@@ -80,39 +70,27 @@ export default function Show({ auth, Pengurus }) {
                   </div>
                 </div>
                 <div>
-                  <div>
-                    <label className="font-bold text-lg">Due Date</label>
-                    <p className="mt-1">{Pengurus.due_date}</p>
+                  <div className="mt-4">
+                    <label className="font-bold text-lg">Gender</label>
+                    <p className="mt-1">{Pengurus.gender}</p>
                   </div>
                   <div className="mt-4">
-                    <label className="font-bold text-lg">Create Date</label>
-                    <p className="mt-1">{Pengurus.created_at}</p>
+                    <label className="font-bold text-lg">Umur</label>
+                    <p className="mt-1">{Pengurus.umur} tahun</p>
                   </div>
                   <div className="mt-4">
-                    <label className="font-bold text-lg">Updated By</label>
-                    <p className="mt-1">{Pengurus.name}</p>
-                  </div>
-                  <div className="mt-4">
-                    <label className="font-bold text-lg">Project</label>
-                    <p className="mt-1">
-                      <Link
-                        href={route("project.show", Pengurus.id)}
-                        className="hover:underline"
-                      >
-                        {Pengurus.name}
-                      </Link>
-                    </p>
-                  </div>
-                  <div className="mt-4">
-                    <label className="font-bold text-lg">Assigned User</label>
-                    <p className="mt-1">{Pengurus.name}</p>
+                    <label className="font-bold text-lg">Role</label>
+                    <p className="mt-1">{Pengurus.role}</p>
                   </div>
                 </div>
               </div>
 
               <div className="mt-4">
                 <label className="font-bold text-lg">Task Description</label>
-                <p className="mt-1">{Pengurus.description}</p>
+                <p
+                  className="mt-1"
+                  dangerouslySetInnerHTML={{ __html: Pengurus.description }}
+                ></p>
               </div>
             </div>
           </div>
