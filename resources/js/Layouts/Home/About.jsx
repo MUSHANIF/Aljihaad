@@ -5,7 +5,7 @@ import about3 from "../../../../public/assets/img/about-3.jpg";
 import aboutChild from "../../../../public/assets/img/about-child.jpg";
 export default function About({}) {
   return (
-    <div className="container-fluid py-5 bg-gray-100">
+    <div className="container-fluid py-5 ">
       <div className="container py-5">
         <div className="flex max-[768px]:flex-wrap mb-5 gap-5">
           <div className="w-full xl:w-1/2">
@@ -61,7 +61,7 @@ export default function About({}) {
                 </div>
               </div>
             </div>
-            <div className="bg-gray-200 p-3 mb-4">
+            <div className="bg-gray-200 rounded-lg p-3 mb-4">
               <div className="flex max-[768px]:flex-wrap items-center justify-center gap-4">
                 <div className="w-1/4">
                   <img

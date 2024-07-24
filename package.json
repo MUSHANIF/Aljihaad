@@ -21,9 +21,11 @@
     },
     "dependencies": {
         "@heroicons/react": "^2.1.1",
+        "@preline/overlay": "^2.4.0",
         "bootstrap": "^5.3.3",
         "date-fns": "^3.6.0",
         "dompurify": "^3.1.6",
+        "preline": "^2.4.0",
         "react-quill": "^2.0.0",
         "react-text-loop": "^2.3.0",
         "swiper": "^11.1.5",

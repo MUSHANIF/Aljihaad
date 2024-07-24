@@ -9,6 +9,8 @@ export default {
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
         './resources/js/**/*.jsx',
+        'node_modules/preline/dist/*.js',
+        "./node_modules/preline/dist/*.js",
     ],
  
     theme: {
@@ -17,7 +19,7 @@ export default {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
             textShadow: {
-                'glow': '15px 5px 15px rgba(255, 255, 255, 0.8), 15px 5px 15px rgba(255, 255, 255, 0.9)',
+                'glow': '15px 5px 25px rgba(255, 255, 255, 3.0), 15px 5px 25px rgba(255, 255, 255, 3.0)',
               },
         },
         // screens: {
@@ -29,5 +31,5 @@ export default {
         //   },
     },
 
-    plugins: [ require('tailwindcss-textshadow'),forms],
+    plugins: [ require('tailwindcss-textshadow'), require('preline/plugin'),forms],
 };

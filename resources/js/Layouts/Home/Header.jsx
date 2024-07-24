@@ -56,13 +56,16 @@ export default function Header({
             </div>
           </div>
           <div
-            className={`flex  flex-col items-start mt-2 z-50 space-y-2 max-[768px]:flex transition-all duration-300 ease-in-out ${
+            className={`flex  flex-col items-start mt-2 relative p-3 z-50 space-y-2 max-[768px]:flex transition-all duration-300 ease-in-out ${
               isOpen
                 ? "opacity-100 min-[768px]:hidden max-h-full   bg-white rounded-lg"
                 : "opacity-0 max-h-0"
             }`}
             style={{ overflow: "hidden", zIndex: isOpen ? 50 : 0 }}
           >
+            <div className="text-center flex justify-center mx-auto">
+              <span class="font-semibold">Jadwal Sholat</span>
+            </div>
             <span className="px-2">Subuh: {fajr}</span>
             <span className="px-2">Dhuha: {Sunrise}</span>
             <span className="px-2">Dzuhur: {Dhuhr}</span>

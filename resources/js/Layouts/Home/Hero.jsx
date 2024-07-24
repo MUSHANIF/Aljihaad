@@ -41,14 +41,14 @@ export default function Hero({ handleScrollToTarget }) {
         <div className="">
           <div className="flex items-center mb-2">
             <i className="fas fa-map-marker-alt text-primary mr-2"></i>
-            <div className="font-bold">Pondok Cipta Raya Blok A No 1</div>
+            <div className="font-bold">Pondok Cipta Raya Blok C No 1</div>
           </div>
           <div className="flex items-center mb-4">
             <i className="fas fa-calendar-alt text-primary mr-2"></i>
             <div className="font-medium">Khutbah Jumat, 3 Oktober 2024</div>
           </div>
 
-          <div className="border flex max-[576px]:flex-wrap bg-white rounded-md p-3 items-center">
+          <div className="border flex max-[576px]:flex-wrap max-[576px]:justify-center max-[576px]:gap-y-3 bg-white rounded-md p-3 items-center">
             <div className="mx-2">
               <img
                 src={ustadadi}
@@ -56,8 +56,10 @@ export default function Hero({ handleScrollToTarget }) {
                 alt="Ustadz"
               />
             </div>
-            <div className="ml-2">
-              <h2 className="text-lg font-semibold">Ustadz Adi Hidayat</h2>
+            <div className="ml-2 max-[576px]:text-center">
+              <h2 className="text-lg font-semibold">
+                Dr. Adi Hidayat, Lc., Ma.
+              </h2>
               <p className="text-gray-600">Founder Quantum Akhyar</p>
             </div>
           </div>
