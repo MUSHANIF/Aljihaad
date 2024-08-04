@@ -38,14 +38,7 @@ export default function Show({ auth, user, tasks, queryParams }) {
                   <div className="mt-4">
                     <label className="font-bold text-lg">User Status</label>
                     <p className="mt-1">
-                      <span
-                        className={
-                          "px-2 py-1 rounded text-white " +
-                          USER_STATUS_CLASS_MAP[user.status]
-                        }
-                      >
-                        {USER_STATUS_TEXT_MAP[user.status]}
-                      </span>
+                      <span className={"px-2 py-1 rounded text-white "}></span>
                     </p>
                   </div>
                   <div className="mt-4">

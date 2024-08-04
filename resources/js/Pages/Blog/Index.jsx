@@ -3,8 +3,8 @@ import TextInput from "@/Components/TextInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router } from "@inertiajs/react";
 import TableHeading from "@/Components/TableHeading";
-import DOMPurify from 'dompurify';
-import { format } from 'date-fns';
+import DOMPurify from "dompurify";
+import { format } from "date-fns";
 
 export default function Index({ auth, blogs, queryParams = null, success }) {
   queryParams = queryParams || {};
@@ -55,7 +55,7 @@ export default function Index({ auth, blogs, queryParams = null, success }) {
           </h2>
           <Link
             href={route("blog.create")}
-            className="bg-emerald-500 py-1 px-3 text-white rounded shadow transition-all hover:bg-emerald-600"
+            className="bg-blue-500 py-2 px-3 text-white  rounded-xl shadow transition-all hover:bg-blue-600"
           >
             Add new
           </Link>
@@ -85,7 +85,7 @@ export default function Index({ auth, blogs, queryParams = null, success }) {
                       >
                         ID
                       </TableHeading>
-                      <th className="py-3">Image</th> 
+                      <th className="py-3">Image</th>
                       <TableHeading
                         name="name"
                         sort_field={queryParams.sort_field}
@@ -110,7 +110,7 @@ export default function Index({ auth, blogs, queryParams = null, success }) {
                         sort_direction={queryParams.sort_direction}
                         sortChanged={sortChanged}
                       >
-                        Keterangan 
+                        Keterangan
                       </TableHeading>
 
                       <th className="px-3 py-3 text-right">Actions</th>
@@ -120,7 +120,7 @@ export default function Index({ auth, blogs, queryParams = null, success }) {
                     <tr className="text-nowrap">
                       <th className="px-3 py-3"></th>
                       <th className="px-3 py-3"></th>
-                      
+
                       <th className="px-3 py-3">
                         <TextInput
                           className="w-full"
@@ -132,10 +132,10 @@ export default function Index({ auth, blogs, queryParams = null, success }) {
                           onKeyPress={(e) => onKeyPress("name", e)}
                         />
                       </th>
+                      <th className="px-3 py-3"></th>
                       <th className="px-3 py-3">
-                       
-                      </th>
-                      <th className="px-3 py-3"> <TextInput
+                        {" "}
+                        <TextInput
                           className="w-full"
                           defaultValue={queryParams.description}
                           placeholder="Blog description"
@@ -143,7 +143,8 @@ export default function Index({ auth, blogs, queryParams = null, success }) {
                             searchFieldChanged("description", e.target.value)
                           }
                           onKeyPress={(e) => onKeyPress("description", e)}
-                        /></th>
+                        />
+                      </th>
                       <th className="px-3 py-3"></th>
                     </tr>
                   </thead>
@@ -154,18 +155,30 @@ export default function Index({ auth, blogs, queryParams = null, success }) {
                         key={blog.id}
                       >
                         <td className="px-3 py-2 text-black">{blog.id}</td>
-                        <td className="px-3 py-2">
-                        <img src={blog.image_path} style={{ width: 250, height: '100%' }} />
+                        <td className="max-[576px]:min-w-64">
+                          <div className="flex justify-center items-center">
+                            <img
+                              src={blog.image_path}
+                              className="w-full h-auto max-w-[576px]:w-96"
+                            />
+                          </div>
                         </td>
-                        <th className="px-3 py-2 text-black  text-nowrap">
+                        <th className="px-3 min-w-64 py-2 text-black  text-nowrap">
                           {blog.name}
                         </th>
-                        <td className="px-3 py-2 text-black">{ format(new Date(blog.created_at), 'dd MMM yyyy, HH:mm')}</td>
-                        <td className="px-3 py-2 text-black text-nowrap">
-                        <div
-                    className="whitespace-pre-wrap break-words"
-                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(blog.description)}}
-                  ></div>
+                        <td className="px-3 py-2 text-black">
+                          {format(
+                            new Date(blog.created_at),
+                            "dd MMM yyyy, HH:mm"
+                          )}
+                        </td>
+                        <td className="px-3 min-w-80 py-2  text-black text-nowrap">
+                          <div
+                            className="whitespace-pre-wrap break-words"
+                            dangerouslySetInnerHTML={{
+                              __html: DOMPurify.sanitize(blog.description),
+                            }}
+                          ></div>
                         </td>
                         <td className="px-3 py-2 text-black text-nowrap">
                           <Link

@@ -28,7 +28,7 @@ export default function Dashboard({
           <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
             <div className="p-6 text-gray-900 dark:text-gray-100">
               <h3 className="text-amber-500 text-2xl font-semibold">
-                Pending Tasks
+                Jumlah Pengurus
               </h3>
               <p className="text-xl mt-4">
                 <span className="mr-2">{myPendingTasks}</span>/
@@ -39,7 +39,7 @@ export default function Dashboard({
           <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
             <div className="p-6 text-gray-900 dark:text-gray-100">
               <h3 className="text-blue-500 text-2xl font-semibold">
-                In Progress Tasks
+                Blog Aktif
               </h3>
               <p className="text-xl mt-4">
                 <span className="mr-2">{myProgressTasks}</span>/
@@ -50,7 +50,7 @@ export default function Dashboard({
           <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
             <div className="p-6 text-gray-900 dark:text-gray-100">
               <h3 className="text-green-500 text-2xl font-semibold">
-                Completed Tasks
+                Event yang akan datang
               </h3>
               <p className="text-xl mt-4">
                 <span className="mr-2">{myCompletedTasks}</span>/
@@ -59,7 +59,7 @@ export default function Dashboard({
             </div>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 mt-4">
+        {/* <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 mt-4">
           <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
             <div className="p-6 text-gray-900 dark:text-gray-100">
               <h3 className="text-gray-200 text-xl font-semibold">
@@ -107,7 +107,7 @@ export default function Dashboard({
               </table>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </AuthenticatedLayout>
   );

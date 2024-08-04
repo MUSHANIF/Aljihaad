@@ -33,24 +33,12 @@ export default function AuthenticatedLayout({ user, header, children }) {
                   active={route().current("project.index")}
                 >
                   Projects
-                </NavLink>
-                <NavLink
-                  href={route("task.index")}
-                  active={route().current("task.index")}
-                >
-                  All Tasks
-                </NavLink>
-                <NavLink
-                  href={route("user.index")}
-                  active={route().current("user.index")}
-                >
-                  Users
                 </NavLink> */}
-                 <NavLink
-                  href={route("project.index")}
-                  active={route().current("project.index")}
+                <NavLink
+                  href={route("jadwalUstad.index")}
+                  active={route().current("jadwalUstad.index")}
                 >
-                  Projects
+                  Jadwal Ustadz
                 </NavLink>
                 <NavLink
                   href={route("event.index")}
@@ -70,7 +58,6 @@ export default function AuthenticatedLayout({ user, header, children }) {
                 >
                   Pengurus
                 </NavLink>
-                
               </div>
             </div>
 
@@ -167,6 +154,30 @@ export default function AuthenticatedLayout({ user, header, children }) {
               active={route().current("dashboard")}
             >
               Dashboard
+            </ResponsiveNavLink>
+            <ResponsiveNavLink
+              href={route("project.index")}
+              active={route().current("project.index")}
+            >
+              Projects
+            </ResponsiveNavLink>
+            <ResponsiveNavLink
+              href={route("event.index")}
+              active={route().current("event.index")}
+            >
+              Events
+            </ResponsiveNavLink>
+            <ResponsiveNavLink
+              href={route("blog.index")}
+              active={route().current("blog.index")}
+            >
+              Blog
+            </ResponsiveNavLink>
+            <ResponsiveNavLink
+              href={route("Pengurus.index")}
+              active={route().current("Pengurus.index")}
+            >
+              Pengurus
             </ResponsiveNavLink>
           </div>
 

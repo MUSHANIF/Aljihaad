@@ -1,4 +1,5 @@
 import React, { forwardRef } from "react";
+import DOMPurify from "dompurify";
 
 const Event = forwardRef(({ event }, ref) => {
   return (
@@ -22,7 +23,14 @@ const Event = forwardRef(({ event }, ref) => {
             <div className="col-9 col-lg-6 border-l border-dark pb-5">
               <div className="ms-3">
                 <h4 className="mb-3">{key.name}</h4>
-                <p className="mb-4">{key.description}</p>
+                <p className="mb-4">
+                  <div
+                    className="whitespace-pre-wrap break-words"
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(key.description),
+                    }}
+                  ></div>
+                </p>
                 <a href="#" className="btn btn-primary px-3">
                   Join Now
                 </a>

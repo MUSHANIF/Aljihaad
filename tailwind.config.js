@@ -10,7 +10,7 @@ export default {
         './resources/views/**/*.blade.php',
         './resources/js/**/*.jsx',
         'node_modules/preline/dist/*.js',
-        "./node_modules/preline/dist/*.js",
+        './node_modules/preline/preline.js',
     ],
  
     theme: {
@@ -20,6 +20,20 @@ export default {
             },
             textShadow: {
                 'glow': '15px 5px 25px rgba(255, 255, 255, 3.0), 15px 5px 25px rgba(255, 255, 255, 3.0)',
+              },
+              keyframes: {
+                'fade-in': {
+                  '0%': { opacity: '0' },
+                  '100%': { opacity: '1' },
+                },
+                'fade-out': {
+                  '0%': { opacity: '1' },
+                  '100%': { opacity: '0' },
+                },
+              },
+              animation: {
+                'fade-in': 'fade-in 0.3s ease-out',
+                'fade-out': 'fade-out 0.3s ease-out',
               },
         },
         // screens: {

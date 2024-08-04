@@ -1,6 +1,8 @@
 import TextLoop from "react-text-loop";
+import { format } from "date-fns";
+import { id } from "date-fns/locale";
 import ustadadi from "../../../../public/assets/img/ustadadi.jpg";
-export default function Hero({ handleScrollToTarget }) {
+export default function Hero({ handleScrollToTarget, kajianUstad }) {
   return (
     <div className="container-fluid hero-header max-[576px]:mb-32 relative ">
       <div className="container mx-auto px-4">
@@ -45,22 +47,27 @@ export default function Hero({ handleScrollToTarget }) {
           </div>
           <div className="flex items-center mb-4">
             <i className="fas fa-calendar-alt text-primary mr-2"></i>
-            <div className="font-medium">Khutbah Jumat, 3 Oktober 2024</div>
+            <div className="font-medium">
+              Khutbah{" "}
+              {format(
+                new Date(kajianUstad.tanggal_kajian),
+                "EEEE, d MMMM yyyy",
+                { locale: id }
+              )}
+            </div>
           </div>
 
           <div className="border flex max-[576px]:flex-wrap max-[576px]:justify-center max-[576px]:gap-y-3 bg-white rounded-md p-3 items-center">
             <div className="mx-2">
               <img
-                src={ustadadi}
+                src={`/storage/${kajianUstad.image_path}`}
                 className="w-16 h-16 rounded-full object-cover"
                 alt="Ustadz"
               />
             </div>
             <div className="ml-2 max-[576px]:text-center">
-              <h2 className="text-lg font-semibold">
-                Dr. Adi Hidayat, Lc., Ma.
-              </h2>
-              <p className="text-gray-600">Founder Quantum Akhyar</p>
+              <h2 className="text-lg font-semibold">{kajianUstad.name}</h2>
+              <p className="text-gray-600">{kajianUstad.description}</p>
             </div>
           </div>
         </div>

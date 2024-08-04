@@ -28,6 +28,7 @@
         "preline": "^2.4.0",
         "react-quill": "^2.0.0",
         "react-text-loop": "^2.3.0",
+        "sweetalert2": "^11.12.4",
         "swiper": "^11.1.5",
         "tailwindcss-textshadow": "^2.1.3"
     }

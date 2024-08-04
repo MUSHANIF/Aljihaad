@@ -3,6 +3,7 @@
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\JadwalUstadController;
 use App\Http\Controllers\PengurusController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
@@ -26,6 +27,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('task.myTasks');
     Route::resource('task', TaskController::class);
     Route::resource('blog', BlogController::class);
+    Route::resource('jadwalUstad', JadwalUstadController::class);
     Route::resource('Pengurus', PengurusController::class);
     Route::resource('user', UserController::class);
     Route::resource('event', EventController::class);

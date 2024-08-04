@@ -11,7 +11,7 @@ export default function Create({ auth, event }) {
     name: event.name || "",
     description: event.description || "",
     date: event.date,
-    
+
     _method: "PUT",
   });
 
@@ -84,7 +84,7 @@ export default function Create({ auth, event }) {
                 />
 
                 <InputError message={errors.date} className="mt-2" />
-              </div>              
+              </div>
               {event.image_path && (
                 <div className="my-5">
                   <img src={event.image_path} className="w-64" />
@@ -102,7 +102,7 @@ export default function Create({ auth, event }) {
                   className="mt-1 block w-full"
                   onChange={(e) => setData("image", e.target.files[0])}
                 />
-                <InputError message={errors.image} className="mt-2" />              
+                <InputError message={errors.image} className="mt-2" />
               </div>
               <div className="mt-4 text-right">
                 <Link
@@ -111,7 +111,7 @@ export default function Create({ auth, event }) {
                 >
                   Cancel
                 </Link>
-                <button className="bg-emerald-500 py-1 px-3 text-white rounded shadow transition-all hover:bg-emerald-600">
+                <button className="bg-blue-500 py-2 px-3 text-white  rounded-xl shadow transition-all hover:bg-blue-600">
                   Submit
                 </button>
               </div>

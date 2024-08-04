@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Resources\TaskResource;
 use App\Models\blog;
 use App\Models\Event;
+use App\Models\jadwalUstad;
 use App\Models\Pengurus;
 use App\Models\Task;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -94,9 +96,16 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
+        $tanggalHariIni = Carbon::today();
+        $kajianUstad = JadwalUstad::query()
+            ->where('tanggal_kajian', '>=', $tanggalHariIni)
+            ->orderBy('tanggal_kajian', 'asc')
+            ->where('status', 'aktif')
+            ->first();
+
         return inertia(
             'Welcome',
-            compact('fajr', 'event', 'pengurus', 'Sunrise', 'blog', 'Dhuhr', 'Asr', 'Maghrib', 'Isha', 'waktu')
+            compact('fajr', 'event', 'kajianUstad', 'pengurus', 'Sunrise', 'blog', 'Dhuhr', 'Asr', 'Maghrib', 'Isha', 'waktu')
         );
     }
 }

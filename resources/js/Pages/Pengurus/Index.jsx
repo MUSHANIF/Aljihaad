@@ -55,7 +55,7 @@ export default function Index({ auth, pengurus, queryParams = null, success }) {
           </h2>
           <Link
             href={route("Pengurus.create")}
-            className="bg-emerald-500 py-1 px-3 text-white rounded shadow transition-all hover:bg-emerald-600"
+            className="bg-blue-500 py-2 px-3 text-white  rounded-xl shadow transition-all hover:bg-blue-600"
           >
             Add new
           </Link>
@@ -155,12 +155,13 @@ export default function Index({ auth, pengurus, queryParams = null, success }) {
                         key={key.id}
                       >
                         <td className="px-3 py-2 text-black">{key.id}</td>
-                        <td className="px-3 py-2 ">
-                          <img
-                            className="w-full sm:w-80 sm:h-auto"
-                            src={key.image_path}
-                            alt="Image"
-                          />
+                        <td className="max-[576px]:min-w-64">
+                          <div className="flex justify-center items-center">
+                            <img
+                              src={key.image_path}
+                              className="w-full h-auto max-w-[576px]:w-96"
+                            />
+                          </div>
                         </td>
 
                         <th className="px-3 py-2 text-black text-nowrap hover:underline ">

@@ -13,15 +13,20 @@ export default function Header({
 }) {
   const [scrolling, setScrolling] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenSidebar, setIsOpenSidebar] = useState(false);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
+  };
+  const toggleMenuSidebar = () => {
+    setIsOpenSidebar(!isOpenSidebar);
   };
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 0) {
         setScrolling(true);
         setIsOpen(false);
+        setIsOpenSidebar(false);
       } else {
         setScrolling(false);
       }
@@ -42,7 +47,7 @@ export default function Header({
               <span>{waktu}</span>
             </div>
             <div className="hidden max-[768px]:flex items-center space-x-4">
-              <button className="text-black" onClick={toggleMenu}>
+              <button className="text-black text-center" onClick={toggleMenu}>
                 ☰
               </button>
             </div>
@@ -91,7 +96,10 @@ export default function Header({
               <a href="index.html" className="text-2xl font-bold">
                 Al<span className="text-primary">Jihaad</span>
               </a>
-              <button className="block lg:hidden text-primary">
+              <button
+                className="block lg:hidden text-primary"
+                onClick={toggleMenuSidebar}
+              >
                 <svg
                   className="w-6 h-6"
                   fill="none"
@@ -107,54 +115,42 @@ export default function Header({
                   ></path>
                 </svg>
               </button>
-              <div className="hidden lg:flex lg:items-center lg:space-x-4">
-                <a href="index.html" className="text-gray-700">
+              <div className="hidden lg:flex gap-5 lg:items-center lg:space-x-4">
+                <a
+                  href="index.html"
+                  className="text-black text-center hover:scale-105 transition-all animate-fade-in  "
+                >
                   Home
                 </a>
-                <a href="about.html" className="text-gray-700">
+                <a
+                  href="about.html"
+                  className="text-black  hover:scale-105 transition-all animate-fade-in "
+                >
                   About
                 </a>
-                <a href="activity.html" className="text-gray-700">
+                <a
+                  href="activity.html"
+                  className="text-black  hover:scale-105 transition-all animate-fade-in "
+                >
                   Activities
                 </a>
-                <a href="event.html" className="text-gray-700">
+                <a
+                  href="event.html"
+                  className="text-black  hover:scale-105 transition-all animate-fade-in "
+                >
                   Events
                 </a>
-                <a href="sermon.html" className="text-gray-700">
+                <a
+                  href="sermon.html"
+                  className="text-black  hover:scale-105 transition-all animate-fade-in "
+                >
                   Sermons
                 </a>
-                <div className="relative group">
-                  <a href="#" className="text-gray-700">
-                    Pages
-                  </a>
-                  <div className="absolute hidden group-hover:block bg-white shadow-lg rounded mt-2">
-                    <a
-                      href="blog.html"
-                      className="block px-4 py-2 text-gray-700"
-                    >
-                      Latest Blog
-                    </a>
-                    <a
-                      href="team.html"
-                      className="block px-4 py-2 text-gray-700"
-                    >
-                      Our Team
-                    </a>
-                    <a
-                      href="testimonial.html"
-                      className="block px-4 py-2 text-gray-700"
-                    >
-                      Testimonial
-                    </a>
-                    <a
-                      href="404.html"
-                      className="block px-4 py-2 text-gray-700"
-                    >
-                      404 Page
-                    </a>
-                  </div>
-                </div>
-                <a href="contact.html" className="text-gray-700">
+
+                <a
+                  href="contact.html"
+                  className="text-black  hover:scale-105 transition-all animate-fade-in "
+                >
                   Contact
                 </a>
               </div>
@@ -164,6 +160,52 @@ export default function Header({
                 className="bg-primary rounded-lg text-white py-2 px-4 "
               >
                 Donate
+              </a>
+            </div>
+            <div
+              className={`flex  flex-col items-start mt-2 relative p-3 z-50 space-y-2 max-[768px]:flex transition-all duration-300 ease-in-out ${
+                isOpenSidebar
+                  ? "opacity-100 min-[768px]:hidden max-h-full   bg-white rounded-lg"
+                  : "opacity-0 max-h-0"
+              }`}
+              style={{ overflow: "hidden", zIndex: isOpenSidebar ? 50 : 0 }}
+            >
+              <a
+                href=""
+                className="text-black text-center bg-primary px-3 py-2 hover:bg-primary-dark hover:scale-105 transition-all animate-fade-in hover:text-black rounded-lg w-full"
+              >
+                Home
+              </a>
+              <a
+                href=""
+                className="text-black text-center bg-primary px-3 py-2 hover:bg-primary-dark hover:scale-105 transition-all animate-fade-in hover:text-black rounded-lg w-full"
+              >
+                About
+              </a>
+              <a
+                href=""
+                className="text-black text-center bg-primary px-3 py-2 hover:bg-primary-dark hover:scale-105 transition-all animate-fade-in hover:text-black rounded-lg w-full"
+              >
+                Activities
+              </a>
+              <a
+                href=""
+                className="text-black text-center  bg-primary px-3 py-2 hover:bg-primary-dark hover:scale-105 transition-all animate-fade-in hover:text-black rounded-lg w-full"
+              >
+                Events
+              </a>
+              <a
+                href=""
+                className="text-black text-center bg-primary px-3 py-2 hover:bg-primary-dark hover:scale-105 transition-all animate-fade-in hover:text-black rounded-lg w-full"
+              >
+                Blog
+              </a>
+
+              <a
+                href=""
+                className="text-black text-center bg-primary px-3 py-2 hover:bg-primary-dark hover:scale-105 transition-all animate-fade-in hover:text-black rounded-lg w-full"
+              >
+                Organizer
               </a>
             </div>
           </nav>

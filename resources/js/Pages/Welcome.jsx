@@ -13,6 +13,7 @@ import Footer from "@/Layouts/Home/Footer";
 export default function Welcome({
   auth,
   blog,
+  kajianUstad,
   status,
   waktu,
   fajr,
@@ -44,7 +45,10 @@ export default function Welcome({
         Isha={Isha}
       />
 
-      <Hero handleScrollToTarget={handleScrollToTarget} />
+      <Hero
+        handleScrollToTarget={handleScrollToTarget}
+        kajianUstad={kajianUstad}
+      />
       <About />
       <Aktivitas />
       <Event ref={targetRef} event={event} />
