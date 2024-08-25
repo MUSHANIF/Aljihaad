@@ -6,7 +6,7 @@ import TextInput from "@/Components/TextInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
 import { useState } from "react";
-
+import Layout from "@/Layouts/layout/layout.jsx";
 export default function Edit({ auth, jadwalUstad }) {
   const { data, setData, post, errors, reset } = useForm({
     name: jadwalUstad.name || "",
@@ -43,7 +43,7 @@ export default function Edit({ auth, jadwalUstad }) {
   };
 
   return (
-    <AuthenticatedLayout
+    <Layout
       user={auth.user}
       header={
         <div className="flex justify-between items-center">
@@ -162,6 +162,6 @@ export default function Edit({ auth, jadwalUstad }) {
           </div>
         </div>
       </div>
-    </AuthenticatedLayout>
+    </Layout>
   );
 }

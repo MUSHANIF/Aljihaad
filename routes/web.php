@@ -39,4 +39,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::get('/uikit/button', function () {
+    return Inertia::render('main/uikit/button/page');
+})->name('button');
+
+
+
 require __DIR__ . '/auth.php';

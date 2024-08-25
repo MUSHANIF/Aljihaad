@@ -1,5 +1,7 @@
 {
     "compilerOptions": {
+        "jsx": "react-jsx", // Jika menggunakan React 17 ke atas
+        "allowJs": true, // Mengizinkan file .jsx diproses oleh TypeScript
         "baseUrl": ".",
         "paths": {
             "@/*": ["resources/js/*"],

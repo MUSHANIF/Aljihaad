@@ -3,11 +3,10 @@ import InputLabel from "@/Components/InputLabel";
 import SelectInput from "@/Components/SelectInput";
 import TextAreaInput from "@/Components/TextAreaInput";
 import TextInput from "@/Components/TextInput";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
-import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useState } from "react";
+import Layout from "@/Layouts/layout/layout.jsx";
 
 export default function Create({ auth }) {
   const { data, setData, post, errors, reset } = useForm({
@@ -41,20 +40,11 @@ export default function Create({ auth }) {
   };
 
   return (
-    <AuthenticatedLayout
-      user={auth.user}
-      header={
-        <div className="flex justify-between items-center">
-          <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            Create New Jadwal Kajian
-          </h2>
-        </div>
-      }
-    >
+    <Layout>
       <Head title="Users" />
 
       <div className="py-12">
-        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div className=" mx-auto sm:px-6 lg:px-8">
           <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
             <form
               onSubmit={onSubmit}
@@ -144,7 +134,7 @@ export default function Create({ auth }) {
               <div className="mt-4 text-right">
                 <Link
                   href={route("user.index")}
-                  className="bg-gray-100 py-1 px-3 text-gray-800 rounded shadow transition-all hover:bg-gray-200 mr-2"
+                  className="bg-gray-200 py-2 rounded-xl px-3 text-gray-800  shadow transition-all hover:bg-gray-300 mr-2"
                 >
                   Cancel
                 </Link>
@@ -156,6 +146,6 @@ export default function Create({ auth }) {
           </div>
         </div>
       </div>
-    </AuthenticatedLayout>
+    </Layout>
   );
 }

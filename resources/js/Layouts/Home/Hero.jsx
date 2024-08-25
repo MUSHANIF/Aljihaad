@@ -1,7 +1,7 @@
 import TextLoop from "react-text-loop";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
-import ustadadi from "../../../../public/assets/img/ustadadi.jpg";
+import nodataimages from "../../../../public/assets/images/no-data-illustration-2.svg";
 export default function Hero({ handleScrollToTarget, kajianUstad }) {
   return (
     <div className="container-fluid hero-header max-[576px]:mb-32 relative ">
@@ -39,38 +39,61 @@ export default function Hero({ handleScrollToTarget, kajianUstad }) {
         </div>
       </div>
 
-      <div className="absolute bottom-0 max-[576px]:left-1/2 max-[576px]:mx-5 max-[576px]:py-40  max-[576px]:w-full min-[576px]:left-1/2 transform -translate-x-1/2 translate-y-1/2 p-5 bg-white rounded-lg mx-auto shadow-lg">
-        <div className="">
-          <div className="flex items-center mb-2">
-            <i className="fas fa-map-marker-alt text-primary mr-2"></i>
-            <div className="font-bold">Pondok Cipta Raya Blok C No 1</div>
-          </div>
-          <div className="flex items-center mb-4">
-            <i className="fas fa-calendar-alt text-primary mr-2"></i>
-            <div className="font-medium">
-              Khutbah{" "}
-              {format(
-                new Date(kajianUstad.tanggal_kajian),
-                "EEEE, d MMMM yyyy",
-                { locale: id }
-              )}
-            </div>
-          </div>
+      <div>
+        {kajianUstad ? (
+          <div className="absolute bottom-0 max-[576px]:left-1/2 max-[576px]:mx-5 max-[576px]:py-40 max-[576px]:w-full min-[576px]:left-1/2 transform -translate-x-1/2 translate-y-1/2 p-5 bg-white rounded-lg mx-auto shadow-lg">
+            <div>
+              <div className="flex items-center mb-2">
+                <i className="fas fa-map-marker-alt text-primary mr-2"></i>
+                <div className="font-bold">Pondok Cipta Raya Blok C No 1</div>
+              </div>
+              <div className="flex items-center mb-4">
+                <i className="fas fa-calendar-alt text-primary mr-2"></i>
+                <div className="font-medium">
+                  Khutbah{" "}
+                  {format(
+                    new Date(kajianUstad.tanggal_kajian),
+                    "EEEE, d MMMM yyyy",
+                    { locale: id }
+                  )}
+                </div>
+              </div>
 
-          <div className="border flex max-[576px]:flex-wrap max-[576px]:justify-center max-[576px]:gap-y-3 bg-white rounded-md p-3 items-center">
-            <div className="mx-2">
-              <img
-                src={`/storage/${kajianUstad.image_path}`}
-                className="w-16 h-16 rounded-full object-cover"
-                alt="Ustadz"
-              />
-            </div>
-            <div className="ml-2 max-[576px]:text-center">
-              <h2 className="text-lg font-semibold">{kajianUstad.name}</h2>
-              <p className="text-gray-600">{kajianUstad.description}</p>
+              <div className="border flex max-[576px]:flex-wrap max-[576px]:justify-center max-[576px]:gap-y-3 bg-white rounded-md p-3 items-center">
+                <div className="mx-2">
+                  <img
+                    src={`/storage/${kajianUstad.image_path}`}
+                    className="w-16 h-16 rounded-full object-cover"
+                    alt="Ustadz"
+                  />
+                </div>
+                <div className="ml-2 max-[576px]:text-center">
+                  <h2 className="text-lg font-semibold">{kajianUstad.name}</h2>
+                  <p className="text-gray-600">{kajianUstad.description}</p>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <div>
+            <div className="absolute bottom-0 max-[576px]:left-1/2 max-[576px]:mx-5 max-[576px]:py-40 max-[576px]:w-full min-[576px]:left-1/2 transform -translate-x-1/2 translate-y-1/2 p-5 bg-white rounded-lg mx-auto shadow-lg">
+              <div>
+                <div className="border flex max-[576px]:flex-wrap max-[576px]:justify-center max-[576px]:gap-y-3 bg-white rounded-md p-3 items-center">
+                  <div className="ml-2 max-[576px]:text-center">
+                    <img
+                      src={nodataimages}
+                      className="w-25 h-25  justify-center mx-auto my-3 "
+                      alt="Ustadz"
+                    />
+                    <p className="text-lg ">
+                      Maaf, Tidak ada kajian dalam waktu dekat
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
