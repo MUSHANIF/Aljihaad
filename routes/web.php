@@ -28,6 +28,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('task', TaskController::class);
     Route::resource('blog', BlogController::class);
     Route::resource('jadwalUstad', JadwalUstadController::class);
+    Route::get('jadwal-ustad/{jadwalUstad}/edit', [JadwalUstadController::class, 'edit'])->name('jadwalUstad.edit');
     Route::resource('Pengurus', PengurusController::class);
     Route::resource('user', UserController::class);
     Route::resource('event', EventController::class);

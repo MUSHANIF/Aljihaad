@@ -5,6 +5,7 @@ import TextAreaInput from "@/Components/TextAreaInput";
 import TextInput from "@/Components/TextInput";
 import { Head, Link, useForm } from "@inertiajs/react";
 import "react-quill/dist/quill.snow.css";
+import { BreadCrumb } from "primereact/breadcrumb";
 import { useState } from "react";
 import Layout from "@/Layouts/layout/layout.jsx";
 
@@ -38,13 +39,15 @@ export default function Create({ auth }) {
       reader.readAsDataURL(file);
     }
   };
-
+  const items = [{ label: "Jadwal Ustadz" }, { label: "Create Jadwal Ustadz" }];
+  const home = { icon: "pi pi-home", url: "" };
   return (
     <Layout>
       <Head title="Users" />
 
-      <div className="py-12">
-        <div className=" mx-auto sm:px-6 lg:px-8">
+      <div className="">
+        <div className=" mx-auto sm:px-6 ">
+          <BreadCrumb model={items} className="my-3" home={home} />
           <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
             <form
               onSubmit={onSubmit}

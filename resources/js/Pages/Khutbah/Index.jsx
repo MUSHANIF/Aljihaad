@@ -7,6 +7,7 @@ import { Message } from "primereact/message";
 import DOMPurify from "dompurify";
 import { format } from "date-fns";
 import Alert from "@/Alert";
+import { BreadCrumb } from "primereact/breadcrumb";
 import Layout from "@/Layouts/layout/layout.jsx";
 export default function Index({ auth, khutbah, queryParams = null, success }) {
   queryParams = queryParams || {};
@@ -47,11 +48,11 @@ export default function Index({ auth, khutbah, queryParams = null, success }) {
     }
     router.delete(route("jadwalUstad.destroy", khutbah.id));
   };
-
+  const items = [{ label: "Jadwal Ustadz" }];
+  const home = { icon: "pi pi-home", url: "" };
   return (
     <Layout>
       <Head title="Blog" />
-
       <div className="">
         <div className=" mx-auto sm:px-6 lg:px-3">
           {success && (
@@ -59,6 +60,7 @@ export default function Index({ auth, khutbah, queryParams = null, success }) {
               <Alert status={true} pesan={success} />
             </div>
           )}
+          <BreadCrumb model={items} className="my-3" home={home} />
 
           <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
             <div className="p-6 text-gray-900 dark:text-gray-100">
@@ -188,7 +190,9 @@ export default function Index({ auth, khutbah, queryParams = null, success }) {
                         </td>
                         <td className="px-3 py-2 text-black text-nowrap border border-gray-300 dark:border-gray-700">
                           <Link
-                            href={route("jadwalUstad.edit", [key.id])}
+                            href={route("jadwalUstad.edit", {
+                              jadwalUstad: key.id,
+                            })}
                             className="font-medium text-blue-600 dark:text-blue-500 hover:underline mx-1"
                           >
                             Edit

@@ -27,8 +27,7 @@
 
     <!-- Scripts -->
     @routes
-    @viteReactRefresh
-    @vite('resources/js/app.js')
+    @viteReactRefresh 
     @vite(['resources/js/app.jsx', "resources/js/Pages/{$page['component']}.jsx"])
     @inertiaHead
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>

@@ -46,12 +46,12 @@ export default function Header({
             <div className="flex items-center">
               <span>{waktu}</span>
             </div>
-            <div className="hidden max-[768px]:flex items-center space-x-4">
+            <div className="min-[768px]:hidden max-[768px]:flex items-center space-x-4">
               <button className="text-black text-center" onClick={toggleMenu}>
                 ☰
               </button>
             </div>
-            <div className="flex items-center space-x-4 max-[768px]:hidden">
+            <div className="min-[768px]:flex items-center space-x-4 max-[768px]:hidden">
               <span className="px-2">Subuh: {fajr}</span>
               <span className="px-2">Dhuha: {Sunrise}</span>
               <span className="px-2">Dzuhur: {Dhuhr}</span>
@@ -69,7 +69,7 @@ export default function Header({
             style={{ overflow: "hidden", zIndex: isOpen ? 50 : 0 }}
           >
             <div className="text-center flex justify-center mx-auto">
-              <span class="font-semibold">Jadwal Sholat</span>
+              <span className="font-semibold">Jadwal Sholat</span>
             </div>
             <span className="px-2">Subuh: {fajr}</span>
             <span className="px-2">Dhuha: {Sunrise}</span>
@@ -108,9 +108,9 @@ export default function Header({
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
                     d="M4 6h16M4 12h16m-7 6h7"
                   ></path>
                 </svg>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import gambar from "../../../../public/assets/img/blog-mini-1.jpg";
 export default function Footer() {
   return (
     <div
@@ -107,8 +108,8 @@ export default function Footer() {
               <h4 className="text-light mb-4">Latest Post</h4>
               <div className="flex border-b border-secondary py-4">
                 <img
-                  src="img/blog-mini-1.jpg"
-                  className="img-fluid flex-shrink-0"
+                  src={gambar}
+                  className="img-fluid  rounded-xl object-cover flex-shrink-0"
                   alt=""
                 />
                 <div className="ps-3">
