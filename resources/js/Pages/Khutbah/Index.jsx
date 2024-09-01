@@ -21,7 +21,7 @@ export default function Index({ auth, khutbah, queryParams = null, success }) {
     router.get(route("jadwalUstad.index"), queryParams);
   };
   const editUrl = route("jadwalUstad.edit", { jadwalUstad: 2 });
-  console.log(editUrl);
+
   const onKeyPress = (name, e) => {
     if (e.key !== "Enter") return;
 
@@ -52,7 +52,7 @@ export default function Index({ auth, khutbah, queryParams = null, success }) {
   const home = { icon: "pi pi-home", url: "" };
   return (
     <Layout>
-      <Head title="Blog" />
+      <Head title="KHutbah" />
       <div className="">
         <div className=" mx-auto sm:px-6 lg:px-3">
           {success && (

@@ -6,6 +6,9 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { BreadCrumb } from "primereact/breadcrumb";
+import { useState } from "react";
+import Layout from "@/Layouts/layout/layout.jsx";
 
 export default function Create({ auth }) {
   const { data, setData, post, errors, reset } = useForm({
@@ -23,22 +26,15 @@ export default function Create({ auth }) {
   const handleDescriptionChange = (value) => {
     setData("description", value);
   };
-
+  const items = [{ label: "Events" }, { label: "Create Events" }];
+  const home = { icon: "pi pi-home", url: "" };
   return (
-    <AuthenticatedLayout
-      user={auth.user}
-      header={
-        <div className="flex justify-between items-center">
-          <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            Create new User
-          </h2>
-        </div>
-      }
-    >
+    <Layout>
       <Head title="Users" />
 
-      <div className="py-12">
-        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+      <div className="">
+        <div className=" mx-auto">
+          <BreadCrumb model={items} className="my-3" home={home} />
           <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
             <form
               onSubmit={onSubmit}
@@ -112,6 +108,13 @@ export default function Create({ auth }) {
                   value={data.date}
                   className="mt-1 block w-full"
                   onChange={(e) => setData("date", e.target.value)}
+                  onFocus={(e) => {
+                    if (!data.date) {
+                      const today = new Date().toISOString().split("T")[0]; // Format tanggal "YYYY-MM-DD"
+                      setData("date", today);
+                      e.target.value = today;
+                    }
+                  }}
                 />
 
                 <InputError message={errors.date} className="mt-2" />
@@ -147,6 +150,6 @@ export default function Create({ auth }) {
           </div>
         </div>
       </div>
-    </AuthenticatedLayout>
+    </Layout>
   );
 }

@@ -16,7 +16,7 @@ export default function TableHeading({
           <div>
             <ChevronUpIcon
               className={
-                "w-2 " +
+                "w-2   " +
                 (sort_field === name && sort_direction === "asc"
                   ? "text-white"
                   : "")

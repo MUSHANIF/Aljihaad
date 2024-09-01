@@ -6,6 +6,7 @@ import TextInput from "@/Components/TextInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
 import { useState } from "react";
+import { BreadCrumb } from "primereact/breadcrumb";
 import Layout from "@/Layouts/layout/layout.jsx";
 export default function Edit({ auth, jadwalUstad }) {
   const { data, setData, post, errors, reset } = useForm({
@@ -41,7 +42,8 @@ export default function Edit({ auth, jadwalUstad }) {
 
     post(route("jadwalUstad.update", jadwalUstad.id));
   };
-
+  const items = [{ label: "Jadwal Ustadz" }, { label: "Edit Jadwal Ustadz" }];
+  const home = { icon: "pi pi-home", url: "" };
   return (
     <Layout
       user={auth.user}
@@ -55,8 +57,9 @@ export default function Edit({ auth, jadwalUstad }) {
     >
       <Head title="Event" />
 
-      <div className="py-12">
-        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+      <div className="">
+        <div className="mx-auto ">
+          <BreadCrumb model={items} className="my-3" home={home} />
           <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
             <form
               onSubmit={onSubmit}

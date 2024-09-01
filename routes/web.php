@@ -9,6 +9,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ZakatController;
 use App\Models\Pengurus;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -27,8 +28,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('task.myTasks');
     Route::resource('task', TaskController::class);
     Route::resource('blog', BlogController::class);
-    Route::resource('jadwalUstad', JadwalUstadController::class);
-    Route::get('jadwal-ustad/{jadwalUstad}/edit', [JadwalUstadController::class, 'edit'])->name('jadwalUstad.edit');
+    Route::resource('jadwalUstad', JadwalUstadController::class);    
+    Route::resource('zakat', ZakatController::class);    
     Route::resource('Pengurus', PengurusController::class);
     Route::resource('user', UserController::class);
     Route::resource('event', EventController::class);

@@ -5,6 +5,9 @@ import TextAreaInput from "@/Components/TextAreaInput";
 import TextInput from "@/Components/TextInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
+import { BreadCrumb } from "primereact/breadcrumb";
+import ReactQuill from "react-quill";
+import Layout from "@/Layouts/layout/layout.jsx";
 
 export default function Edit({ auth, blog }) {
   const { data, setData, post, errors, reset } = useForm({
@@ -20,9 +23,13 @@ export default function Edit({ auth, blog }) {
 
     post(route("blog.update", blog.id));
   };
-
+  const handleDescriptionChange = (value) => {
+    setData("description", value);
+  };
+  const items = [{ label: "Blog" }, { label: "Edit Blog" }];
+  const home = { icon: "pi pi-home", url: "" };
   return (
-    <AuthenticatedLayout
+    <Layout
       user={auth.user}
       header={
         <div className="flex justify-between items-center">
@@ -34,8 +41,9 @@ export default function Edit({ auth, blog }) {
     >
       <Head title="Event" />
 
-      <div className="py-12">
-        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+      <div className="">
+        <div className="mx-auto">
+          <BreadCrumb model={items} className="my-3" home={home} />
           <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
             <form
               onSubmit={onSubmit}
@@ -58,14 +66,41 @@ export default function Edit({ auth, blog }) {
               </div>
               <div className="mt-4">
                 <InputLabel htmlFor="event_description" value="description" />
-
-                <TextAreaInput
-                  id="event_description"
-                  type="text"
-                  name="description"
+                <ReactQuill
                   value={data.description}
+                  onChange={handleDescriptionChange}
+                  modules={{
+                    toolbar: [
+                      [{ header: "1" }, { header: "2" }, { font: [] }],
+                      [{ size: [] }],
+                      ["bold", "italic", "underline", "strike", "blockquote"],
+                      [
+                        { list: "ordered" },
+                        { list: "bullet" },
+                        { indent: "-1" },
+                        { indent: "+1" },
+                      ],
+                      ["link", "image", "video"],
+                      ["clean"],
+                    ],
+                  }}
+                  formats={[
+                    "header",
+                    "font",
+                    "size",
+                    "bold",
+                    "italic",
+                    "underline",
+                    "strike",
+                    "blockquote",
+                    "list",
+                    "bullet",
+                    "indent",
+                    "link",
+                    "image",
+                    "video",
+                  ]}
                   className="mt-1 block w-full"
-                  onChange={(e) => setData("description", e.target.value)}
                 />
 
                 <InputError message={errors.description} className="mt-2" />
@@ -119,6 +154,6 @@ export default function Edit({ auth, blog }) {
           </div>
         </div>
       </div>
-    </AuthenticatedLayout>
+    </Layout>
   );
 }

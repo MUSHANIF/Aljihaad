@@ -4,28 +4,29 @@ import React, { useEffect, useContext } from "react";
 import { CSSTransition } from "react-transition-group";
 import { MenuContext } from "./context/menucontext";
 import { Link } from "@inertiajs/react";
+import { Badge } from "primereact/badge";
+import { route } from "ziggy-js";
 
 const AppMenuitem = (props) => {
-  const pathname = route(route().current()) ?? "";
-  console.log(pathname);
+  const pathname = window.location.pathname ?? "";
+  // console.log(pathname);
   const searchParams = "";
   const { activeMenu, setActiveMenu } = useContext(MenuContext);
   const item = props.item;
   const key = props.parentKey
     ? props.parentKey + "-" + props.index
     : String(props.index);
-  const isActiveRoute = item.to && pathname === item.to;
+  const isActiveRoute = item.active && pathname === item.active;
   const active = activeMenu === key || activeMenu.startsWith(key + "-");
 
   const onRouteChange = (url) => {
-    if (item.to && item.to === url) {
+    if (item.active && item.active == url) {
       setActiveMenu(key);
     }
   };
 
   useEffect(() => {
     onRouteChange(pathname);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, searchParams]);
 
   const itemClick = (event) => {
@@ -91,6 +92,7 @@ const AppMenuitem = (props) => {
           {item.items && (
             <i className="pi pi-fw pi-angle-down layout-submenu-toggler"></i>
           )}
+          {item.status && <Badge value={item.status} className="mx-2"></Badge>}
           <Ripple />
         </a>
       ) : null}
@@ -111,6 +113,7 @@ const AppMenuitem = (props) => {
           {item.items && (
             <i className="pi pi-fw pi-angle-down layout-submenu-toggler"></i>
           )}
+          {item.status && <Badge value={item.status} className="mx-2"></Badge>}
           <Ripple />
         </Link>
       ) : null}

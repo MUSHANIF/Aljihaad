@@ -76,7 +76,7 @@ export default function About({}) {
                   </div>
                 </div>
                 <div className="ml-4">
-                  <h5>Our Vision</h5>
+                  <h5>Our Mission</h5>
                   <p>
                     Lorem, ipsum dolor sit amet consectetur adipisicing elit.
                     Nesciunt asperiores esse quisquam eligendi assumenda
