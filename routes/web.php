@@ -28,8 +28,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('task.myTasks');
     Route::resource('task', TaskController::class);
     Route::resource('blog', BlogController::class);
-    Route::resource('jadwalUstad', JadwalUstadController::class);    
-    Route::resource('zakat', ZakatController::class);    
+    Route::resource('jadwalUstad', JadwalUstadController::class); 
+    Route::prefix('zakat')->group(function () {
+        Route::get('/RekapGabungan', [ZakatController::class, 'index'])
+            ->name('zakat.RekapGabungan');         
+    });   
+    // Route::resource('zakat', ZakatController::class);    
     Route::resource('Pengurus', PengurusController::class);
     Route::resource('user', UserController::class);
     Route::resource('event', EventController::class);

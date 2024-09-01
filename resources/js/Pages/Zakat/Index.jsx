@@ -19,6 +19,8 @@ import { StatusBarModule } from "@ag-grid-enterprise/status-bar";
 import Alert from "@/Alert";
 import { BreadCrumb } from "primereact/breadcrumb";
 import Layout from "@/Layouts/layout/layout.jsx";
+import AppZakat from "@/Layouts/layout/AppZakat.jsx";
+import { Head, Link, router } from "@inertiajs/react";
 import React, {
   useCallback,
   useEffect,
@@ -172,29 +174,40 @@ const FinanceExample = ({
   );
 
   const themeClass = `${gridTheme}${isDarkMode ? "-dark" : ""}`;
-
+  const items = [{ label: "Rekap Gabungan" }];
+  const home = { icon: "pi pi-home", url: "" };
   return (
     <Layout>
-      <div className={styles.wrapper}>
-        <div className={styles.container}>
-          <div className={`${themeClass} ${styles.grid}`}>
-            <AgGridReact
-              ref={gridRef}
-              getRowId={getRowId}
-              rowData={rowData}
-              columnDefs={colDefs}
-              defaultColDef={defaultColDef}
-              enableRangeSelection
-              enableCharts
-              rowSelection="multiple"
-              rowGroupPanelShow="always"
-              suppressAggFuncInHeader
-              groupDefaultExpanded={-1}
-              statusBar={statusBar}
-            />
+      <Head title="Perhitungan Zakat" />
+      <AppZakat>
+        <BreadCrumb model={items} className="my-3" home={home} />
+        <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+          <div className=" text-gray-900 dark:text-gray-100">
+            <div className="mb-5 ">
+              <div className={styles.wrapper}>
+                <div className={styles.container}>
+                  <div className={`${themeClass} ${styles.grid}`}>
+                    <AgGridReact
+                      ref={gridRef}
+                      getRowId={getRowId}
+                      rowData={rowData}
+                      columnDefs={colDefs}
+                      defaultColDef={defaultColDef}
+                      enableRangeSelection
+                      enableCharts
+                      rowSelection="multiple"
+                      rowGroupPanelShow="always"
+                      suppressAggFuncInHeader
+                      groupDefaultExpanded={-1}
+                      statusBar={statusBar}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      </AppZakat>
     </Layout>
   );
 };

@@ -45,8 +45,8 @@ const AppMenu = () => {
         {
           label: "Zakat",
           icon: "pi pi-money-bill",
-          to: route("zakat.index"),
-          active: "/Pengurus",
+          to: route("zakat.RekapGabungan"),
+          active: "/zakat/RekapGabungan",
           status: "NEW",
         },
       ],

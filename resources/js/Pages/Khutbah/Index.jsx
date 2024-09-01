@@ -52,7 +52,7 @@ export default function Index({ auth, khutbah, queryParams = null, success }) {
   const home = { icon: "pi pi-home", url: "" };
   return (
     <Layout>
-      <Head title="KHutbah" />
+      <Head title="Khutbah" />
       <div className="">
         <div className=" mx-auto sm:px-6 lg:px-3">
           {success && (
