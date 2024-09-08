@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Storepenerimaan_zakatRequest;
 use App\Http\Requests\Updatepenerimaan_zakatRequest;
 use App\Http\Resources\PengurusResource;
+use App\Models\jenis_zakat;
 use App\Models\penerimaan_zakat;
 use App\Models\Pengurus;
+use App\Models\per_rt;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -33,6 +35,8 @@ class ZakatController extends Controller
         return inertia("Zakat/Index", [
             "pengurus" => PengurusResource::collection($Pengurus),
             'queryParams' => request()->query() ?: null,
+            'dataRT' => per_rt::all(),
+            'dataJenisZakat' => jenis_zakat::all(),
             'success' => session('success'),
         ]);
     }

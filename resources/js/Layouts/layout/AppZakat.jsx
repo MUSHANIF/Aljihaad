@@ -73,7 +73,7 @@ const AppZakat = ({ children }) => {
             Rekap Per Hari
           </Link>
         </nav>
-        {dataRT.map((rt, index) => (
+        {/* {dataRT.map((rt, index) => (
           <nav
             className="relative z-0 flex border rounded-xl overflow-hidden dark:border-neutral-700"
             aria-label="Tabs"
@@ -101,7 +101,7 @@ const AppZakat = ({ children }) => {
           // >
           //   {rt.nama_rt}
           // </Link>
-        ))}
+        ))} */}
       </div>
       <div className="layout-main">{children}</div>
     </React.Fragment>

@@ -62,9 +62,12 @@ const Index = ({
   gridTheme = "ag-theme-quartz",
   isDarkMode = false,
   success,
+  dataJenisZakat,
+  dataRT,
 }) => {
   const [rowData, setRowData] = useState(getData());
   const gridRef = useRef(null);
+
   const [getRekapGabungan, setRekapGabungan] = useState("");
   useEffect(() => {
     axios
@@ -77,26 +80,6 @@ const Index = ({
       });
   }, []);
 
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     setRowData((rowData) =>
-  //       rowData.map((item) =>
-  //         Math.random() < 0.1
-  //           ? {
-  //               ...item,
-  //               price:
-  //                 item.price +
-  //                 item.price *
-  //                   ((Math.random() * 4 + 1) / 100) *
-  //                   (Math.random() > 0.5 ? 1 : -1),
-  //             }
-  //           : item
-  //       )
-  //     );
-  //   }, 1000);
-
-  //   return () => clearInterval(intervalId);
-  // }, []);
   const colDefs = useMemo(
     () => [
       {
@@ -124,6 +107,27 @@ const Index = ({
         aggFunc: "sum",
       },
       {
+        field: "id_rt",
+        headerName: "Rt",
+        valueFormatter: (params) => {
+          const item = dataRT.find((item) => item.id == params.value);
+          return item ? item.nama_rt : "din";
+        },
+        minWidth: 200,
+        aggFunc: "sum",
+      },
+      {
+        field: "id_jenis_zakat",
+        headerName: "Jenis Zakat",
+        valueFormatter: (params) => {
+          const item = dataJenisZakat.find((item) => item.id == params.value);
+          return item ? item.nama_zakat : "din";
+        },
+        minWidth: 200,
+        aggFunc: "sum",
+      },
+
+      {
         field: "status_zakat",
         headerName: "Status Zakat",
         cellClass: "ag-center-cell",
@@ -139,15 +143,7 @@ const Index = ({
         headerName: "Tanggal",
         minWidth: 120,
       },
-      {
-        field: "created_at",
-        headerName: "Created At",
-        minWidth: 100,
-        valueFormatter: (params) => {
-          const date = new Date(params.value);
-          return date.toLocaleDateString();
-        },
-      },
+
       {
         field: "actions",
         cellRenderer: ActionButtons,
