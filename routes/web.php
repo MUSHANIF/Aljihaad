@@ -32,6 +32,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('zakat')->group(function () {
         Route::get('/RekapGabungan', [ZakatController::class, 'index'])
             ->name('zakat.RekapGabungan');         
+        Route::get('/CreateZakat', [ZakatController::class, 'CreateZakat'])
+            ->name('zakat.CreateZakat');         
+        Route::get('/EditZakat/{id}', [ZakatController::class, 'EditZakat'])
+            ->name('zakat.EditZakat');         
+        Route::post('/PostZakat', [ZakatController::class, 'PostZakat'])
+            ->name('zakat.PostZakat');         
+        Route::put('/PutZakat/{id}', [ZakatController::class, 'PutZakat'])
+            ->name('zakat.PutZakat');         
+        Route::delete('/DeleteZakat/{id}', [ZakatController::class, 'DeleteZakat'])
+            ->name('zakat.DeleteZakat');         
     });   
     // Route::resource('zakat', ZakatController::class);    
     Route::resource('Pengurus', PengurusController::class);

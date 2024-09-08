@@ -1,35 +1,84 @@
-import InputError from "@/Components/InputError";
-import InputLabel from "@/Components/InputLabel";
-import TextAreaInput from "@/Components/TextAreaInput";
-import TextInput from "@/Components/TextInput";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import { Head, Link, useForm } from "@inertiajs/react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import SelectInput from "@/Components/SelectInput";
 import { BreadCrumb } from "primereact/breadcrumb";
-import { useState } from "react";
+
+import { Dropdown } from "primereact/dropdown";
+import { InputNumber } from "primereact/inputnumber";
+import axios from "axios";
+import { InputText } from "primereact/inputtext";
 import Layout from "@/Layouts/layout/layout.jsx";
 export default function Create({ auth }) {
   const { data, setData, post, errors, reset } = useForm({
-    name: "",
-    status: "",
-    gender: "",
-    no_telp: "",
-    umur: "",
-    description: "",
-    image: "",
+    nama_muzakki: "",
+    tanggal: "",
+    jiwa: "",
+    jumlah_uang: "",
+    jumlah_beras: "",
+    status_zakat: "",
+    waktu_berzakat: "",
+    id_jenis_zakat: "",
+    id_rt: "",
+    updated_by: auth.user.id,
+    created_by: auth.user.id,
   });
-
   const onSubmit = (e) => {
+    console.log(data);
     e.preventDefault();
 
-    post(route("Pengurus.store"));
+    post(route("zakat.PostZakat"));
   };
-  const handleDescriptionChange = (value) => {
-    setData("description", value);
+  const [dataRT, setDataRT] = useState([]);
+  const [dataJenisZakat, setDataJenisZakat] = useState([]);
+  const [getRT, setRt] = useState("");
+  const [getIdJenisZakat, setIdJenisZakat] = useState("");
+
+  useEffect(() => {
+    const today = new Date();
+    const formattedDate = today.toISOString().split("T")[0];
+    setData("tanggal", formattedDate);
+  }, []);
+  useEffect(() => {
+    axios
+      .get("/api/getRtApi")
+      .then((response) => {
+        setDataRT(response.data.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+  useEffect(() => {
+    axios
+      .get("/api/getTypeOfZakat")
+      .then((response) => {
+        setDataJenisZakat(response.data.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
+  const statusZakat = ["Uang", "Beras", "Beras + Uang"];
+  const waktuZakat = ["Sore", "Malam"];
+
+  const setSelectedStatusZakat = (value) => {
+    setData("status_zakat", value);
   };
-  const items = [{ label: "Pengurus" }, { label: "Create Pengurus" }];
+  const setSelectedJenisZakat = (value) => {
+    setData("id_jenis_zakat", value.id);
+    setIdJenisZakat(value);
+  };
+  const setSelectedRt = (value) => {
+    setData("id_rt", value.id);
+    setRt(value);
+  };
+  const setSelectedWaktuZakat = (value) => {
+    setData("waktu_berzakat", value);
+  };
+  const items = [{ label: "Zakat" }, { label: "Create Data Zakat" }];
   const home = { icon: "pi pi-home", url: "" };
   return (
     <Layout>
@@ -43,150 +92,155 @@ export default function Create({ auth }) {
               onSubmit={onSubmit}
               className="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg"
             >
-              <div className="mt-4">
-                <InputLabel htmlFor="user_name" value="Name" />
-
-                <TextInput
-                  id="user_name"
-                  type="text"
-                  name="name"
-                  value={data.name}
-                  className="mt-1 block w-full"
-                  isFocused={true}
-                  onChange={(e) => setData("name", e.target.value)}
+              <div className="flex flex-column gap-2">
+                <label htmlFor="username">
+                  Nama perwakilan Keluarga Muzakki
+                </label>
+                <InputText
+                  value={data.nama_muzakki}
+                  aria-describedby="username-help"
+                  placeholder="Masukan Username"
+                  onChange={(e) => setData("nama_muzakki", e.target.value)}
                 />
-
-                <InputError message={errors.name} className="mt-2" />
+                <small id="username-help">
+                  Mohon perhatikan nama Muzakki yang akan digunakan
+                </small>
+                {errors.nama_muzakki && (
+                  <small className="p-error">{errors.nama_muzakki}</small>
+                )}
               </div>
-              <div className="mt-4">
-                <InputLabel htmlFor="status" value="Status" />
 
-                <SelectInput
-                  name="status"
-                  id="status"
-                  className="mt-1 block w-full"
-                  onChange={(e) => setData("status", e.target.value)}
-                >
-                  <option value="">Select Status</option>
-                  <option value="ketua">Ketua Devisi</option>
-                  <option value="wakil">Wakil Devisi</option>
-                  <option value="sekretaris1">Sekretaris 1</option>
-                  <option value="sekretaris2">Sekretaris 2</option>
-                  <option value="bendahara1">Bendahara 1 </option>
-                  <option value="bendahara2">Bendahara 2</option>
-                  <option value="jamaah">Jamaah</option>
-                </SelectInput>
-              </div>
-              <div className="mt-4">
-                <InputLabel htmlFor="gender" value="Gender" />
-
-                <SelectInput
-                  name="gender"
-                  id="gender"
-                  className="mt-1 block w-full"
-                  onChange={(e) => setData("gender", e.target.value)}
-                >
-                  <option value="">Select Status</option>
-                  <option value="Laki - laki">Laki - laki</option>
-                  <option value="Perempuan">Perempuan</option>
-                </SelectInput>
-              </div>
-              <div className="mt-4">
-                <InputLabel htmlFor="user_name" value="Umur" />
-
-                <TextInput
-                  id="user_name"
-                  type="text"
-                  name="umur"
-                  value={data.umur}
-                  className="mt-1 block w-full"
-                  isFocused={true}
-                  onChange={(e) => setData("umur", e.target.value)}
+              <div className="flex flex-column gap-2 my-4 ">
+                <label htmlFor="username">Tanggal</label>
+                <InputText
+                  id="username"
+                  onChange={(e) => setData("tanggal", e.target.value)}
+                  value={data.tanggal}
+                  type="date"
+                  aria-describedby="username-help"
                 />
-
-                <InputError message={errors.umur} className="mt-2" />
+                <small id="username-help">
+                  Tanggal akan otomatis terisi dengan tanggal hari ini
+                </small>
+                {errors.tanggal && (
+                  <small className="p-error">{errors.tanggal}</small>
+                )}
               </div>
-              <div className="mt-4">
-                <InputLabel htmlFor="user_name" value="No_telp" />
+              <div className="flex flex-column gap-2 my-4 ">
+                <label htmlFor="username">Jumlah jiwa</label>
 
-                <TextInput
-                  id="user_name"
-                  type="number"
-                  name="no_telp"
-                  value={data.no_telp}
-                  className="mt-1 block w-full"
-                  isFocused={true}
-                  onChange={(e) => setData("no_telp", e.target.value)}
+                <InputText
+                  keyfilter="int"
+                  placeholder="Masukan Jumlah Jiwa"
+                  value={data.jiwa}
+                  onChange={(e) => setData("jiwa", e.target.value)}
                 />
-
-                <InputError message={errors.name} className="mt-2" />
+                {errors.jiwa && (
+                  <small className="p-error">{errors.jiwa}</small>
+                )}
               </div>
-              <div className="mt-4">
-                <InputLabel htmlFor="event_description" value="description" />
-
-                <ReactQuill
-                  value={data.description}
-                  onChange={handleDescriptionChange}
-                  modules={{
-                    toolbar: [
-                      [{ header: "1" }, { header: "2" }, { font: [] }],
-                      [{ size: [] }],
-                      ["bold", "italic", "underline", "strike", "blockquote"],
-                      [
-                        { list: "ordered" },
-                        { list: "bullet" },
-                        { indent: "-1" },
-                        { indent: "+1" },
-                      ],
-                      ["link", "image", "video"],
-                      ["clean"],
-                    ],
-                  }}
-                  formats={[
-                    "header",
-                    "font",
-                    "size",
-                    "bold",
-                    "italic",
-                    "underline",
-                    "strike",
-                    "blockquote",
-                    "list",
-                    "bullet",
-                    "indent",
-                    "link",
-                    "image",
-                    "video",
-                  ]}
-                  className="mt-1 block w-full"
+              <div className="flex flex-column gap-2 my-4 ">
+                <label htmlFor="username">Jenis Zakat </label>
+                <Dropdown
+                  value={getIdJenisZakat}
+                  onChange={(e) => setSelectedJenisZakat(e.value)}
+                  options={dataJenisZakat}
+                  optionLabel="nama_zakat"
+                  placeholder="Select a Status Zakat"
+                  className="w-full "
                 />
-
-                <InputError message={errors.description} className="mt-2" />
+                {errors.id_jenis_zakat && (
+                  <small className="p-error">{errors.id_jenis_zakat}</small>
+                )}
               </div>
+              <div className="flex flex-column gap-2 my-4 ">
+                <label htmlFor="username">Status Zakat </label>
 
-              <div className="mt-4">
-                <InputLabel
-                  htmlFor="project_image_path"
-                  value="Image Pengurus"
+                <Dropdown
+                  value={data.status_zakat}
+                  onChange={(e) => setSelectedStatusZakat(e.value)}
+                  options={statusZakat}
+                  optionLabel="name"
+                  placeholder="Select a Status Zakat"
+                  className="w-full "
                 />
-                <TextInput
-                  id="project_image_path"
-                  type="file"
-                  name="image"
-                  className="mt-1 block w-full"
-                  onChange={(e) => setData("image", e.target.files[0])}
-                />
-                <InputError message={errors.image} className="mt-2" />
+                {errors.status_zakat && (
+                  <small className="p-error">{errors.status_zakat}</small>
+                )}
               </div>
+              {["Uang"].includes(data.status_zakat) ? (
+                <div className="flex flex-column gap-2 my-4 ">
+                  <label htmlFor="username">Uang</label>
 
+                  <div className="p-inputgroup flex-1">
+                    <span className="p-inputgroup-addon">Rp</span>
+                    <InputNumber
+                      placeholder="Masukan Nominal Uang Zakat"
+                      value={data.jumlah_uang}
+                      onChange={(e) => setData("jumlah_uang", e.value)}
+                    />
+                    <span className="p-inputgroup-addon">.00</span>
+                  </div>
+                  {errors.jumlah_uang && (
+                    <small className="p-error">{errors.jumlah_uang}</small>
+                  )}
+                </div>
+              ) : null}
+              {["Beras", "Beras + Uang"].includes(data.status_zakat) ? (
+                <div className="flex flex-column gap-2 my-4">
+                  <label htmlFor="username">Beras</label>
+
+                  <div className="p-inputgroup flex-1">
+                    <InputNumber
+                      placeholder="Masukan Nominal Beras Zakat"
+                      value={data.jumlah_beras}
+                      onChange={(e) => setData("jumlah_beras", e.value)}
+                    />
+                    <span className="p-inputgroup-addon">.Liter</span>
+                  </div>
+                  {errors.jumlah_beras && (
+                    <small className="p-error">{errors.jumlah_beras}</small>
+                  )}
+                </div>
+              ) : null}
+              <div className="flex flex-column gap-2 my-4 ">
+                <label htmlFor="username">Waktu Berzakat </label>
+                <Dropdown
+                  value={data.waktu_berzakat}
+                  onChange={(e) => setSelectedWaktuZakat(e.value)}
+                  options={waktuZakat}
+                  placeholder="Select a Waktu Zakat"
+                  className="w-full "
+                />
+                {errors.waktu_berzakat && (
+                  <small className="p-error">{errors.waktu_berzakat}</small>
+                )}
+              </div>
+              <div className="flex flex-column gap-2 my-4 ">
+                <label htmlFor="username">Jenis Rt </label>
+                <Dropdown
+                  value={getRT}
+                  onChange={(e) => setSelectedRt(e.value)}
+                  options={dataRT}
+                  optionLabel="nama_rt"
+                  placeholder="Select a Status Zakat"
+                  className="w-full "
+                />
+                {errors.id_rt && (
+                  <small className="p-error">{errors.id_rt}</small>
+                )}
+              </div>
               <div className="mt-4 text-right">
                 <Link
-                  href={route("Pengurus.index")}
+                  href={route("zakat.RekapGabungan")}
                   className="bg-gray-2  00  py-2 px-3 text-gray-800 rounded-xl shadow transition-all hover:bg-gray-300 mr-2"
                 >
                   Cancel
                 </Link>
-                <button className="bg-blue-500 py-2 px-3 text-white  rounded-xl shadow transition-all hover:bg-blue-600">
+                <button
+                  type="submit"
+                  className="bg-blue-500 py-2 px-3 text-white  rounded-xl shadow transition-all hover:bg-blue-600"
+                >
                   Submit
                 </button>
               </div>

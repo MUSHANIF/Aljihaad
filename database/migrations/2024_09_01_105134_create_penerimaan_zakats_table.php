@@ -20,6 +20,8 @@ return new class extends Migration
             $table->integer('jumlah_uang')->nullable();
             $table->string('jumlah_beras')->nullable();
             $table->string('waktu_berzakat')->nullable();
+            $table->integer('created_by')->nullable();
+            $table->integer('updated_by')->nullable();
             $table->foreignId('id_jenis_zakat')->constrained('jenis_zakats');
             $table->foreignId('id_rt')->constrained('per_rts');
             $table->timestamps();

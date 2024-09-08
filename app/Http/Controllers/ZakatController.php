@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Storepenerimaan_zakatRequest;
+use App\Http\Requests\Updatepenerimaan_zakatRequest;
 use App\Http\Resources\PengurusResource;
+use App\Models\penerimaan_zakat;
 use App\Models\Pengurus;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ZakatController extends Controller
 {
     public function index()
-    {      
+    {
         $query = Pengurus::query();
 
         $sortField = request("sort_field", 'created_at');
@@ -30,6 +34,52 @@ class ZakatController extends Controller
             "pengurus" => PengurusResource::collection($Pengurus),
             'queryParams' => request()->query() ?: null,
             'success' => session('success'),
-        ]);        
+        ]);
+    }
+    public function CreateZakat()
+    {
+        return inertia("Zakat/Create");
+    }
+    public function EditZakat($penerimaan_zakat)
+    {
+        $EditZakat = penerimaan_zakat::find($penerimaan_zakat);
+        return inertia("Zakat/Edit", [
+            'penerimaan_zakat' => $EditZakat
+        ]);
+    }
+    public function PostZakat(Storepenerimaan_zakatRequest $request)
+    {
+        try {
+            $data = $request->validated();
+            $penerimaan_zakat = penerimaan_zakat::create($data);
+            return redirect()->route('zakat.RekapGabungan')->with('success', 'Muzaaki atas nama ' . $penerimaan_zakat->nama_muzakki . ' berhasil ditambahkan');
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+        }
+    }
+    public function PutZakat(Updatepenerimaan_zakatRequest $request, $zakat)
+    {
+        try {
+            $Datazakat = penerimaan_zakat::find($zakat);
+            $data = $request->validated();
+            $data['updated_by'] = Auth::id();
+            $Datazakat->update($data);
+            return redirect()->route('zakat.RekapGabungan')->with('success', 'Muzaaki atas nama ' . $Datazakat->nama_muzakki . ' berhasil diupdate');
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+        }
+    }
+
+    public function DeleteZakat($Idpenerimaan_zakat)
+    {
+        try {
+            $penerimaan_zakat = penerimaan_zakat::find($Idpenerimaan_zakat);
+            $name = $penerimaan_zakat->nama_muzakki;
+            $penerimaan_zakat->delete();
+            return to_route('zakat.RekapGabungan')
+                ->with('success', "Muzakki \"$name\" berhasil dihapus, Tolong Refresh Halaman");
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+        }
     }
 }

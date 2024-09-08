@@ -1,41 +1,100 @@
-import InputError from "@/Components/InputError";
-import InputLabel from "@/Components/InputLabel";
-import SelectInput from "@/Components/SelectInput";
-import TextAreaInput from "@/Components/TextAreaInput";
-import TextInput from "@/Components/TextInput";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import { Head, Link, useForm } from "@inertiajs/react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import SelectInput from "@/Components/SelectInput";
 import { BreadCrumb } from "primereact/breadcrumb";
+
+import { Dropdown } from "primereact/dropdown";
+import { InputNumber } from "primereact/inputnumber";
+import axios from "axios";
+import { InputText } from "primereact/inputtext";
 import Layout from "@/Layouts/layout/layout.jsx";
-
-export default function Edit({ auth, Pengurus }) {
+export default function Edit({ auth, penerimaan_zakat }) {
   const { data, setData, post, errors, reset } = useForm({
-    name: Pengurus.name || "",
-    description: Pengurus.description || "",
-    umur: Pengurus.umur,
-    no_telp: Pengurus.no_telp,
-    status: Pengurus.status,
-    gender: Pengurus.gender,
-
+    nama_muzakki: penerimaan_zakat.nama_muzakki,
+    tanggal: penerimaan_zakat.tanggal,
+    jiwa: penerimaan_zakat.jiwa,
+    jumlah_uang: penerimaan_zakat.jumlah_uang,
+    jumlah_beras: penerimaan_zakat.jumlah_beras,
+    status_zakat: penerimaan_zakat.status_zakat,
+    waktu_berzakat: penerimaan_zakat.waktu_berzakat,
+    id_jenis_zakat: penerimaan_zakat.id_jenis_zakat,
+    id_rt: penerimaan_zakat.id_rt,
+    updated_by: penerimaan_zakat.updated_by,
     _method: "PUT",
   });
-
   const onSubmit = (e) => {
+    console.log(data);
     e.preventDefault();
+    post(route("zakat.PutZakat", penerimaan_zakat.id));
+  };
+  const [dataRT, setDataRT] = useState([]);
+  const [dataJenisZakat, setDataJenisZakat] = useState([]);
 
-    post(route("Pengurus.update", Pengurus.id));
+  const [getRT, setRt] = useState("");
+  const [getIdJenisZakat, setIdJenisZakat] = useState("");
+
+  useEffect(() => {
+    const today = new Date();
+    const formattedDate = today.toISOString().split("T")[0];
+    setData("tanggal", formattedDate);
+  }, []);
+  useEffect(() => {
+    axios
+      .get("/api/getRtApi")
+      .then((response) => {
+        const data = response.data.data;
+        setDataRT(response.data.data);
+        data.map((item) => {
+          if (item.id === penerimaan_zakat.id_rt) {
+            setRt(item);
+          }
+        });
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+  useEffect(() => {
+    axios
+      .get("/api/getTypeOfZakat")
+      .then((response) => {
+        const data = response.data.data;
+        setDataJenisZakat(response.data.data);
+        data.map((item) => {
+          if (item.id == penerimaan_zakat.id_jenis_zakat) {
+            setIdJenisZakat(item);
+          }
+        });
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
+  const statusZakat = ["Uang", "Beras", "Beras + Uang"];
+  const waktuZakat = ["Sore", "Malam"];
+
+  const setSelectedStatusZakat = (value) => {
+    setData("status_zakat", value);
   };
-  const handleDescriptionChange = (value) => {
-    setData("description", value);
+  const setSelectedJenisZakat = (value) => {
+    setData("id_jenis_zakat", value.id);
+    setIdJenisZakat(value);
   };
-  const items = [{ label: "Pengurus" }, { label: "Edit Pengurus" }];
+  const setSelectedRt = (value) => {
+    setData("id_rt", value.id);
+    setRt(value);
+  };
+  const setSelectedWaktuZakat = (value) => {
+    setData("waktu_berzakat", value);
+  };
+  const items = [{ label: "Zakat" }, { label: "Edit Data Zakat" }];
   const home = { icon: "pi pi-home", url: "" };
-
   return (
     <Layout>
-      <Head title="Event" />
+      <Head title="Users" />
 
       <div className="">
         <div className="mx-auto">
@@ -45,157 +104,155 @@ export default function Edit({ auth, Pengurus }) {
               onSubmit={onSubmit}
               className="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg"
             >
-              <div className="mt-4">
-                <InputLabel htmlFor="user_name" value="Name" />
-
-                <TextInput
-                  id="user_name"
-                  type="text"
-                  name="name"
-                  value={data.name}
-                  className="mt-1 block w-full"
-                  isFocused={true}
-                  onChange={(e) => setData("name", e.target.value)}
+              <div className="flex flex-column gap-2">
+                <label htmlFor="username">
+                  Nama perwakilan Keluarga Muzakki
+                </label>
+                <InputText
+                  value={data.nama_muzakki}
+                  aria-describedby="username-help"
+                  placeholder="Masukan Username"
+                  onChange={(e) => setData("nama_muzakki", e.target.value)}
                 />
-
-                <InputError message={errors.name} className="mt-2" />
+                <small id="username-help">
+                  Mohon perhatikan nama Muzakki yang akan digunakan
+                </small>
+                {errors.nama_muzakki && (
+                  <small className="p-error">{errors.nama_muzakki}</small>
+                )}
               </div>
 
-              <div className="mt-4">
-                <InputLabel htmlFor="status" value="Status" />
-
-                <SelectInput
-                  name="status"
-                  id="status"
-                  value={data.status}
-                  className="mt-1 block w-full"
-                  onChange={(e) => setData("status", e.target.value)}
-                >
-                  <option value="">Select Status</option>
-                  <option value="ketua">Ketua Devisi</option>
-                  <option value="wakil">Wakil Devisi</option>
-                  <option value="sekretaris1">Sekretaris 1</option>
-                  <option value="sekretaris2">Sekretaris 2</option>
-                  <option value="bendahara1">Bendahara 1 </option>
-                  <option value="bendahara2">Bendahara 2</option>
-                  <option value="jamaah">Jamaah</option>
-                </SelectInput>
-              </div>
-              <div className="mt-4">
-                <InputLabel htmlFor="gender" value="Gender" />
-
-                <SelectInput
-                  name="gender"
-                  id="gender"
-                  value={Pengurus.gender}
-                  className="mt-1 block w-full"
-                  onChange={(e) => setData("gender", e.target.value)}
-                >
-                  <option value="">Select Gender</option>
-                  <option value="Laki - laki">Laki - laki</option>
-                  <option value="Perempuan">Perempuan</option>
-                </SelectInput>
-              </div>
-              <div className="mt-4">
-                <InputLabel htmlFor="user_name" value="Umur" />
-
-                <TextInput
-                  id="user_name"
-                  type="text"
-                  name="umur"
-                  value={data.umur}
-                  className="mt-1 block w-full"
-                  isFocused={true}
-                  onChange={(e) => setData("umur", e.target.value)}
+              <div className="flex flex-column gap-2 my-4 ">
+                <label htmlFor="username">Tanggal</label>
+                <InputText
+                  id="username"
+                  onChange={(e) => setData("tanggal", e.target.value)}
+                  value={data.tanggal}
+                  type="date"
+                  aria-describedby="username-help"
                 />
-
-                <InputError message={errors.umur} className="mt-2" />
+                <small id="username-help">
+                  Tanggal akan otomatis terisi dengan tanggal hari ini
+                </small>
+                {errors.tanggal && (
+                  <small className="p-error">{errors.tanggal}</small>
+                )}
               </div>
-              <div className="mt-4">
-                <InputLabel htmlFor="user_name" value="No_telp" />
+              <div className="flex flex-column gap-2 my-4 ">
+                <label htmlFor="username">Jumlah jiwa</label>
 
-                <TextInput
-                  id="user_name"
-                  type="number"
-                  name="no_telp"
-                  value={data.no_telp}
-                  className="mt-1 block w-full"
-                  isFocused={true}
-                  onChange={(e) => setData("no_telp", e.target.value)}
+                <InputText
+                  keyfilter="int"
+                  placeholder="Masukan Jumlah Jiwa"
+                  value={data.jiwa}
+                  onChange={(e) => setData("jiwa", e.target.value)}
                 />
-
-                <InputError message={errors.name} className="mt-2" />
+                {errors.jiwa && (
+                  <small className="p-error">{errors.jiwa}</small>
+                )}
               </div>
-              <div className="mt-4">
-                <InputLabel htmlFor="event_description" value="description" />
-
-                <ReactQuill
-                  value={data.description}
-                  onChange={handleDescriptionChange}
-                  modules={{
-                    toolbar: [
-                      [{ header: "1" }, { header: "2" }, { font: [] }],
-                      [{ size: [] }],
-                      ["bold", "italic", "underline", "strike", "blockquote"],
-                      [
-                        { list: "ordered" },
-                        { list: "bullet" },
-                        { indent: "-1" },
-                        { indent: "+1" },
-                      ],
-                      ["link", "image", "video"],
-                      ["clean"],
-                    ],
-                  }}
-                  formats={[
-                    "header",
-                    "font",
-                    "size",
-                    "bold",
-                    "italic",
-                    "underline",
-                    "strike",
-                    "blockquote",
-                    "list",
-                    "bullet",
-                    "indent",
-                    "link",
-                    "image",
-                    "video",
-                  ]}
-                  className="mt-1 block w-full"
+              <div className="flex flex-column gap-2 my-4 ">
+                <label htmlFor="username">Jenis Zakat </label>
+                <Dropdown
+                  value={getIdJenisZakat}
+                  onChange={(e) => setSelectedJenisZakat(e.value)}
+                  options={dataJenisZakat}
+                  optionLabel="nama_zakat"
+                  placeholder="Select a Status Zakat"
+                  className="w-full "
                 />
-
-                <InputError message={errors.description} className="mt-2" />
+                {errors.id_jenis_zakat && (
+                  <small className="p-error">{errors.id_jenis_zakat}</small>
+                )}
               </div>
+              <div className="flex flex-column gap-2 my-4 ">
+                <label htmlFor="username">Status Zakat </label>
 
-              <div className="mt-4">
-                <InputLabel
-                  htmlFor="project_image_path"
-                  value="Image Pengurus"
+                <Dropdown
+                  value={data.status_zakat}
+                  onChange={(e) => setSelectedStatusZakat(e.value)}
+                  options={statusZakat}
+                  optionLabel="name"
+                  placeholder="Select a Status Zakat"
+                  className="w-full "
                 />
-                <TextInput
-                  id="project_image_path"
-                  type="file"
-                  name="image"
-                  className="mt-1 block w-full"
-                  onChange={(e) => setData("image", e.target.files[0])}
-                />
-                <InputError message={errors.image} className="mt-2" />
+                {errors.status_zakat && (
+                  <small className="p-error">{errors.status_zakat}</small>
+                )}
               </div>
-              {Pengurus.image_path && (
-                <div className="my-5">
-                  <img src={Pengurus.image_path} className="w-64" />
+              {["Uang"].includes(data.status_zakat) ? (
+                <div className="flex flex-column gap-2 my-4 ">
+                  <label htmlFor="username">Uang</label>
+
+                  <div className="p-inputgroup flex-1">
+                    <span className="p-inputgroup-addon">Rp</span>
+                    <InputNumber
+                      placeholder="Masukan Nominal Uang Zakat"
+                      value={data.jumlah_uang}
+                      onChange={(e) => setData("jumlah_uang", e.value)}
+                    />
+                    <span className="p-inputgroup-addon">.00</span>
+                  </div>
+                  {errors.jumlah_uang && (
+                    <small className="p-error">{errors.jumlah_uang}</small>
+                  )}
                 </div>
-              )}
+              ) : null}
+              {["Beras", "Beras + Uang"].includes(data.status_zakat) ? (
+                <div className="flex flex-column gap-2 my-4">
+                  <label htmlFor="username">Beras</label>
+
+                  <div className="p-inputgroup flex-1">
+                    <InputNumber
+                      placeholder="Masukan Nominal Beras Zakat"
+                      value={data.jumlah_beras}
+                      onChange={(e) => setData("jumlah_beras", e.value)}
+                    />
+                    <span className="p-inputgroup-addon">.Liter</span>
+                  </div>
+                  {errors.jumlah_beras && (
+                    <small className="p-error">{errors.jumlah_beras}</small>
+                  )}
+                </div>
+              ) : null}
+              <div className="flex flex-column gap-2 my-4 ">
+                <label htmlFor="username">Waktu Berzakat </label>
+                <Dropdown
+                  value={data.waktu_berzakat}
+                  onChange={(e) => setSelectedWaktuZakat(e.value)}
+                  options={waktuZakat}
+                  placeholder="Select a Waktu Zakat"
+                  className="w-full "
+                />
+                {errors.waktu_berzakat && (
+                  <small className="p-error">{errors.waktu_berzakat}</small>
+                )}
+              </div>
+              <div className="flex flex-column gap-2 my-4 ">
+                <label htmlFor="username">Jenis Rt </label>
+                <Dropdown
+                  value={getRT}
+                  onChange={(e) => setSelectedRt(e.value)}
+                  options={dataRT}
+                  optionLabel="nama_rt"
+                  placeholder="Select a Status Zakat"
+                  className="w-full "
+                />
+                {errors.id_rt && (
+                  <small className="p-error">{errors.id_rt}</small>
+                )}
+              </div>
               <div className="mt-4 text-right">
                 <Link
-                  href={route("user.index")}
-                  className="bg-gray-100 py-1 px-3 text-gray-800 rounded shadow transition-all hover:bg-gray-200 mr-2"
+                  href={route("zakat.RekapGabungan")}
+                  className="bg-gray-2  00  py-2 px-3 text-gray-800 rounded-xl shadow transition-all hover:bg-gray-300 mr-2"
                 >
                   Cancel
                 </Link>
-                <button className="bg-blue-500 py-2 px-3 text-white  rounded-xl shadow transition-all hover:bg-blue-600">
+                <button
+                  type="submit"
+                  className="bg-blue-500 py-2 px-3 text-white  rounded-xl shadow transition-all hover:bg-blue-600"
+                >
                   Submit
                 </button>
               </div>

@@ -17,7 +17,8 @@ class PerRtSeeder extends Seeder
             ['nama_rt' => 'RT 01', 'status' => 'nonaktif', 'created_at' => now(), 'updated_at' => now()],
             ['nama_rt' => 'RT 02', 'status' => 'nonaktif', 'created_at' => now(), 'updated_at' => now()],
             ['nama_rt' => 'RT 03', 'status' => 'aktif', 'created_at' => now(), 'updated_at' => now()],
-            ['nama_rt' => 'RT 04', 'status' => 'aktif', 'created_at' => now(), 'updated_at' => now()],
+            ['nama_rt' => 'RT 04 ATAS', 'status' => 'aktif', 'created_at' => now(), 'updated_at' => now()],
+            ['nama_rt' => 'RT 04 BAWAH', 'status' => 'aktif', 'created_at' => now(), 'updated_at' => now()],
             ['nama_rt' => 'RT 05', 'status' => 'aktif', 'created_at' => now(), 'updated_at' => now()],
         ]);
     }
