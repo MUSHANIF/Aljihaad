@@ -133,7 +133,7 @@ export default function Footer() {
           <div className="col-md-6 text-center text-md-end">
             Designed By{" "}
             <a className="border-b" href="https://htmlcodex.com">
-              The MusCorp
+              MuSolution
             </a>
           </div>
         </div>

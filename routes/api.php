@@ -13,3 +13,6 @@ Route::get('/user', function (Request $request) {
 Route::get('/getRtApi', [ZakatControllerApi::class, 'perRtApi'])->name('getRtApi');
 Route::get('/getTypeOfZakat', [ZakatControllerApi::class, 'jenisZakat'])->name('getTypeOfZakat');
 Route::get('/getRekapGabungan', [ZakatControllerApi::class, 'RekapGabungan'])->name('getRekapGabungan');
+Route::get('/RekapDataPerhari', [ZakatControllerApi::class, 'RekapDataPerhari'])->name('RekapDataPerhari');
+Route::post('/amilZakatAbsen', [ZakatControllerApi::class, 'amilZakatAbsen'])->name('amilZakatAbsen');
+

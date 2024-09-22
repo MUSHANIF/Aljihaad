@@ -6,7 +6,7 @@ const AppFooter = () => {
       <span>
         Made with <span className="text-red-500">&#10084;&#65039;</span> by
       </span>
-      <span className="font-medium ml-2">MusCorp</span>
+      <span className="font-medium ml-2">MuSolution</span>
     </div>
   );
 };

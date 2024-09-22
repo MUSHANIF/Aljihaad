@@ -32,7 +32,6 @@ import React, {
 
 import styles from "./../../../css/FinanceExample.module.css";
 // import { TickerCellRenderer } from "./cell-renderers/TickerCellRenderer";
-import { getData } from "./data";
 
 ModuleRegistry.registerModules([
   ClientSideRowModelModule,
@@ -65,7 +64,6 @@ const Index = ({
   dataJenisZakat,
   dataRT,
 }) => {
-  const [rowData, setRowData] = useState(getData());
   const gridRef = useRef(null);
 
   const [getRekapGabungan, setRekapGabungan] = useState("");

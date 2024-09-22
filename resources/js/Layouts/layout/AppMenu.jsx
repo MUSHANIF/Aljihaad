@@ -49,6 +49,13 @@ const AppMenu = () => {
           active: "/zakat/RekapGabungan",
           status: "NEW",
         },
+        {
+          label: "Pengurus Zakat",
+          icon: "pi pi-money-bill",
+          to: route("zakat.AmilZakat"),
+          active: "/PengurusZakat/AmilZakat",
+          status: "NEW",
+        },
       ],
     },
   ];

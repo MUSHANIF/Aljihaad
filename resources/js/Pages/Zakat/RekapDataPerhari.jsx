@@ -17,6 +17,7 @@ import { SetFilterModule } from "@ag-grid-enterprise/set-filter";
 import { SparklinesModule } from "@ag-grid-enterprise/sparklines";
 import { StatusBarModule } from "@ag-grid-enterprise/status-bar";
 import Alert from "@/Alert";
+import Swal from "sweetalert2";
 import { BreadCrumb } from "primereact/breadcrumb";
 import Layout from "@/Layouts/layout/layout.jsx";
 import AppZakat from "@/Layouts/layout/AppZakat.jsx";
@@ -31,7 +32,6 @@ import React, {
 
 import styles from "./../../../css/FinanceExample.module.css";
 // import { TickerCellRenderer } from "./cell-renderers/TickerCellRenderer";
-import { getData } from "./data";
 
 ModuleRegistry.registerModules([
   ClientSideRowModelModule,
@@ -57,93 +57,96 @@ const numberFormatter = ({ value }) => {
   return value == null ? "" : formatter.format(value);
 };
 
-const FinanceExample = ({
+const RekapDataPerhari = ({
   gridTheme = "ag-theme-quartz",
   isDarkMode = false,
+  success,
+  dataJenisZakat,
+  dataRT,
 }) => {
-  const [rowData, setRowData] = useState(getData());
   const gridRef = useRef(null);
 
+  const [getRekapPerHari, setRekapPerHari] = useState("");
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      setRowData((rowData) =>
-        rowData.map((item) =>
-          Math.random() < 0.1
-            ? {
-                ...item,
-                price:
-                  item.price +
-                  item.price *
-                    ((Math.random() * 4 + 1) / 100) *
-                    (Math.random() > 0.5 ? 1 : -1),
-              }
-            : item
-        )
-      );
-    }, 1000);
-
-    return () => clearInterval(intervalId);
+    axios
+      .get("/api/RekapDataPerhari")
+      .then((response) => {
+        console.log(response.data);
+        setRekapPerHari(response.data.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
   }, []);
-  console.log(rowData);
 
   const colDefs = useMemo(
     () => [
-      // {
-      //   field: "ticker",
-      //   cellRenderer: TickerCellRenderer,
-      //   minWidth: 380,
-      // },
       {
-        field: "instrument",
-        type: "rightAligned",
-        maxWidth: 180,
+        field: "nama_muzakki",
+        headerName: "Nama Muzakki",
+        minWidth: 200,
       },
       {
-        headerName: "P&L",
-        type: "rightAligned",
-        cellRenderer: "agAnimateShowChangeCellRenderer",
-        valueGetter: ({ data }) =>
-          data && data.quantity * (data.price / data.purchasePrice),
-        valueFormatter: numberFormatter,
-        aggFunc: "sum",
-      },
-      {
-        headerName: "Total Value",
-        type: "rightAligned",
-        valueGetter: ({ data }) => data && data.quantity * data.price,
-        cellRenderer: "agAnimateShowChangeCellRenderer",
-        valueFormatter: numberFormatter,
-        aggFunc: "sum",
-      },
-      {
-        field: "quantity",
-        type: "rightAligned",
-        valueFormatter: numberFormatter,
-        maxWidth: 150,
-      },
-      {
-        headerName: "Price",
-        field: "purchasePrice",
-        type: "rightAligned",
-        valueFormatter: numberFormatter,
-        maxWidth: 150,
-      },
-      {
-        field: "purchaseDate",
-        type: "rightAligned",
-        hide: true,
-      },
-      {
-        headerName: "Last 24hrs",
-        field: "last24",
-        cellRenderer: "agSparklineCellRenderer",
-        cellRendererParams: {
-          sparklineOptions: {
-            line: {
-              strokeWidth: 2,
-            },
-          },
+        field: "jumlah_beras",
+        headerName: "Jumlah Beras (Liter)",
+
+        valueFormatter: (params) => {
+          return params.value ? `${numberFormatter(params)} liter` : "0 liter";
         },
+        minWidth: 100,
+      },
+      {
+        field: "jumlah_uang",
+        headerName: "Jumlah Uang",
+
+        valueFormatter: (params) => {
+          return `Rp ${numberFormatter(params)}`;
+        },
+        minWidth: 200,
+        aggFunc: "sum",
+      },
+      {
+        field: "id_rt",
+        headerName: "Rt",
+        valueFormatter: (params) => {
+          const item = dataRT.find((item) => item.id == params.value);
+          return item ? item.nama_rt : "din";
+        },
+        minWidth: 200,
+        aggFunc: "sum",
+      },
+      {
+        field: "id_jenis_zakat",
+        headerName: "Jenis Zakat",
+        valueFormatter: (params) => {
+          const item = dataJenisZakat.find((item) => item.id == params.value);
+          return item ? item.nama_zakat : "din";
+        },
+        minWidth: 200,
+        aggFunc: "sum",
+      },
+
+      {
+        field: "status_zakat",
+        headerName: "Status Zakat",
+        cellClass: "ag-center-cell",
+        minWidth: 150,
+      },
+      {
+        field: "waktu_berzakat",
+        headerName: "Waktu Berzakat",
+        minWidth: 100,
+      },
+      {
+        field: "tanggal",
+        headerName: "Tanggal",
+        minWidth: 120,
+      },
+
+      {
+        field: "actions",
+        cellRenderer: ActionButtons,
+        minWidth: 200,
       },
     ],
     []
@@ -175,23 +178,36 @@ const FinanceExample = ({
   );
 
   const themeClass = `${gridTheme}${isDarkMode ? "-dark" : ""}`;
-  const items = [{ label: "Rekap Gabungan" }];
+  const items = [{ label: "Rekap PerHari" }];
   const home = { icon: "pi pi-home", url: "" };
   return (
     <Layout>
-      <Head title="Perhitungan Zakat Perhari" />
+      <Head title="Perhitungan Zakat" />
+      {success && (
+        <div className="">
+          <Alert status={true} pesan={success} />
+        </div>
+      )}
       <AppZakat>
+        <div className="flex justify-end">
+          <Link
+            href={route("zakat.CreateZakat")}
+            className="bg-primary p-2 rounded-lg hover:opacity-95"
+          >
+            Create Data Muzzakki
+          </Link>
+        </div>
         <BreadCrumb model={items} className="my-3" home={home} />
-        <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+        <div className="bg-white dark:bg-gray-800 overflow-x-auto shadow-sm sm:rounded-lg">
           <div className=" text-gray-900 dark:text-gray-100">
             <div className="mb-5 ">
               <div className={styles.wrapper}>
                 <div className={styles.container}>
-                  <div className={`${themeClass} ${styles.grid}`}>
+                  <div className={`${themeClass} ${styles.grid} `}>
                     <AgGridReact
                       ref={gridRef}
                       getRowId={getRowId}
-                      rowData={rowData}
+                      rowData={getRekapPerHari}
                       columnDefs={colDefs}
                       defaultColDef={defaultColDef}
                       enableRangeSelection
@@ -212,5 +228,46 @@ const FinanceExample = ({
     </Layout>
   );
 };
+const ActionButtons = ({ data }) => {
+  const handleEdit = () => {
+    console.log("Editing", data);
+    // Implement edit logic
+  };
 
-export default FinanceExample;
+  const handleDelete = (data) => {
+    // router.delete(route("zakat.DeleteZakat", data.id));
+    // console.log("Deleting", data.id);
+    Swal.fire({
+      title: "Apakah Anda yakin untuk menghapus data ini?",
+      showDenyButton: true,
+      confirmButtonText: "Ya",
+      denyButtonText: "Tidak",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire("Saved!", "", "success");
+        console.log("Deleting", data.id);
+        router.delete(route("zakat.DeleteZakat", data));
+      } else if (result.isDenied) {
+        Swal.fire("Changes are not saved", "", "info");
+      }
+    });
+  };
+
+  return (
+    <div className="flex space-x-2 my-auto mb-5">
+      <Link
+        href={route("zakat.EditZakat", data)}
+        className="bg-blue-500 rounded-md text-white px-3 py-1 "
+      >
+        Edit
+      </Link>
+      <button
+        onClick={(e) => handleDelete(data)}
+        className="bg-red-500 text-white px-3 py-1 rounded-md"
+      >
+        Delete
+      </button>
+    </div>
+  );
+};
+export default RekapDataPerhari;

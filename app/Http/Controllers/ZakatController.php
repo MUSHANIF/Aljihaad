@@ -16,7 +16,17 @@ class ZakatController extends Controller
 {
     public function index()
     {
-        $query = Pengurus::query();
+            
+        return inertia("Zakat/Index", [
+            'queryParams' => request()->query() ?: null,
+            'dataRT' => per_rt::all(),
+            'dataJenisZakat' => jenis_zakat::all(),
+            'success' => session('success'),
+        ]);
+    }
+    public function zakatPerhari()
+    {
+        $query = Pengurus::where('created_at', now()->format('Y-m-d'));
 
         $sortField = request("sort_field", 'created_at');
         $sortDirection = request("sort_direction", "desc");
@@ -32,8 +42,29 @@ class ZakatController extends Controller
             ->paginate(10)
             ->onEachSide(1);
 
-        return inertia("Zakat/Index", [
+        return inertia("Zakat/RekapDataPerhari", [
             "pengurus" => PengurusResource::collection($Pengurus),
+            'queryParams' => request()->query() ?: null,
+            'dataRT' => per_rt::all(),
+            'dataJenisZakat' => jenis_zakat::all(),
+            'success' => session('success'),
+        ]);
+    }
+    public function AmilZakat()
+    {
+        $query = Pengurus::with(['getDataAmilZakat'])->where('status', 'amil');
+        $sortField = request("sort_field", 'created_at');
+        $sortDirection = request("sort_direction", "desc");
+        if (request("name")) {
+            $query->where("name", "like", "%" . request("name") . "%");
+        }      
+
+        $Pengurus = $query->orderBy($sortField, $sortDirection)
+            ->paginate(10)
+            ->onEachSide(1);
+
+        return inertia("Zakat/AbsensiZakat", [
+            "pengurus" => $Pengurus,
             'queryParams' => request()->query() ?: null,
             'dataRT' => per_rt::all(),
             'dataJenisZakat' => jenis_zakat::all(),

@@ -20,7 +20,6 @@ export default function Create({ auth }) {
 
   const onSubmit = (e) => {
     e.preventDefault();
-
     post(route("jadwalUstad.store"));
   };
   const handleDescriptionChange = (value) => {

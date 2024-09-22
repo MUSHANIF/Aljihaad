@@ -74,7 +74,7 @@ export default function Create({ auth }) {
                   <option value="sekretaris2">Sekretaris 2</option>
                   <option value="bendahara1">Bendahara 1 </option>
                   <option value="bendahara2">Bendahara 2</option>
-                  <option value="jamaah">Jamaah</option>
+                  <option value="amil">Amil Zakat</option>
                 </SelectInput>
               </div>
               <div className="mt-4">

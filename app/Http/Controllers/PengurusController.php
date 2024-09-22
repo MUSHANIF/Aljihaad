@@ -6,6 +6,7 @@ use App\Models\Pengurus;
 use App\Http\Requests\StorePengurusRequest;
 use App\Http\Requests\UpdatePengurusRequest;
 use App\Http\Resources\PengurusResource;
+use App\Models\amil_zakat;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -54,12 +55,12 @@ class PengurusController extends Controller
         $image = $data['image'] ?? null;
         $data['created_by'] = Auth::id();
         $data['updated_by'] = Auth::id();
+        
         if ($image) {
             $path = $image->store('Pengurus/' . Str::random(), 'public');
             $data['image_path'] = $path;
         }
-        Pengurus::create($data);
-
+        $dataPengurus = Pengurus::create($data);        
         return to_route('Pengurus.index')
             ->with('success', 'Project was created');
     }
