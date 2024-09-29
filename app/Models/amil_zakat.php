@@ -15,4 +15,10 @@ class amil_zakat extends Model
     {
         return $this->belongsTo(Pengurus::class, 'id_pengurus', 'id');
     }
+
+    public function scopeGetAmilZakat($query, $request)
+    {
+        return $query->where('id_pengurus', $request->id_pengurus)
+            ->where('waktu_hadir', $request->waktu_berzakat)->where('tanggal_hadir', $request->tanggal);
+    }
 }

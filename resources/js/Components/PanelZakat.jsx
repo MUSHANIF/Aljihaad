@@ -37,7 +37,7 @@ export default function PanelZakat() {
             size="large"
             shape="circle"
           />
-          <span className="font-bold">Musthafa Hanif</span>
+          <span className="font-bold">Pak Harmen</span>
         </div>
         <div>
           <Menu model={items} popup ref={configMenu} id="config_menu" />

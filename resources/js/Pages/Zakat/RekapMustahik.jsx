@@ -1,224 +1,5 @@
-// import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-model";
-
-// import { ModuleRegistry } from "@ag-grid-community/core";
-// import { AgGridReact } from "@ag-grid-community/react";
-// import "@ag-grid-community/styles/ag-grid.css";
-// import "@ag-grid-community/styles/ag-theme-quartz.css";
-// import { AdvancedFilterModule } from "@ag-grid-enterprise/advanced-filter";
-// import { GridChartsModule } from "@ag-grid-enterprise/charts-enterprise";
-// import { ColumnsToolPanelModule } from "@ag-grid-enterprise/column-tool-panel";
-// import { ExcelExportModule } from "@ag-grid-enterprise/excel-export";
-// import { FiltersToolPanelModule } from "@ag-grid-enterprise/filter-tool-panel";
-// import { MenuModule } from "@ag-grid-enterprise/menu";
-// import { RangeSelectionModule } from "@ag-grid-enterprise/range-selection";
-// import { RichSelectModule } from "@ag-grid-enterprise/rich-select";
-// import { RowGroupingModule } from "@ag-grid-enterprise/row-grouping";
-// import { SetFilterModule } from "@ag-grid-enterprise/set-filter";
-// import { SparklinesModule } from "@ag-grid-enterprise/sparklines";
-// import { StatusBarModule } from "@ag-grid-enterprise/status-bar";
-// import Alert from "@/Alert";
-// import Swal from "sweetalert2";
-// import { Dropdown } from "primereact/dropdown";
-// import { BreadCrumb } from "primereact/breadcrumb";
-// import Layout from "@/Layouts/layout/layout.jsx";
-// import AppZakat from "@/Layouts/layout/AppZakat.jsx";
-// import { Head, Link, router } from "@inertiajs/react";
-// import React, {
-//   useCallback,
-//   useEffect,
-//   useMemo,
-//   useRef,
-//   useState,
-// } from "react";
-
-// import styles from "./../../../css/FinanceExample.module.css";
-// // import { TickerCellRenderer } from "./cell-renderers/TickerCellRenderer";
-
-// ModuleRegistry.registerModules([
-//   ClientSideRowModelModule,
-//   AdvancedFilterModule,
-//   ColumnsToolPanelModule,
-//   ExcelExportModule,
-//   FiltersToolPanelModule,
-//   GridChartsModule,
-//   MenuModule,
-//   RangeSelectionModule,
-//   RowGroupingModule,
-//   SetFilterModule,
-//   RichSelectModule,
-//   StatusBarModule,
-//   SparklinesModule,
-// ]);
-
-// const numberFormatter = ({ value }) => {
-//   const formatter = new Intl.NumberFormat("en-US", {
-//     style: "decimal",
-//     maximumFractionDigits: 2,
-//   });
-//   return value == null ? "" : formatter.format(value);
-// };
-
-// const AbsensiZakat = ({
-//   gridTheme = "ag-theme-quartz",
-//   isDarkMode = false,
-//   success,
-//   pengurus,
-//   dataJenisZakat,
-//   dataRT,
-// }) => {
-//   const gridRef = useRef(null);
-
-//   const [getRekapGabungan, setRekapGabungan] = useState(pengurus.data);
-
-//   const colDefs = useMemo(
-//     () => [
-//       {
-//         field: "name",
-//         headerName: "Nama Amil Zakat",
-//         minWidth: 200,
-//       },
-//       {
-//         field: "umur",
-//         headerName: "Umur",
-
-//         valueFormatter: (params) => {
-//           return params.value ? `${numberFormatter(params)} Tahun` : "0 Tahun";
-//         },
-//         minWidth: 100,
-//       },
-//       {
-//         field: "no_telp",
-//         headerName: "No Telepon",
-//         minWidth: 100,
-//       },
-//       {
-//         field: "status",
-//         headerName: "Role",
-//         minWidth: 100,
-//       },
-//       {
-//         field: "tanggal",
-//         headerName: "Total Hadir",
-//         minWidth: 120,
-//       },
-//       {
-//         field: "tanggal",
-//         headerName: "Total Tidak Hadir",
-//         minWidth: 120,
-//       },
-//       {
-//         field: "tanggal",
-//         headerName: "Persentase Kehadiran",
-//         minWidth: 120,
-//       },
-
-//       {
-//         field: "actions",
-//         cellRenderer: ActionButtons,
-//         minWidth: 200,
-//         minHeight: 100,
-//       },
-//     ],
-//     []
-//   );
-
-//   const defaultColDef = useMemo(
-//     () => ({
-//       flex: 1,
-//       filter: true,
-//       enableRowGroup: true,
-//       enableValue: true,
-//     }),
-//     []
-//   );
-
-//   const getRowId = useCallback(({ data: { ticker } }) => ticker, []);
-
-//   const statusBar = useMemo(
-//     () => ({
-//       statusPanels: [
-//         { statusPanel: "agTotalAndFilteredRowCountComponent" },
-//         { statusPanel: "agTotalRowCountComponent" },
-//         { statusPanel: "agFilteredRowCountComponent" },
-//         { statusPanel: "agSelectedRowCountComponent" },
-//         { statusPanel: "agAggregationComponent" },
-//       ],
-//     }),
-//     []
-//   );
-
-//   const themeClass = `${gridTheme}${isDarkMode ? "-dark" : ""}`;
-//   const items = [{ label: "Rekap Gabungan" }];
-
-//   const home = { icon: "pi pi-home", url: "" };
-//   return (
-//     <Layout>
-//       <Head title="Perhitungan Zakat" />
-//       {success && (
-//         <div className="">
-//           <Alert status={true} pesan={success} />
-//         </div>
-//       )}
-
-//       {/* <div className="flex justify-end">
-//           <Link
-//             href={route("zakat.CreateZakat")}
-//             className="bg-primary p-2 rounded-lg hover:opacity-95"
-//           >
-//             Create Data Muzzakki
-//           </Link>
-//         </div> */}
-//       <BreadCrumb model={items} className="my-3" home={home} />
-//       <div className="bg-white dark:bg-gray-800 overflow-x-auto shadow-sm sm:rounded-lg">
-//         <div className=" text-gray-900 dark:text-gray-100">
-//           <div className="mb-5 ">
-//             <div className={styles.wrapper}>
-//               <div className={styles.container}>
-//                 <div className={`${themeClass} ${styles.grid} `}>
-//                   <AgGridReact
-//                     ref={gridRef}
-//                     getRowId={getRowId}
-//                     rowData={getRekapGabungan}
-//                     columnDefs={colDefs}
-//                     defaultColDef={defaultColDef}
-//                     enableRangeSelection
-//                     enableCharts
-//                     rowSelection="multiple"
-//                     rowGroupPanelShow="always"
-//                     suppressAggFuncInHeader
-//                     groupDefaultExpanded={-1}
-//                     statusBar={statusBar}
-//                   />
-//                 </div>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </Layout>
-//   );
-// };
-// const ActionButtons = ({ data }) => {
-//   const StatusKehadiran = ["Hadir", "Tidak Hadir", "Izin"];
-//   return (
-//     <div className="flex my-auto mb-5">
-//       <Dropdown
-//         // value={data.status_zakat}
-//         // onChange={(e) => setSelectedStatusZakat(e.value)}
-//         options={StatusKehadiran}
-//         optionLabel="name"
-//         placeholder="Select a Status Zakat"
-//         className="w-full "
-//       />
-//     </div>
-//   );
-// };
-// export default AbsensiZakat;
-
 import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-model";
 import { ModuleRegistry } from "@ag-grid-community/core";
-import { MeterGroup } from "primereact/metergroup";
-import { Panel } from "primereact/panel";
 import PanelZakat from "@/Components/PanelZakat";
 import { AgGridReact } from "@ag-grid-community/react";
 import "@ag-grid-community/styles/ag-grid.css";
@@ -233,19 +14,14 @@ import { StatusBarModule } from "@ag-grid-enterprise/status-bar";
 import { useCallback, useMemo, useRef, useEffect, useState } from "react";
 import { ProgressBar } from "primereact/progressbar";
 import styles from "./../../../css/HRExample.module.css";
-import { ContactCellRenderer } from "../../cell-renderers/ContactCellRenderer";
-import { EmployeeCellRenderer } from "../../cell-renderers/EmployeeCellRenderer";
-import { FlagCellRenderer } from "../../cell-renderers/FlagCellRenderer";
-import { StatusCellRenderer } from "../../cell-renderers/StatusCellRenderer";
-import { TagCellRenderer } from "../../cell-renderers/TagCellRenderer";
 import { Dropdown } from "primereact/dropdown";
-import { InputNumber } from "primereact/inputnumber";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { ScrollPanel } from "primereact/scrollpanel";
+import Alert from "@/Alert";
 import { BreadCrumb } from "primereact/breadcrumb";
 import { Head, Link, useForm } from "@inertiajs/react";
 import { Chip } from "primereact/chip";
@@ -270,9 +46,6 @@ const numberFormatter = ({ value }) => {
   return value == null ? "" : formatter.format(value);
 };
 
-const employmentTypeOptions = ["Permanent", "Contract"];
-const paymentMethodOptions = ["Cash", "Check", "Bank Transfer"];
-const paymentStatusOptions = ["Paid", "Pending"];
 const StatusKehadiran = ["Hadir", "Tidak Hadir", "Izin"];
 const WaktuKehadiran = ["Sore", "Malam"];
 const departments = {
@@ -283,8 +56,6 @@ const departments = {
   product: "Product",
   customerSupport: "Customer Support",
 };
-
-const departmentFormatter = ({ value }) => departments[value] ?? "";
 const setSelectedStatusZakat = (event) => {
   const updatedData = {
     id: event.data.id,
@@ -293,11 +64,8 @@ const setSelectedStatusZakat = (event) => {
   };
   if (!updatedData.waktu_hadir) {
     alert("Waktu Kehadiran belum terisi. Tidak boleh submit!");
-    return; // Hentikan eksekusi jika belum terisi
+    return;
   }
-
-  console.log(updatedData);
-  // updateStatusInDatabase(updatedData);
 };
 const updateStatusInDatabase = async (data) => {
   try {
@@ -307,87 +75,55 @@ const updateStatusInDatabase = async (data) => {
     console.error("Error updating status:", error);
   }
 };
-const AbsensiZakat = ({
+const RekapMustahik = ({
   gridTheme = "ag-theme-quartz",
   isDarkMode = false,
   success,
-  pengurus,
+  Mustahik,
   dataJenisZakat,
   dataRT,
 }) => {
   const gridRef = useRef(null);
 
-  const [getRekapGabungan, setRekapGabungan] = useState(pengurus.data);
+  const [getDataMustahik, setRekapGabungan] = useState(Mustahik.data);
 
   const [colDefs] = useState([
     {
-      field: "name",
-      headerName: "Nama Amil Zakat",
+      field: "nama_kepala_keluarga",
+      headerName: "Nama Mustahik",
       pinned: "left",
       sort: "asc",
-      cellRenderer: NamaAmil,
-      minWidth: 220,
+      cellRenderer: NamaMustahik,
+      minWidth: 300,
     },
     {
-      field: "umur",
-      headerName: "Umur",
-
+      field: "nik",
+      headerName: "Nik",
       valueFormatter: (params) => {
-        return params.value ? `${numberFormatter(params)} Tahun` : "0 Tahun";
+        return params.value ? `${params.value}` : "Tidak ada";
       },
-      minWidth: 220,
+      minWidth: 300,
     },
     {
-      field: "no_telp",
-      headerName: "No Telepon",
-      minWidth: 220,
+      field: "jumlah_anggota_keluarga",
+      headerName: "Jumlah Anggota Keluarga",
+      minWidth: 300,
     },
     {
-      field: "status",
-      headerName: "Role",
-      minWidth: 220,
+      field: "tahun_mustahik",
+      headerName: "Tahun Mustahik",
+      minWidth: 300,
     },
     {
-      cellRenderer: TotalHadir,
-      headerName: "Total Hadir",
-      minWidth: 220,
+      field: "id_rt",
+      headerName: "Rt",
+      valueFormatter: (params) => {
+        const item = dataRT.find((item) => item.id == params.value);
+        return item ? item.nama_rt : "din";
+      },
+      minWidth: 300,
     },
-    {
-      cellRenderer: TotalTidakHadir,
-      headerName: "Total Tidak Hadir",
-      minWidth: 220,
-    },
-    {
-      cellRenderer: Persentase,
-      field: "persentase_kehadiran",
-      headerName: "Persentase Kehadiran",
-      minWidth: 100,
-    },
-    {
-      cellRenderer: ModalAbsen,
-      field: "absen",
-      headerName: "Isi Absen",
-    },
-    // {
-    //   headerName: "Status",
-    //   field: "get_data_amil_zakat.status",
-    //   editable: true,
-    //   width: 220,
-    //   cellRenderer: StatusCellRenderer,
-    //   cellEditor: "agRichSelectCellEditor",
-    //   cellEditorParams: {
-    //     values: StatusKehadiran,
-    //   },
-    // },
-    // {
-    //   field: "actions",
-    //   cellRenderer: ActionButtons,
-    //   minWidth: 200,
-    //   minHeight: 100,
-    // },
   ]);
-
-  const getDataPath = useCallback((data) => data.name);
 
   const themeClass = isDarkMode ? `${gridTheme}-dark` : gridTheme;
 
@@ -405,7 +141,7 @@ const AbsensiZakat = ({
     }),
     []
   );
-  const items = [{ label: "Rekap Gabungan" }];
+  const items = [{ label: "Rekap Mustahik" }];
   const home = { icon: "pi pi-home", url: "" };
   return (
     <Layout>
@@ -415,17 +151,24 @@ const AbsensiZakat = ({
           <Alert status={true} pesan={success} />
         </div>
       )}
-
+      <div className="flex justify-end">
+        <Link
+          href={route("zakat.CreateMustahik")}
+          className="bg-primary p-2 rounded-lg hover:opacity-95"
+        >
+          Create Data Mustahik
+        </Link>
+      </div>
       <div className="flex justify-end"></div>
       <BreadCrumb model={items} className="my-3" home={home} />
-      <PanelZakat />
+
       <div className={styles.wrapper}>
         <div className={styles.container}>
           <div className={`${themeClass} ${styles.grid}`}>
             <AgGridReact
               ref={gridRef}
               columnDefs={colDefs}
-              rowData={getRekapGabungan}
+              rowData={getDataMustahik}
               groupDefaultExpanded={-1}
               // getDataPath={getDataPath}
               onCellValueChanged={setSelectedStatusZakat}
@@ -441,7 +184,7 @@ const AbsensiZakat = ({
 const ModalAbsen = ({ data, auth }) => {
   const [visible, setVisible] = useState(false);
   const [datas, setDatas] = useState({
-    id_pengurus: data.id,
+    id_Mustahik: data.id,
     tanggal: "",
     waktu_berzakat: "",
     status: "",
@@ -474,7 +217,7 @@ const ModalAbsen = ({ data, auth }) => {
           }
           setVisible(false);
           // setDatas({
-          //   id_pengurus: data.id,
+          //   id_Mustahik: data.id,
           //   waktu_berzakat: "",
           //   status: "",
           // });
@@ -716,14 +459,12 @@ const TotalTidakHadir = ({ data }) => {
     </div>
   );
 };
-const NamaAmil = ({ data }) => {
-  const values = [{ label: "Space used", value: 90 }];
-
+const NamaMustahik = ({ data }) => {
   return (
     <div className="my-auto flex">
-      <Chip label={data.name} />
+      <Chip label={data.nama_kepala_keluarga} />
     </div>
   );
 };
 
-export default AbsensiZakat;
+export default RekapMustahik;

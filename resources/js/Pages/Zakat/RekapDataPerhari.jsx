@@ -177,8 +177,44 @@ const RekapDataPerhari = ({
     []
   );
 
+  const formatTanggal = () => {
+    const date = new Date();
+    const bulan = [
+      "Januari",
+      "Februari",
+      "Maret",
+      "April",
+      "Mei",
+      "Juni",
+      "Juli",
+      "Agustus",
+      "September",
+      "Oktober",
+      "November",
+      "Desember",
+    ];
+
+    const hari = String(date.getDate()).padStart(2, "0");
+    const bulanNama = bulan[date.getMonth()];
+    const tahun = date.getFullYear();
+    const jam = String(date.getHours()).padStart(2, "0");
+    const menit = String(date.getMinutes()).padStart(2, "0");
+    const detik = String(date.getSeconds()).padStart(2, "0");
+
+    return `${hari} ${bulanNama} ${tahun} ${jam}:${menit}:${detik}`;
+  };
+  const [currentTime, setCurrentTime] = useState("");
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(formatTanggal());
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const updateTime = () => {
+    return [{ label: "Rekap PerHari Tanggal: " + currentTime }];
+  };
   const themeClass = `${gridTheme}${isDarkMode ? "-dark" : ""}`;
-  const items = [{ label: "Rekap PerHari" }];
   const home = { icon: "pi pi-home", url: "" };
   return (
     <Layout>
@@ -197,7 +233,7 @@ const RekapDataPerhari = ({
             Create Data Muzzakki
           </Link>
         </div>
-        <BreadCrumb model={items} className="my-3" home={home} />
+        <BreadCrumb model={updateTime()} className="my-3" home={home} />
         <div className="bg-white dark:bg-gray-800 overflow-x-auto shadow-sm sm:rounded-lg">
           <div className=" text-gray-900 dark:text-gray-100">
             <div className="mb-5 ">

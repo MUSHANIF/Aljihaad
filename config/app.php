@@ -149,7 +149,7 @@ return [
     'providers' => ServiceProvider::defaultProviders()->merge([
 
         RealRashid\SweetAlert\SweetAlertServiceProvider::class,
-
+        App\Providers\RepositoryServiceProvider::class,
     ])->toArray(),
 
 

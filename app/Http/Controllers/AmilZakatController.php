@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Storeamil_zakatRequest;
 use App\Http\Requests\Updateamil_zakatRequest;
 use App\Models\amil_zakat;
+use App\Models\jenis_zakat;
+use App\Models\Pengurus;
+use App\Models\per_rt;
 
 class AmilZakatController extends Controller
 {
@@ -13,7 +16,25 @@ class AmilZakatController extends Controller
      */
     public function index()
     {
-        //
+
+        $query = Pengurus::with(['getDataAmilZakat'])->where('status', 'amil');
+        $sortField = request("sort_field", 'created_at');
+        $sortDirection = request("sort_direction", "desc");
+        if (request("name")) {
+            $query->where("name", "like", "%" . request("name") . "%");
+        }
+
+        $Pengurus = $query->orderBy($sortField, $sortDirection)
+            ->paginate(10)
+            ->onEachSide(1);
+
+        return inertia("Zakat/AbsensiZakat", [
+            "pengurus" => $Pengurus,
+            'queryParams' => request()->query() ?: null,
+            'dataRT' => per_rt::all(),
+            'dataJenisZakat' => jenis_zakat::all(),
+            'success' => session('success'),
+        ]);
     }
 
     /**

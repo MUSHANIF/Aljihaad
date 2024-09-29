@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('status_zakat')->nullable();
             $table->integer('jumlah_uang')->nullable();
             $table->string('jumlah_beras')->nullable();
+            $table->string('metode_pembayaran')->nullable();
             $table->string('waktu_berzakat')->nullable();
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
