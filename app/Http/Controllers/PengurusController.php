@@ -55,14 +55,14 @@ class PengurusController extends Controller
         $image = $data['image'] ?? null;
         $data['created_by'] = Auth::id();
         $data['updated_by'] = Auth::id();
-        
+
         if ($image) {
             $path = $image->store('Pengurus/' . Str::random(), 'public');
             $data['image_path'] = $path;
         }
-        $dataPengurus = Pengurus::create($data);        
+        $dataPengurus = Pengurus::create($data);
         return to_route('Pengurus.index')
-            ->with('success', 'Project was created');
+            ->with('success', 'Pengurus was created');
     }
 
     /**
@@ -110,14 +110,9 @@ class PengurusController extends Controller
         return to_route('Pengurus.index')
             ->with('success', "Pengurus \"$Pengurus->name\" was updated");
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($Pengurus)
     {
         $searchData = Pengurus::find($Pengurus);
-
         $name = $searchData->name;
         $searchData->delete();
         if ($searchData->image_path) {

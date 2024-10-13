@@ -9,7 +9,6 @@ const AppMenu = () => {
 
   const model = [
     {
-      label: "Home",
       items: [
         {
           label: "Dashboard",

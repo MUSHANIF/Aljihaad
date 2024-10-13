@@ -32,7 +32,7 @@ export default function Footer() {
           </div>
         </div> */}
         <div className="row g-4 footer-inner">
-          <div className="col-md-6 col-lg-6 col-xl-3">
+          <div className="col-md-6 col-lg-6 col-xl-4">
             <div className="footer-item ">
               <h4 className="text-light mb-4">
                 Al<span className="text-primary">Jihaad</span>
@@ -43,11 +43,11 @@ export default function Footer() {
                 nyaman dan tentram.
               </p>
               <a href="" className="btn btn-primary py-2 px-4">
-                Donate Now
+                Bayar Zakat Sekarang
               </a>
             </div>
           </div>
-          <div className="col-md-6 col-lg-6 col-xl-3">
+          <div className="col-md-6 col-lg-6 col-xl-4">
             <div className="footer-item mt-5">
               <h4 className="text-light mb-4">Our Mosque</h4>
               <div className="flex flex-col">
@@ -72,7 +72,7 @@ export default function Footer() {
               </div>
             </div>
           </div>
-          <div className="col-md-6 col-lg-6 col-xl-3">
+          {/* <div className="col-md-6 col-lg-6 col-xl-3">
             <div className="footer-item mt-5">
               <h4 className="text-light mb-4">Explore Link</h4>
               <div className="flex flex-col items-start">
@@ -102,8 +102,8 @@ export default function Footer() {
                 </a>
               </div>
             </div>
-          </div>
-          <div className="col-md-6 col-lg-6 col-xl-3">
+          </div> */}
+          <div className="col-md-6 col-lg-6 col-xl-4">
             <div className="footer-item mt-5">
               <h4 className="text-light mb-4">Latest Post</h4>
               <div className="flex border-b border-secondary py-4">
@@ -128,10 +128,10 @@ export default function Footer() {
         <div className="border-top border-secondary pb-4"></div>
         <div className="row">
           <div className="col-md-6 text-center text-md-start mb-3 mb-md-0">
-            &copy;All Right Reserved.
+            2024&copy;All Right Reserved.
           </div>
           <div className="col-md-6 text-center text-md-end">
-            Designed By{" "}
+            Create By{" "}
             <a className="border-b" href="https://htmlcodex.com">
               MuSolution
             </a>

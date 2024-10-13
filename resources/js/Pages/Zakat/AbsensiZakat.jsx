@@ -499,7 +499,7 @@ const ModalAbsen = ({ data, auth }) => {
   return (
     <div className="">
       <Button
-        label="Show"
+        label="Isi Absen"
         icon="pi pi-external-link"
         onClick={() => setVisible(true)}
       />
@@ -721,7 +721,7 @@ const NamaAmil = ({ data }) => {
 
   return (
     <div className="my-auto flex">
-      <Chip label={data.name} />
+      <Chip label={data.name} image={`/storage/${data.image_path}`} />
     </div>
   );
 };

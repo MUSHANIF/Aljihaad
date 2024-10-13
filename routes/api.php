@@ -15,4 +15,4 @@ Route::get('/getTypeOfZakat', [ZakatControllerApi::class, 'jenisZakat'])->name('
 Route::get('/getRekapGabungan', [ZakatControllerApi::class, 'RekapGabungan'])->name('getRekapGabungan');
 Route::get('/RekapDataPerhari', [ZakatControllerApi::class, 'RekapDataPerhari'])->name('RekapDataPerhari');
 Route::post('/amilZakatAbsen', [ZakatControllerApi::class, 'amilZakatAbsen'])->name('amilZakatAbsen');
-
+Route::get('/PengurusZakat', [ZakatControllerApi::class, 'PengurusZakat'])->name('PengurusZakat');

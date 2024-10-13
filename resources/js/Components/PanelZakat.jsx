@@ -32,11 +32,7 @@ export default function PanelZakat() {
     return (
       <div className={className}>
         <div className="flex align-items-center gap-2">
-          <Avatar
-            image="https://primefaces.org/cdn/primereact/images/avatar/amyelsner.png"
-            size="large"
-            shape="circle"
-          />
+          <Avatar image="/assets/img/team-1.jpg" size="large" shape="circle" />
           <span className="font-bold">Pak Harmen</span>
         </div>
         <div>
@@ -52,7 +48,7 @@ export default function PanelZakat() {
 
     return (
       <div className={className}>
-        <span className="p-text-secondary">Updated 2 hours ago</span>
+        <span className="p-text-secondary">Updated 30 days ago</span>
       </div>
     );
   };

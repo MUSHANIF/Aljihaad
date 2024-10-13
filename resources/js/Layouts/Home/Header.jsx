@@ -159,7 +159,7 @@ export default function Header({
                 href="#"
                 className="bg-primary rounded-lg text-white py-2 px-4 "
               >
-                Donate
+                Bayar Zakat
               </a>
             </div>
             <div

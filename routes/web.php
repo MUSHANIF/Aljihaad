@@ -36,8 +36,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('zakat.RekapGabungan');
         Route::get('/RekapMustahik', [MustahikController::class, 'index'])
             ->name('zakat.RekapMustahik');
+        Route::get('/RekapAtk', [ZakatController::class, 'RekapAtk'])
+            ->name('zakat.RekapAtk');
         Route::get('/CreateMustahik', [MustahikController::class, 'CreateMustahik'])
             ->name('zakat.CreateMustahik');
+        Route::get('/CreateAtk', [ZakatController::class, 'CreateAtk'])
+            ->name('zakat.CreateAtk');
+        Route::post('/PostDataAtk', [ZakatController::class, 'PostDataAtk'])
+            ->name('zakat.PostDataAtk');
         Route::post('/PostMustahik', [MustahikController::class, 'PostMustahik'])
             ->name('zakat.PostMustahik');
         Route::get('/RekapDataPerhari', [ZakatController::class, 'zakatPerhari'])
@@ -52,6 +58,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('zakat.PutZakat');
         Route::delete('/DeleteZakat/{id}', [ZakatController::class, 'DeleteZakat'])
             ->name('zakat.DeleteZakat');
+        Route::delete('/DeleteAtk/{id}', [ZakatController::class, 'DeleteAtk'])
+            ->name('zakat.DeleteAtk');
     });
     Route::prefix('PengurusZakat')->group(function () {
         Route::get('/AmilZakat', [AmilZakatController::class, 'index'])

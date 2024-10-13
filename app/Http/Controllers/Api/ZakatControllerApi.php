@@ -35,6 +35,15 @@ class ZakatControllerApi extends Controller
             'data' => $jenisZakat
         ]);
     }
+    public function PengurusZakat()
+    {
+
+        $jenisZakat = Pengurus::all();
+        return response()->json([
+            'status' => 'success',
+            'data' => $jenisZakat
+        ]);
+    }
     public function RekapGabungan()
     {
         $penerimaan_zakat = penerimaan_zakat::all();
