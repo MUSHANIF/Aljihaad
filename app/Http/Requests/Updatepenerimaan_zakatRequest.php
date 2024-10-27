@@ -20,12 +20,13 @@ class Updatepenerimaan_zakatRequest extends FormRequest
     {
         return [
             "nama_muzakki" => ['required', 'max:255'],
-            'tanggal' => ['required', 'date'],
+            'tanggal' => ['date'],
             "jiwa" => ['required'],
             "jumlah_uang" => ['nullable'],
             "jumlah_beras" => ['nullable'],
             "status_zakat" => ['required', 'string'],
             "waktu_berzakat" => ['required'],
+            "metode_pembayaran" => ['required'],
             "updated_by" => ['required'],
             "id_jenis_zakat" => ['required'],
             "id_rt" => ['required'],

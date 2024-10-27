@@ -13,19 +13,19 @@ import Layout from "@/Layouts/layout/layout.jsx";
 export default function Edit({ auth, penerimaan_zakat }) {
   const { data, setData, post, errors, reset } = useForm({
     nama_muzakki: penerimaan_zakat.nama_muzakki,
-    tanggal: penerimaan_zakat.tanggal,
+    // tanggal: penerimaan_zakat.tanggal,
     jiwa: penerimaan_zakat.jiwa,
     jumlah_uang: penerimaan_zakat.jumlah_uang,
     jumlah_beras: penerimaan_zakat.jumlah_beras,
     status_zakat: penerimaan_zakat.status_zakat,
     waktu_berzakat: penerimaan_zakat.waktu_berzakat,
+    metode_pembayaran: penerimaan_zakat.metode_pembayaran,
     id_jenis_zakat: penerimaan_zakat.id_jenis_zakat,
     id_rt: penerimaan_zakat.id_rt,
     updated_by: penerimaan_zakat.updated_by,
     _method: "PUT",
   });
   const onSubmit = (e) => {
-    console.log(data);
     e.preventDefault();
     post(route("zakat.PutZakat", penerimaan_zakat.id));
   };
@@ -35,11 +35,11 @@ export default function Edit({ auth, penerimaan_zakat }) {
   const [getRT, setRt] = useState("");
   const [getIdJenisZakat, setIdJenisZakat] = useState("");
 
-  useEffect(() => {
-    const today = new Date();
-    const formattedDate = today.toISOString().split("T")[0];
-    setData("tanggal", formattedDate);
-  }, []);
+  // useEffect(() => {
+  //   const today = new Date();
+  //   const formattedDate = today.toISOString().split("T")[0];
+  //   setData("tanggal", formattedDate);
+  // }, []);
   useEffect(() => {
     axios
       .get("/api/getRtApi")
@@ -75,6 +75,7 @@ export default function Edit({ auth, penerimaan_zakat }) {
 
   const statusZakat = ["Uang", "Beras", "Beras + Uang"];
   const waktuZakat = ["Sore", "Malam"];
+  const metode_pembayaran = ["Tunai", "Transfer"];
 
   const setSelectedStatusZakat = (value) => {
     setData("status_zakat", value);
@@ -89,6 +90,9 @@ export default function Edit({ auth, penerimaan_zakat }) {
   };
   const setSelectedWaktuZakat = (value) => {
     setData("waktu_berzakat", value);
+  };
+  const setSelectedMetodePembayaranZakat = (value) => {
+    setData("metode_pembayaran", value);
   };
   const items = [{ label: "Zakat" }, { label: "Edit Data Zakat" }];
   const home = { icon: "pi pi-home", url: "" };
@@ -122,7 +126,7 @@ export default function Edit({ auth, penerimaan_zakat }) {
                 )}
               </div>
 
-              <div className="flex flex-column gap-2 my-4 ">
+              {/* <div className="flex flex-column gap-2 my-4 " >
                 <label htmlFor="username">Tanggal</label>
                 <InputText
                   id="username"
@@ -137,7 +141,7 @@ export default function Edit({ auth, penerimaan_zakat }) {
                 {errors.tanggal && (
                   <small className="p-error">{errors.tanggal}</small>
                 )}
-              </div>
+              </div> */}
               <div className="flex flex-column gap-2 my-4 ">
                 <label htmlFor="username">Jumlah jiwa</label>
 
@@ -226,6 +230,19 @@ export default function Edit({ auth, penerimaan_zakat }) {
                 />
                 {errors.waktu_berzakat && (
                   <small className="p-error">{errors.waktu_berzakat}</small>
+                )}
+              </div>
+              <div className="flex flex-column gap-2 my-4 ">
+                <label htmlFor="username">Metode Pembayaran </label>
+                <Dropdown
+                  value={data.metode_pembayaran}
+                  onChange={(e) => setSelectedMetodePembayaranZakat(e.value)}
+                  options={metode_pembayaran}
+                  placeholder="Select a Metode Pembayaran"
+                  className="w-full "
+                />
+                {errors.metode_pembayaran && (
+                  <small className="p-error">{errors.metode_pembayaran}</small>
                 )}
               </div>
               <div className="flex flex-column gap-2 my-4 ">

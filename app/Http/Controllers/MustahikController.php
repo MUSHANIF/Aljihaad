@@ -47,13 +47,13 @@ class MustahikController extends Controller
     {
         try {
             $data = $request->validated();
-            foreach ($data['muzakki'] as $muzakki) {
+            foreach ($data['Mustahik'] as $mustahik) {
                 Mustahik::create([
-                    'nama_kepala_keluarga' => $muzakki['nama_muzakki'],
-                    'jumlah_anggota_keluarga' => $muzakki['jiwa'],
+                    'nama_kepala_keluarga' => $mustahik['nama_Mustahik'],
+                    'jumlah_anggota_keluarga' => $mustahik['jiwa'],
                     'tahun_mustahik' => date('Y'),
                     'id_rt' => $data['id_rt'],
-                    'nik' => $muzakki['nik'],
+                    'nik' => $mustahik['nik'],
                     'created_by' => $data['created_by'],
                     'updated_by' => $data['updated_by'],
                     'tanggal' => now()->format('Y-m-d')

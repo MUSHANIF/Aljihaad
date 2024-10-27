@@ -20,11 +20,25 @@ class ZakatController extends Controller
 {
     public function index()
     {
+        $TotalHariIni = penerimaan_zakat::whereDate('tanggal', now()->format('Y-m-d'))->count();
+        $TotalKemarin = penerimaan_zakat::whereDate('tanggal', now()->subDay()->format('Y-m-d'))->count();
+
+        $TotalKemarinUangZakat = penerimaan_zakat::whereDate('tanggal', now()->subDay()->format('Y-m-d'))->sum('jumlah_uang');
+        $TotalUangZakatToday = penerimaan_zakat::whereDate('tanggal', now()->format('Y-m-d'))->sum('jumlah_uang');
+
+        $PersentaseKenaikan = $TotalKemarin > 0 ? (($TotalHariIni - $TotalKemarin) / $TotalKemarin) * 100 : ($TotalHariIni > 0 ? 100 : 0);
+
+        $PersentaseKenaikanUang = $TotalKemarinUangZakat > 0 ? (($TotalUangZakatToday - $TotalKemarinUangZakat) / $TotalKemarinUangZakat) * 100 : ($TotalUangZakatToday > 0 ? 100 : 0);
+
         return inertia("Zakat/RekapGabungan", [
             'queryParams' => request()->query() ?: null,
             'dataRT' => per_rt::all(),
             'dataJenisZakat' => jenis_zakat::all(),
             'success' => session('success'),
+            'TotalHariIni' => $TotalHariIni,
+            'PersentaseKenaikan' => $PersentaseKenaikan,
+            'TotalUangZakatToday' => number_format($TotalUangZakatToday, 2, ',', '.'),
+            'PersentaseKenaikanUang' => $PersentaseKenaikanUang,
         ]);
     }
     public function RekapAtk()
@@ -77,12 +91,27 @@ class ZakatController extends Controller
             ->paginate(10)
             ->onEachSide(1);
 
+        $TotalHariIniRt3 = penerimaan_zakat::where('id_rt', 3)->whereDate('tanggal', now()->format('Y-m-d'));
+        $TotalHariIniRt4 = penerimaan_zakat::where('id_rt', 5)->whereDate('tanggal', now()->format('Y-m-d'));
+        $TotalHariIniRt4Atas = penerimaan_zakat::where('id_rt', 4)->whereDate('tanggal', now()->format('Y-m-d'));
+        $TotalHariIniRt5 = penerimaan_zakat::where('id_rt', 6)->whereDate('tanggal', now()->format('Y-m-d'));
+
         return inertia("Zakat/RekapDataPerhari", [
             "pengurus" => PengurusResource::collection($Pengurus),
             'queryParams' => request()->query() ?: null,
             'dataRT' => per_rt::all(),
             'dataJenisZakat' => jenis_zakat::all(),
             'success' => session('success'),
+            'TotalHariIniRt3' => number_format($TotalHariIniRt3->sum('jumlah_uang'), 2, ',', '.'),
+            'TotalHariIniRt4' => number_format($TotalHariIniRt4->sum('jumlah_uang'), 2, ',', '.'),
+            'TotalHariIniRt4Atas' => number_format($TotalHariIniRt4Atas->sum('jumlah_uang'), 2, ',', '.'),
+            'TotalHariIniRt5' => number_format($TotalHariIniRt5->sum('jumlah_uang'), 2, ',', '.'),
+
+            'CountHariIniRt3' => $TotalHariIniRt3->count(),
+            'CountHariIniRt4' => $TotalHariIniRt4->count(),
+            'CountHariIniRt4Atas' => $TotalHariIniRt4Atas->count(),
+            'CountHariIniRt5' => $TotalHariIniRt5->count(),
+
         ]);
     }
 
@@ -126,8 +155,23 @@ class ZakatController extends Controller
     {
         try {
             $data = $request->validated();
-            $penerimaan_zakat = penerimaan_zakat::create($data);
-            return redirect()->route('zakat.RekapGabungan')->with('success', 'Muzaaki atas nama ' . $penerimaan_zakat->nama_muzakki . ' berhasil ditambahkan');
+            foreach ($data['dataJenisZakat'] as $key) {
+                penerimaan_zakat::create([
+                    'nama_muzakki' => $data['nama_muzakki'],
+                    'id_rt' => $data['id_rt'],
+                    'tanggal' => $data['tanggal'],
+                    'jiwa' => $data['jiwa'],
+                    'id_jenis_zakat' => $key['id_jenis_zakat'],
+                    'status_zakat' => $key['status_zakat'],
+                    'jumlah_uang' => $key['jumlah_uang'],
+                    'jumlah_beras' => $key['jumlah_beras'],
+                    'waktu_berzakat' => $key['waktu_berzakat'],
+                    'metode_pembayaran' => $key['metode_pembayaran'],
+                    'created_by' => $data['created_by'],
+                    'updated_by' => $data['updated_by']
+                ]);
+            }
+            return redirect()->route('zakat.RekapGabungan')->with('success', 'Muzaaki atas nama ' . $data['nama_muzakki'] . ' berhasil ditambahkan');
         } catch (\Exception $e) {
             dd($e->getMessage());
         }

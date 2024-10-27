@@ -20,6 +20,7 @@ import Alert from "@/Alert";
 import Swal from "sweetalert2";
 import { BreadCrumb } from "primereact/breadcrumb";
 import Layout from "@/Layouts/layout/layout.jsx";
+import DashboardInfoCard from "@/Components/DashboardInfoCard.jsx";
 import AppZakat from "@/Layouts/layout/AppZakat.jsx";
 import { Head, Link, router } from "@inertiajs/react";
 import React, {
@@ -63,6 +64,10 @@ const Index = ({
   success,
   dataJenisZakat,
   dataRT,
+  TotalHariIni,
+  PersentaseKenaikan,
+  TotalUangZakatToday,
+  PersentaseKenaikanUang,
 }) => {
   const gridRef = useRef(null);
 
@@ -119,15 +124,26 @@ const Index = ({
         headerName: "Jenis Zakat",
         valueFormatter: (params) => {
           const item = dataJenisZakat.find((item) => item.id == params.value);
-          return item ? item.nama_zakat : "din";
+          return item ? item.nama_zakat : "";
         },
         minWidth: 200,
         aggFunc: "sum",
+        filterParams: {
+          valueFormatter: (params) => {
+            const item = dataJenisZakat.find((item) => item.id == params.value);
+            return item ? item.nama_zakat : "";
+          },
+        },
       },
-
       {
         field: "status_zakat",
         headerName: "Status Zakat",
+        cellClass: "ag-center-cell",
+        minWidth: 150,
+      },
+      {
+        field: "metode_pembayaran",
+        headerName: "Metode Pembayaran",
         cellClass: "ag-center-cell",
         minWidth: 150,
       },
@@ -182,19 +198,40 @@ const Index = ({
   return (
     <Layout>
       <Head title="Perhitungan Zakat" />
+
       {success && (
         <div className="">
           <Alert status={true} pesan={success} />
         </div>
       )}
       <AppZakat>
-        <div className="flex justify-end">
+        <div className="flex mb-5 justify-end">
           <Link
             href={route("zakat.CreateZakat")}
             className="bg-primary p-2 rounded-lg hover:opacity-95"
           >
             Create Data Muzzakki
           </Link>
+        </div>
+        <div className="grid">
+          <DashboardInfoCard
+            title="Total Zakat Hari ini"
+            value={TotalHariIni}
+            icon="sort-numeric-up"
+            col={6}
+            iconColor="blue"
+            descriptionValue={PersentaseKenaikan + "%"}
+            descriptionText="since yesterday"
+          ></DashboardInfoCard>
+          <DashboardInfoCard
+            title="Total Penerimaan Zakat Hari ini (All Zakat)"
+            value={"Rp" + TotalUangZakatToday}
+            icon="money-bill"
+            col={6}
+            iconColor="orange"
+            descriptionValue={PersentaseKenaikanUang + "%"}
+            descriptionText="since yesterday from all zakat"
+          ></DashboardInfoCard>
         </div>
         <BreadCrumb model={items} className="my-3" home={home} />
         <div className="bg-white dark:bg-gray-800 overflow-x-auto shadow-sm sm:rounded-lg">

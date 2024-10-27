@@ -19,9 +19,9 @@ class StoreMustahikRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'muzakki.*.nama_muzakki' => ['required', 'string', 'max:255'],
-            'muzakki.*.jiwa' => ['required', 'integer'],
-            'muzakki.*.nik' => ['nullable', 'integer'],
+            'Mustahik.*.nama_Mustahik' => ['required', 'string', 'max:255'],
+            'Mustahik.*.jiwa' => ['required', 'integer'],
+            'Mustahik.*.nik' => ['nullable', 'integer'],
             'tanggal' => ['required', 'date'],
             "id_rt" => ['required'],
             "created_by" => ['nullable'],

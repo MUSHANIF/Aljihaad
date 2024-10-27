@@ -48,26 +48,29 @@ export default function Create({ auth }) {
     setData("id_jenis_zakat", value.id);
     setIdJenisZakat(value);
   };
-  const [muzakkiData, setMuzakkiData] = useState([
-    { nama_muzakki: "", jiwa: "", nik: "" },
+  const [MustahikData, setMustahikData] = useState([
+    { nama_Mustahik: "", jiwa: "", nik: "" },
   ]);
 
   const handleAddEntry = () => {
-    setMuzakkiData([...muzakkiData, { nama_muzakki: "", jiwa: "", nik: "" }]);
-    setData("muzakki", muzakkiData);
+    setMustahikData([
+      ...MustahikData,
+      { nama_Mustahik: "", jiwa: "", nik: "" },
+    ]);
+    setData("Mustahik", MustahikData);
   };
 
   const handleRemoveEntry = (index) => {
-    const newData = muzakkiData.filter((_, i) => i !== index);
-    setMuzakkiData(newData);
-    setData("muzakki", newData);
+    const newData = MustahikData.filter((_, i) => i !== index);
+    setMustahikData(newData);
+    setData("Mustahik", newData);
   };
 
   const handleChange = (index, field, value) => {
-    const newData = [...muzakkiData];
+    const newData = [...MustahikData];
     newData[index][field] = value;
-    setMuzakkiData(newData);
-    setData("muzakki", muzakkiData);
+    setMustahikData(newData);
+    setData("Mustahik", MustahikData);
   };
 
   const setSelectedRt = (value) => {
@@ -79,7 +82,7 @@ export default function Create({ auth }) {
   };
   const { data, setData, post, errors, reset } = useForm({
     tanggal: "",
-    muzakki: muzakkiData,
+    Mustahik: MustahikData,
     id_rt: "",
     updated_by: auth.user.id,
     created_by: auth.user.id,
@@ -135,36 +138,38 @@ export default function Create({ auth }) {
                 )}
               </div>
               <div>
-                {muzakkiData.map((entry, index) => (
+                {MustahikData.map((entry, index) => (
                   <div
                     key={index}
                     className="border border-gray-400 border-separate p-5 mb-4"
                   >
                     <div className="mb-5">
                       <span className="font-semibold">
-                        Data Muzakki ke-{index + 1}
+                        Data Mustahik ke-{index + 1}
                       </span>
                     </div>
                     <div className="flex flex-column gap-2">
                       <label htmlFor={`username-${index}`}>
-                        Nama perwakilan Keluarga Muzakki
+                        Nama perwakilan Keluarga Mustahik
                       </label>
                       <InputText
-                        value={entry.nama_muzakki}
+                        value={entry.nama_Mustahik}
                         aria-describedby={`username-help-${index}`}
-                        placeholder="Masukan Nama Muzakki"
+                        placeholder="Masukan Nama Mustahik"
                         onChange={(e) =>
-                          handleChange(index, "nama_muzakki", e.target.value)
+                          handleChange(index, "nama_Mustahik", e.target.value)
                         }
                       />
                       <small
                         id={`username-help-${index}`}
                         className="justify-end ml-auto"
                       >
-                        Mohon perhatikan nama Muzakki yang akan digunakan
+                        Mohon perhatikan nama Mustahik yang akan digunakan
                       </small>
-                      {errors.nama_muzakki && (
-                        <small className="p-error">{errors.nama_muzakki}</small>
+                      {errors.nama_Mustahik && (
+                        <small className="p-error">
+                          {errors.nama_Mustahik}
+                        </small>
                       )}
                     </div>
                     <div className="flex flex-column gap-2">
@@ -207,7 +212,7 @@ export default function Create({ auth }) {
                       )}
                     </div>
 
-                    {muzakkiData.length > 1 && (
+                    {MustahikData.length > 1 && (
                       <button
                         type="button"
                         className="bg-red-500 rounded-lg py-1 px-2 text-white  shadow hover:bg-red-600"

@@ -18,6 +18,7 @@ import { SparklinesModule } from "@ag-grid-enterprise/sparklines";
 import { StatusBarModule } from "@ag-grid-enterprise/status-bar";
 import Alert from "@/Alert";
 import Swal from "sweetalert2";
+import DashboardInfoCard from "@/Components/DashboardInfoCard.jsx";
 import { BreadCrumb } from "primereact/breadcrumb";
 import Layout from "@/Layouts/layout/layout.jsx";
 import AppZakat from "@/Layouts/layout/AppZakat.jsx";
@@ -63,6 +64,14 @@ const RekapDataPerhari = ({
   success,
   dataJenisZakat,
   dataRT,
+  TotalHariIniRt3,
+  TotalHariIniRt4,
+  TotalHariIniRt4Atas,
+  TotalHariIniRt5,
+  CountHariIniRt3,
+  CountHariIniRt4,
+  CountHariIniRt4Atas,
+  CountHariIniRt5,
 }) => {
   const gridRef = useRef(null);
 
@@ -219,19 +228,56 @@ const RekapDataPerhari = ({
   return (
     <Layout>
       <Head title="Perhitungan Zakat" />
+
       {success && (
         <div className="">
           <Alert status={true} pesan={success} />
         </div>
       )}
       <AppZakat>
-        <div className="flex justify-end">
+        <div className="flex mb-5 justify-end">
           <Link
             href={route("zakat.CreateZakat")}
             className="bg-primary p-2 rounded-lg hover:opacity-95"
           >
             Create Data Muzzakki
           </Link>
+        </div>
+        <div className="grid">
+          <DashboardInfoCard
+            title="Total Zakat RT 3 Hari ini"
+            value={"Rp " + TotalHariIniRt3}
+            icon="money-bill"
+            col={3}
+            iconColor="orange"
+            descriptionValue={"Jumlah Data Hari ini:  " + CountHariIniRt3}
+            descriptionText=""
+          ></DashboardInfoCard>
+          <DashboardInfoCard
+            title="Total Zakat RT 4 Hari ini"
+            value={"Rp " + TotalHariIniRt4}
+            icon="money-bill"
+            col={3}
+            iconColor="orange"
+            descriptionValue={"Jumlah Data Hari ini: " + CountHariIniRt4}
+            descriptionText=""
+          ></DashboardInfoCard>
+          <DashboardInfoCard
+            title="Total Zakat RT 4 ATAS Hari ini"
+            value={"Rp " + TotalHariIniRt4Atas}
+            icon="money-bill"
+            col={3}
+            iconColor="orange"
+            descriptionValue={"Jumlah Data Hari ini: " + CountHariIniRt4Atas}
+          ></DashboardInfoCard>
+          <DashboardInfoCard
+            title="Total Zakat RT 5 Hari ini"
+            value={"Rp " + TotalHariIniRt5}
+            icon="money-bill"
+            col={3}
+            iconColor="orange"
+            descriptionValue={"Jumlah Data Hari ini: " + CountHariIniRt5}
+          ></DashboardInfoCard>
         </div>
         <BreadCrumb model={updateTime()} className="my-3" home={home} />
         <div className="bg-white dark:bg-gray-800 overflow-x-auto shadow-sm sm:rounded-lg">
