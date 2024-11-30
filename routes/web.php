@@ -65,6 +65,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/AmilZakat', [AmilZakatController::class, 'index'])
             ->name('zakat.AmilZakat');
     });
+
+    Route::get('/invoice/{id}/download', [ZakatController::class, 'downloadPDF']);
+
     // Route::resource('zakat', ZakatController::class);    
     Route::resource('Pengurus', PengurusController::class);
     Route::resource('user', UserController::class);

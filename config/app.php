@@ -150,6 +150,8 @@ return [
 
         RealRashid\SweetAlert\SweetAlertServiceProvider::class,
         App\Providers\RepositoryServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
+
     ])->toArray(),
 
 

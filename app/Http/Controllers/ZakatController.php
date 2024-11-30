@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use App\Models\penerimaan_zakat;
 use App\Models\Pengurus;
 use App\Models\per_rt;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -114,7 +115,28 @@ class ZakatController extends Controller
 
         ]);
     }
+    public function downloadPDF($id)
+    {
 
+        $invoice = [
+            'no' => '0001/INV/2024/1445',
+            'tanggal' => now()->format('Y-m-d'),
+            'nama' => 'John Doe',
+            'alamat' => 'Pondok Cipta Blok A No.5',
+            'uang' => 50000,
+            'beras' => 2,
+            'jenis' => 'Zakat Fitrah',
+            'jiwa' => 4,
+            'namaPetugas' => 'mbak aca',
+        ];
+
+        // Render view ke PDF dengan ukuran height yang lebih kecil
+        $pdf = Pdf::loadView('invoicePageZakat', compact('invoice'))->setPaper('a4', 'portrait')->setOption('height', '1in');
+
+        // Tampilkan PDF di browser
+        return $pdf->stream('invoice_' . $id . '.pdf');
+        // return $pdf->download('invoice_' . $id . '.pdf');
+    }
     public function CreateZakat()
     {
         return inertia("Zakat/Create");
