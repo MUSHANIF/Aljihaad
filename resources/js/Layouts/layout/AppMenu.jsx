@@ -60,6 +60,13 @@ const AppMenu = () => {
           to: route("zakat.RekapMustahik"),
           active: "/zakat/RekapMustahik",
         },
+        {
+          label: "Pembagian Zakat",
+          icon: "pi pi-users",
+          to: route("zakat.PembagianZakat"),
+          active: "/zakat/PembagianZakat",
+          status: "NEW",
+        },
       ],
     },
   ];

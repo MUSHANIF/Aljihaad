@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('penerimaan_zakats', function (Blueprint $table) {
             $table->id();
+            $table->string('no_invoice')->nullable();
             $table->string('nama_muzakki')->nullable();
             $table->date('tanggal')->nullable();
             $table->integer('jiwa')->nullable();

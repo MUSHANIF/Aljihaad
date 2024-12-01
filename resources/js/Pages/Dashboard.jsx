@@ -267,7 +267,7 @@ const Dashboard = () => {
         <div className="col-12 xl:col-6">
           <div className="card">
             <div className="flex justify-content-between align-items-center mb-5">
-              <h5>Best Selling Products</h5>
+              <h5>Amil Zakat paling Rajin</h5>
               <div>
                 <Button
                   type="button"

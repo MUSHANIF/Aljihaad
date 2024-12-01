@@ -18,9 +18,9 @@ import { SparklinesModule } from "@ag-grid-enterprise/sparklines";
 import { StatusBarModule } from "@ag-grid-enterprise/status-bar";
 import Alert from "@/Alert";
 import Swal from "sweetalert2";
+import DashboardInfoCard from "@/Components/DashboardInfoCard.jsx";
 import { BreadCrumb } from "primereact/breadcrumb";
 import Layout from "@/Layouts/layout/layout.jsx";
-import DashboardInfoCard from "@/Components/DashboardInfoCard.jsx";
 import AppZakat from "@/Layouts/layout/AppZakat.jsx";
 import { Head, Link, router } from "@inertiajs/react";
 import React, {
@@ -58,25 +58,30 @@ const numberFormatter = ({ value }) => {
   return value == null ? "" : formatter.format(value);
 };
 
-const Index = ({
+const RekapDataPerhari = ({
   gridTheme = "ag-theme-quartz",
   isDarkMode = false,
   success,
   dataJenisZakat,
   dataRT,
-  TotalHariIni,
-  PersentaseKenaikan,
-  TotalUangZakatToday,
-  PersentaseKenaikanUang,
+  TotalHariIniRt3,
+  TotalHariIniRt4,
+  TotalHariIniRt4Atas,
+  TotalHariIniRt5,
+  CountHariIniRt3,
+  CountHariIniRt4,
+  CountHariIniRt4Atas,
+  CountHariIniRt5,
 }) => {
   const gridRef = useRef(null);
 
-  const [getRekapGabungan, setRekapGabungan] = useState("");
+  const [getRekapPerHari, setRekapPerHari] = useState("");
   useEffect(() => {
     axios
-      .get("/api/getRekapGabungan")
+      .get("/api/RekapDataPerhari")
       .then((response) => {
-        setRekapGabungan(response.data.data);
+        console.log(response.data);
+        setRekapPerHari(response.data.data);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -85,11 +90,6 @@ const Index = ({
 
   const colDefs = useMemo(
     () => [
-      {
-        field: "invoice",
-        cellRenderer: DownloadData,
-        minWidth: 200,
-      },
       {
         field: "nama_muzakki",
         headerName: "Nama Muzakki",
@@ -129,26 +129,15 @@ const Index = ({
         headerName: "Jenis Zakat",
         valueFormatter: (params) => {
           const item = dataJenisZakat.find((item) => item.id == params.value);
-          return item ? item.nama_zakat : "";
+          return item ? item.nama_zakat : "din";
         },
         minWidth: 200,
         aggFunc: "sum",
-        filterParams: {
-          valueFormatter: (params) => {
-            const item = dataJenisZakat.find((item) => item.id == params.value);
-            return item ? item.nama_zakat : "";
-          },
-        },
       },
+
       {
         field: "status_zakat",
         headerName: "Status Zakat",
-        cellClass: "ag-center-cell",
-        minWidth: 150,
-      },
-      {
-        field: "metode_pembayaran",
-        headerName: "Metode Pembayaran",
         cellClass: "ag-center-cell",
         minWidth: 150,
       },
@@ -197,8 +186,44 @@ const Index = ({
     []
   );
 
+  const formatTanggal = () => {
+    const date = new Date();
+    const bulan = [
+      "Januari",
+      "Februari",
+      "Maret",
+      "April",
+      "Mei",
+      "Juni",
+      "Juli",
+      "Agustus",
+      "September",
+      "Oktober",
+      "November",
+      "Desember",
+    ];
+
+    const hari = String(date.getDate()).padStart(2, "0");
+    const bulanNama = bulan[date.getMonth()];
+    const tahun = date.getFullYear();
+    const jam = String(date.getHours()).padStart(2, "0");
+    const menit = String(date.getMinutes()).padStart(2, "0");
+    const detik = String(date.getSeconds()).padStart(2, "0");
+
+    return `${hari} ${bulanNama} ${tahun} ${jam}:${menit}:${detik}`;
+  };
+  const [currentTime, setCurrentTime] = useState("");
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(formatTanggal());
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const updateTime = () => {
+    return [{ label: "Rekap PerHari Tanggal: " + currentTime }];
+  };
   const themeClass = `${gridTheme}${isDarkMode ? "-dark" : ""}`;
-  const items = [{ label: "Rekap Gabungan" }];
   const home = { icon: "pi pi-home", url: "" };
   return (
     <Layout>
@@ -220,25 +245,41 @@ const Index = ({
         </div>
         <div className="grid">
           <DashboardInfoCard
-            title="Total Zakat Hari ini"
-            value={TotalHariIni}
-            icon="sort-numeric-up"
-            col={6}
-            iconColor="blue"
-            descriptionValue={PersentaseKenaikan + "%"}
-            descriptionText="since yesterday"
+            title="Total Zakat RT 3 Hari ini"
+            value={"Rp " + TotalHariIniRt3}
+            icon="money-bill"
+            col={3}
+            iconColor="orange"
+            descriptionValue={"Jumlah Data Hari ini:  " + CountHariIniRt3}
+            descriptionText=""
           ></DashboardInfoCard>
           <DashboardInfoCard
-            title="Total Penerimaan Zakat Hari ini (All Zakat)"
-            value={"Rp" + TotalUangZakatToday}
+            title="Total Zakat RT 4 Hari ini"
+            value={"Rp " + TotalHariIniRt4}
             icon="money-bill"
-            col={6}
+            col={3}
             iconColor="orange"
-            descriptionValue={PersentaseKenaikanUang + "%"}
-            descriptionText="since yesterday from all zakat"
+            descriptionValue={"Jumlah Data Hari ini: " + CountHariIniRt4}
+            descriptionText=""
+          ></DashboardInfoCard>
+          <DashboardInfoCard
+            title="Total Zakat RT 4 ATAS Hari ini"
+            value={"Rp " + TotalHariIniRt4Atas}
+            icon="money-bill"
+            col={3}
+            iconColor="orange"
+            descriptionValue={"Jumlah Data Hari ini: " + CountHariIniRt4Atas}
+          ></DashboardInfoCard>
+          <DashboardInfoCard
+            title="Total Zakat RT 5 Hari ini"
+            value={"Rp " + TotalHariIniRt5}
+            icon="money-bill"
+            col={3}
+            iconColor="orange"
+            descriptionValue={"Jumlah Data Hari ini: " + CountHariIniRt5}
           ></DashboardInfoCard>
         </div>
-        <BreadCrumb model={items} className="my-3" home={home} />
+        <BreadCrumb model={updateTime()} className="my-3" home={home} />
         <div className="bg-white dark:bg-gray-800 overflow-x-auto shadow-sm sm:rounded-lg">
           <div className=" text-gray-900 dark:text-gray-100">
             <div className="mb-5 ">
@@ -248,7 +289,7 @@ const Index = ({
                     <AgGridReact
                       ref={gridRef}
                       getRowId={getRowId}
-                      rowData={getRekapGabungan}
+                      rowData={getRekapPerHari}
                       columnDefs={colDefs}
                       defaultColDef={defaultColDef}
                       enableRangeSelection
@@ -267,38 +308,6 @@ const Index = ({
         </div>
       </AppZakat>
     </Layout>
-  );
-};
-const DownloadData = ({ data }) => {
-  // const handleDelete = (data) => {
-  //   // router.delete(route("zakat.DeleteZakat", data.id));
-  //   // console.log("Deleting", data.id)
-  //   Swal.fire({
-  //     title: "Apakah Anda yakin untuk menghapus data ini?",
-  //     showDenyButton: true,
-  //     confirmButtonText: "Ya",
-  //     denyButtonText: "Tidak",
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       Swal.fire("Saved!", "", "success");
-  //       console.log("Deleting", data.id);
-  //       router.delete(route("zakat.DeleteZakat", data));
-  //     } else if (result.isDenied) {
-  //       Swal.fire("Changes are not saved", "", "info");
-  //     }
-  //   });
-  // };
-
-  return (
-    <div className="flex space-x-2 my-auto mb-5">
-      <a
-        href={`/invoice/${data.id}/download`}
-        target="_blank"
-        className="bg-red-700 rounded-md text-white px-3 py-1 "
-      >
-        Download Invoice
-      </a>
-    </div>
   );
 };
 const ActionButtons = ({ data }) => {
@@ -343,4 +352,4 @@ const ActionButtons = ({ data }) => {
     </div>
   );
 };
-export default Index;
+export default RekapDataPerhari;

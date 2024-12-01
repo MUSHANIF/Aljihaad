@@ -117,20 +117,20 @@ class ZakatController extends Controller
     }
     public function downloadPDF($id)
     {
-
+        $dataZakat = penerimaan_zakat::with(['RelationRt', 'createdByUser', 'RelationJenisZakat'])->where('id', $id)->first();
         $invoice = [
-            'no' => '0001/INV/2024/1445',
-            'tanggal' => now()->format('Y-m-d'),
-            'nama' => 'John Doe',
-            'alamat' => 'Pondok Cipta Blok A No.5',
-            'uang' => 50000,
-            'beras' => 2,
-            'jenis' => 'Zakat Fitrah',
-            'jiwa' => 4,
-            'namaPetugas' => 'mbak aca',
+            'no' => $dataZakat->no_invoice,
+            'tanggal' => \Carbon\Carbon::parse($dataZakat->tanggal)->locale('id')->translatedFormat('d F Y'),
+            'nama' => $dataZakat->nama_muzakki,
+            'alamat' => 'Pondok Cipta Blok C ' . $dataZakat->RelationRt->nama_rt,
+            'uang' => number_format($dataZakat->jumlah_uang, 2, ',', '.'),
+            'beras' => $dataZakat->jumlah_beras,
+            'jenis' => $dataZakat->RelationJenisZakat->jenis_zakat,
+            'jiwa' => $dataZakat->jiwa,
+            'namaPetugas' => $dataZakat->createdByUser->name,
         ];
 
-        // Render view ke PDF dengan ukuran height yang lebih kecil
+
         $pdf = Pdf::loadView('invoicePageZakat', compact('invoice'))->setPaper('a4', 'portrait')->setOption('height', '1in');
 
         // Tampilkan PDF di browser
@@ -140,6 +140,10 @@ class ZakatController extends Controller
     public function CreateZakat()
     {
         return inertia("Zakat/Create");
+    }
+    public function PembagianZakat()
+    {
+        return inertia("Zakat/PembagianZakat");
     }
     public function EditZakat($penerimaan_zakat)
     {
@@ -178,7 +182,10 @@ class ZakatController extends Controller
         try {
             $data = $request->validated();
             foreach ($data['dataJenisZakat'] as $key) {
+                $no_invoice = str_pad(penerimaan_zakat::max('id') + 1, 4, '0', STR_PAD_LEFT) . '/INV/' . now()->format('Y') . '/' . \Carbon\Carbon::now()->format('Y') - 580;
+
                 penerimaan_zakat::create([
+                    'no_invoice' => $no_invoice,
                     'nama_muzakki' => $data['nama_muzakki'],
                     'id_rt' => $data['id_rt'],
                     'tanggal' => $data['tanggal'],

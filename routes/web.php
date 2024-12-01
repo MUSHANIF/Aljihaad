@@ -60,6 +60,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('zakat.DeleteZakat');
         Route::delete('/DeleteAtk/{id}', [ZakatController::class, 'DeleteAtk'])
             ->name('zakat.DeleteAtk');
+        Route::get('/PembagianZakat', [ZakatController::class, 'PembagianZakat'])
+            ->name('zakat.PembagianZakat');
     });
     Route::prefix('PengurusZakat')->group(function () {
         Route::get('/AmilZakat', [AmilZakatController::class, 'index'])
