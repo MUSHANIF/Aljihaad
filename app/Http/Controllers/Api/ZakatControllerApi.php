@@ -10,6 +10,7 @@ use App\Models\per_rt;
 use App\Http\Controllers\Controller;
 use App\Models\amil_zakat;
 use App\Models\jenis_zakat;
+use App\Models\pembagian_zakat;
 use App\Models\penerimaan_zakat;
 use App\Models\Pengurus;
 use Illuminate\Support\Facades\Auth;
@@ -55,6 +56,14 @@ class ZakatControllerApi extends Controller
     public function RekapDataPerhari()
     {
         $penerimaan_zakat = penerimaan_zakat::where('tanggal', now()->format('Y-m-d'))->get();
+        return response()->json([
+            'status' => 200,
+            'data' => $penerimaan_zakat
+        ]);
+    }
+    public function PembagianZakat()
+    {
+        $penerimaan_zakat = pembagian_zakat::all();
         return response()->json([
             'status' => 200,
             'data' => $penerimaan_zakat

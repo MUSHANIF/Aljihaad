@@ -32,7 +32,6 @@ import React, {
 } from "react";
 
 import styles from "./../../../css/FinanceExample.module.css";
-// import { TickerCellRenderer } from "./cell-renderers/TickerCellRenderer";
 
 ModuleRegistry.registerModules([
   ClientSideRowModelModule,
@@ -58,7 +57,7 @@ const numberFormatter = ({ value }) => {
   return value == null ? "" : formatter.format(value);
 };
 
-const RekapDataPerhari = ({
+const PembagianZakat = ({
   gridTheme = "ag-theme-quartz",
   isDarkMode = false,
   success,
@@ -78,7 +77,7 @@ const RekapDataPerhari = ({
   const [getRekapPerHari, setRekapPerHari] = useState("");
   useEffect(() => {
     axios
-      .get("/api/RekapDataPerhari")
+      .get("/api/PembagianZakat")
       .then((response) => {
         console.log(response.data);
         setRekapPerHari(response.data.data);
@@ -91,8 +90,13 @@ const RekapDataPerhari = ({
   const colDefs = useMemo(
     () => [
       {
-        field: "nama_muzakki",
-        headerName: "Nama Muzakki",
+        field: "jenis_penyaluran",
+        headerName: "Jenis Penyaluran",
+        minWidth: 200,
+      },
+      {
+        field: "nama_yayasan",
+        headerName: "Nama Yayasan",
         minWidth: 200,
       },
       {
@@ -125,31 +129,17 @@ const RekapDataPerhari = ({
         aggFunc: "sum",
       },
       {
-        field: "id_jenis_zakat",
-        headerName: "Jenis Zakat",
-        valueFormatter: (params) => {
-          const item = dataJenisZakat.find((item) => item.id == params.value);
-          return item ? item.nama_zakat : "din";
-        },
-        minWidth: 200,
-        aggFunc: "sum",
-      },
-
-      {
-        field: "status_zakat",
-        headerName: "Status Zakat",
+        field: "alamat",
+        headerName: "Alamat",
         cellClass: "ag-center-cell",
         minWidth: 150,
       },
+
       {
-        field: "waktu_berzakat",
-        headerName: "Waktu Berzakat",
-        minWidth: 100,
-      },
-      {
-        field: "tanggal",
-        headerName: "Tanggal",
-        minWidth: 120,
+        field: "no_hp",
+        headerName: "No HP",
+        cellClass: "ag-center-cell",
+        minWidth: 150,
       },
 
       {
@@ -234,79 +224,61 @@ const RekapDataPerhari = ({
           <Alert status={true} pesan={success} />
         </div>
       )}
-      <AppZakat>
-        <div className="flex mb-5 justify-end">
-          <Link
-            href={route("zakat.CreateZakat")}
-            className="bg-primary p-2 rounded-lg hover:opacity-95"
-          >
-            Create Data Muzzakki
-          </Link>
-        </div>
-        <div className="grid">
-          <DashboardInfoCard
-            title="Total Zakat RT 3 Hari ini"
-            value={"Rp " + TotalHariIniRt3}
-            icon="money-bill"
-            col={3}
-            iconColor="orange"
-            descriptionValue={"Jumlah Data Hari ini:  " + CountHariIniRt3}
-            descriptionText=""
-          ></DashboardInfoCard>
-          <DashboardInfoCard
-            title="Total Zakat RT 4 Hari ini"
-            value={"Rp " + TotalHariIniRt4}
-            icon="money-bill"
-            col={3}
-            iconColor="orange"
-            descriptionValue={"Jumlah Data Hari ini: " + CountHariIniRt4}
-            descriptionText=""
-          ></DashboardInfoCard>
-          <DashboardInfoCard
-            title="Total Zakat RT 4 ATAS Hari ini"
-            value={"Rp " + TotalHariIniRt4Atas}
-            icon="money-bill"
-            col={3}
-            iconColor="orange"
-            descriptionValue={"Jumlah Data Hari ini: " + CountHariIniRt4Atas}
-          ></DashboardInfoCard>
-          <DashboardInfoCard
-            title="Total Zakat RT 5 Hari ini"
-            value={"Rp " + TotalHariIniRt5}
-            icon="money-bill"
-            col={3}
-            iconColor="orange"
-            descriptionValue={"Jumlah Data Hari ini: " + CountHariIniRt5}
-          ></DashboardInfoCard>
-        </div>
-        <BreadCrumb model={updateTime()} className="my-3" home={home} />
-        <div className="bg-white dark:bg-gray-800 overflow-x-auto shadow-sm sm:rounded-lg">
-          <div className=" text-gray-900 dark:text-gray-100">
-            <div className="mb-5 ">
-              <div className={styles.wrapper}>
-                <div className={styles.container}>
-                  <div className={`${themeClass} ${styles.grid} `}>
-                    <AgGridReact
-                      ref={gridRef}
-                      getRowId={getRowId}
-                      rowData={getRekapPerHari}
-                      columnDefs={colDefs}
-                      defaultColDef={defaultColDef}
-                      enableRangeSelection
-                      enableCharts
-                      rowSelection="multiple"
-                      rowGroupPanelShow="always"
-                      suppressAggFuncInHeader
-                      groupDefaultExpanded={-1}
-                      statusBar={statusBar}
-                    />
-                  </div>
+
+      <div className="flex mb-5 justify-end">
+        <Link
+          href={route("zakat.CreatePembagianZakat")}
+          className="bg-primary p-2 rounded-lg hover:opacity-95"
+        >
+          Create Data Pembagian Zakat
+        </Link>
+      </div>
+      <div className="grid">
+        <DashboardInfoCard
+          title="Total "
+          value={"Rp " + TotalHariIniRt3}
+          icon="money-bill"
+          col={6}
+          iconColor="orange"
+          // descriptionValue={"Jumlah Data Hari ini:  " + CountHariIniRt3}
+          descriptionText="ini testing"
+        ></DashboardInfoCard>
+        <DashboardInfoCard
+          title="Total Keseluruhan Zakat"
+          value={"Rp " + TotalHariIniRt5}
+          icon="money-bill"
+          col={6}
+          iconColor="orange"
+          // descriptionValue={"Jumlah Data Hari ini: " + CountHariIniRt5}
+        ></DashboardInfoCard>
+      </div>
+      <BreadCrumb model={updateTime()} className="my-3" home={home} />
+      <div className="bg-white dark:bg-gray-800 overflow-x-auto shadow-sm sm:rounded-lg">
+        <div className=" text-gray-900 dark:text-gray-100">
+          <div className="mb-5 ">
+            <div className={styles.wrapper}>
+              <div className={styles.container}>
+                <div className={`${themeClass} ${styles.grid} `}>
+                  <AgGridReact
+                    ref={gridRef}
+                    getRowId={getRowId}
+                    rowData={getRekapPerHari}
+                    columnDefs={colDefs}
+                    defaultColDef={defaultColDef}
+                    enableRangeSelection
+                    enableCharts
+                    rowSelection="multiple"
+                    rowGroupPanelShow="always"
+                    suppressAggFuncInHeader
+                    groupDefaultExpanded={-1}
+                    statusBar={statusBar}
+                  />
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </AppZakat>
+      </div>
     </Layout>
   );
 };
@@ -352,4 +324,4 @@ const ActionButtons = ({ data }) => {
     </div>
   );
 };
-export default RekapDataPerhari;
+export default PembagianZakat;

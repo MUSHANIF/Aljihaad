@@ -92,10 +92,10 @@ class ZakatController extends Controller
             ->paginate(10)
             ->onEachSide(1);
 
-        $TotalHariIniRt3 = penerimaan_zakat::where('id_rt', 3)->whereDate('tanggal', now()->format('Y-m-d'));
-        $TotalHariIniRt4 = penerimaan_zakat::where('id_rt', 5)->whereDate('tanggal', now()->format('Y-m-d'));
-        $TotalHariIniRt4Atas = penerimaan_zakat::where('id_rt', 4)->whereDate('tanggal', now()->format('Y-m-d'));
-        $TotalHariIniRt5 = penerimaan_zakat::where('id_rt', 6)->whereDate('tanggal', now()->format('Y-m-d'));
+        $TotalHariIniRt3 = penerimaan_zakat::byRt(3)->byDate()->get();
+        $TotalHariIniRt4 = penerimaan_zakat::byRt(5)->byDate()->get();
+        $TotalHariIniRt4Atas = penerimaan_zakat::byRt(4)->byDate()->get();
+        $TotalHariIniRt5 = penerimaan_zakat::byRt(6)->byDate()->get();
 
         return inertia("Zakat/RekapDataPerhari", [
             "pengurus" => PengurusResource::collection($Pengurus),
@@ -144,6 +144,18 @@ class ZakatController extends Controller
     public function PembagianZakat()
     {
         return inertia("Zakat/PembagianZakat");
+    }
+    public function CreatePembagianZakat()
+    {
+        $allZakat = penerimaan_zakat::whereYear('created_at', now()->year)->get();
+        $jumlah_zakat = $allZakat->sum('jumlah_uang');
+        $jumlah_beras = $allZakat->sum('jumlah_beras');
+
+        return inertia("Zakat/PembagianZakat/CreatePembagianZakat", [
+            'jumlah_zakat' => $jumlah_zakat,
+            'jumlah_beras' => $jumlah_beras,
+            'allZakat' => $allZakat
+        ]);
     }
     public function EditZakat($penerimaan_zakat)
     {

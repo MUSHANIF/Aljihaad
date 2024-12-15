@@ -230,6 +230,7 @@ import { RichSelectModule } from "@ag-grid-enterprise/rich-select";
 import { RowGroupingModule } from "@ag-grid-enterprise/row-grouping";
 import { SetFilterModule } from "@ag-grid-enterprise/set-filter";
 import { StatusBarModule } from "@ag-grid-enterprise/status-bar";
+import DashboardInfoCard from "@/Components/DashboardInfoCard.jsx";
 import { useCallback, useMemo, useRef, useEffect, useState } from "react";
 import { ProgressBar } from "primereact/progressbar";
 import styles from "./../../../css/HRExample.module.css";
@@ -312,6 +313,9 @@ const AbsensiZakat = ({
   isDarkMode = false,
   success,
   pengurus,
+  AkumulasiZakat,
+  AkumulasiInfaq,
+  AkumulasiTotal,
   dataJenisZakat,
   dataRT,
 }) => {
@@ -419,6 +423,35 @@ const AbsensiZakat = ({
       <div className="flex justify-end"></div>
       <BreadCrumb model={items} className="my-3" home={home} />
       <PanelZakat />
+      <div className="grid mt-5">
+        <DashboardInfoCard
+          title="Total infaq dan pemasukan amil zakat"
+          value={"Rp " + AkumulasiTotal}
+          icon="sort-numeric-up"
+          col={4}
+          iconColor="blue"
+          descriptionValue=""
+          descriptionText="Pemasukan Total untuk amil zakat + infaq"
+        ></DashboardInfoCard>
+        <DashboardInfoCard
+          title="Pemasukan Total untuk amil zakat"
+          value={"Rp " + AkumulasiZakat}
+          icon="sort-numeric-up"
+          col={4}
+          iconColor="blue"
+          descriptionValue=""
+          descriptionText="25% x Zakat Fitrah + Zakat Maal + Fidyah pada tahun ini"
+        ></DashboardInfoCard>
+        <DashboardInfoCard
+          title="Pemasukan Infaq"
+          value={"Rp " + AkumulasiInfaq}
+          icon="sort-numeric-up"
+          col={4}
+          iconColor="blue"
+          descriptionValue=""
+          descriptionText="*Diambil dari keseluruhan data pada tahun ini"
+        ></DashboardInfoCard>
+      </div>
       <div className={styles.wrapper}>
         <div className={styles.container}>
           <div className={`${themeClass} ${styles.grid}`}>
@@ -664,7 +697,7 @@ const Persentase = ({ data }) => {
               <div className="w-50 mt-5">
                 {" "}
                 <ScrollPanel style={{ width: "200%", height: "200px" }}>
-                  <p>Jika Amil Zakat tidak hadir, maka akan diberikan sanksi</p>
+                  <p>*Rumus Total Kehadiran / Total hari yaitu 22 hari</p>
                 </ScrollPanel>
               </div>
             </div>

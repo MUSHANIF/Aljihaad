@@ -46,18 +46,40 @@ export default function Create({ auth }) {
   const waktuZakat = ["Sore", "Malam"];
   const metode_pembayaran = ["Tunai", "Transfer"];
 
-  const [NominalData, setDataZakatNominal] = useState([
-    {
-      id_jenis_zakat: "",
-      status_zakat: "",
-      jumlah_uang: "",
-      jumlah_beras: "",
-      waktu_berzakat: "",
-      metode_pembayaran: "",
-    },
-  ]);
+  const [NominalData, setDataZakatNominal] = useState([]);
 
   const handleChange = (index, field, value) => {
+    console.log(index, field, value);
+
+    // Salin data dari NominalData
+    const newData = [...NominalData];
+
+    // Pastikan semua indeks hingga index terisi
+    while (newData.length <= index) {
+      newData.push({
+        id_jenis_zakat: "",
+        status_zakat: "",
+        jumlah_uang: "",
+        jumlah_beras: "",
+        waktu_berzakat: "",
+        metode_pembayaran: "",
+      });
+    }
+
+    // Perbarui field yang diberikan
+    newData[index][field] = value;
+
+    // Filter data untuk menghapus elemen tanpa id_jenis_zakat
+    const filteredData = newData.filter((item) => item.id_jenis_zakat);
+
+    // Perbarui state
+    setDataZakatNominal(filteredData);
+    console.log(filteredData);
+    setData("dataJenisZakat", filteredData);
+  };
+
+  const handleCheckboxChange = (index, field, value) => {
+    console.log(index, field, value);
     const newData = [...NominalData];
     if (!newData[index]) {
       newData[index] = {
@@ -71,9 +93,20 @@ export default function Create({ auth }) {
     }
 
     newData[index][field] = value;
+
+    // Ambil item yang telah diubah
+    const selectedItem = newData[index];
+
+    // Hapus item yang telah diubah dari posisi semula
+    newData.splice(index, 1);
+
+    // Masukkan item yang dipilih ke posisi pertama
+    newData.unshift(selectedItem);
     setDataZakatNominal(newData);
+    console.log(newData);
     setData("dataJenisZakat", newData);
   };
+
   const handleRemoveEntry = (index) => {
     const newData = NominalData.filter((_, i) => i !== index);
     setDataZakatNominal(newData);
@@ -202,9 +235,9 @@ export default function Create({ auth }) {
                       </label>
                     </div>
                     {NominalData.map(
-                      (entry, index) =>
+                      (entry, indexNominal) =>
                         entry.id_jenis_zakat == key.id && (
-                          <div key={index}>
+                          <div key={indexNominal}>
                             <div className="flex flex-column gap-2 my-4">
                               <label htmlFor="status_zakat">
                                 Status Zakat{" "}
@@ -212,7 +245,11 @@ export default function Create({ auth }) {
                               <Dropdown
                                 value={entry.status_zakat}
                                 onChange={(e) =>
-                                  handleChange(index, "status_zakat", e.value)
+                                  handleChange(
+                                    indexNominal,
+                                    "status_zakat",
+                                    e.value
+                                  )
                                 }
                                 options={statusZakat}
                                 optionLabel="name"
@@ -237,7 +274,7 @@ export default function Create({ auth }) {
                                     value={entry.jumlah_uang}
                                     onChange={(e) =>
                                       handleChange(
-                                        index,
+                                        indexNominal,
                                         "jumlah_uang",
                                         e.value
                                       )
@@ -267,7 +304,7 @@ export default function Create({ auth }) {
                                     value={entry.jumlah_beras}
                                     onChange={(e) =>
                                       handleChange(
-                                        index,
+                                        indexNominal,
                                         "jumlah_beras",
                                         e.value
                                       )
@@ -292,7 +329,11 @@ export default function Create({ auth }) {
                               <Dropdown
                                 value={entry.waktu_berzakat}
                                 onChange={(e) =>
-                                  handleChange(index, "waktu_berzakat", e.value)
+                                  handleChange(
+                                    indexNominal,
+                                    "waktu_berzakat",
+                                    e.value
+                                  )
                                 }
                                 options={waktuZakat}
                                 placeholder="Select a Waktu Zakat"
@@ -313,7 +354,7 @@ export default function Create({ auth }) {
                                 value={entry.metode_pembayaran}
                                 onChange={(e) =>
                                   handleChange(
-                                    index,
+                                    indexNominal,
                                     "metode_pembayaran",
                                     e.value
                                   )

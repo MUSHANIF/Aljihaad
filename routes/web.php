@@ -62,6 +62,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('zakat.DeleteAtk');
         Route::get('/PembagianZakat', [ZakatController::class, 'PembagianZakat'])
             ->name('zakat.PembagianZakat');
+        Route::get('/CreatePembagianZakat', [ZakatController::class, 'CreatePembagianZakat'])
+            ->name('zakat.CreatePembagianZakat');
     });
     Route::prefix('PengurusZakat')->group(function () {
         Route::get('/AmilZakat', [AmilZakatController::class, 'index'])

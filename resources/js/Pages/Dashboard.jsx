@@ -225,7 +225,7 @@ const Dashboard = () => {
     <Layout>
       <div className="grid">
         <DashboardInfoCard
-          title="Orders"
+          title="Total Zakat tahun ini"
           value="152"
           icon="map-marker"
           iconColor="blue"
@@ -233,7 +233,7 @@ const Dashboard = () => {
           descriptionText="since last visit"
         ></DashboardInfoCard>
         <DashboardInfoCard
-          title="Revenue"
+          title="Pendapatan zakat fitrah ditahun ini"
           value="GHS 2.100"
           icon="map-marker"
           iconColor="orange"
@@ -241,7 +241,7 @@ const Dashboard = () => {
           descriptionText="since last week"
         ></DashboardInfoCard>
         <DashboardInfoCard
-          title="Customers"
+          title="Pendapatan zakat mal ditahun ini"
           value="28441"
           descriptionValue="520"
           icon="inbox"
@@ -249,7 +249,15 @@ const Dashboard = () => {
           descriptionText="since last week"
         ></DashboardInfoCard>
         <DashboardInfoCard
-          title="Comments"
+          title="Pendapatan infaq dan shodaqoh ditahun ini"
+          value="152 Unread"
+          descriptionValue="85"
+          icon="comment"
+          iconColor="purple"
+          descriptionText="responded"
+        ></DashboardInfoCard>
+        <DashboardInfoCard
+          title="Pengurus yang aktif"
           value="152 Unread"
           descriptionValue="85"
           icon="comment"

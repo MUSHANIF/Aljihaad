@@ -22,4 +22,37 @@ class penerimaan_zakat extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+    public function scopeByRt($query, $id_rt)
+    {
+        return $query->where('id_rt', $id_rt);
+    }
+
+    /**
+     * Scope untuk filter berdasarkan tanggal tertentu
+     */
+    public function scopeByDate($query, $date = null)
+    {
+        $date = $date ?? now()->format('Y-m-d');
+        return $query->whereDate('tanggal', $date);
+    }
+
+
+    public static function getAkumulasiZakat()
+    {
+        return self::whereIn('id_jenis_zakat', [1, 2, 3])
+            ->whereYear('created_at', now()->year)
+            ->sum('jumlah_uang') * 0.25;
+    }
+
+    /**
+     * Get Akumulasi Infaq.
+     *
+     * @return float
+     */
+    public static function getAkumulasiInfaq()
+    {
+        return self::whereIn('id_jenis_zakat', [4])
+            ->whereYear('created_at', now()->year)
+            ->sum('jumlah_uang') ?? 0;
+    }
 }
