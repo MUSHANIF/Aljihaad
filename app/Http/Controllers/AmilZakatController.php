@@ -24,7 +24,7 @@ class AmilZakatController extends Controller
         if (request("name")) {
             $query->where("name", "like", "%" . request("name") . "%");
         }
-        $AkumulasiZakat = penerimaan_zakat::getAkumulasiZakat();
+        $AkumulasiZakat = penerimaan_zakat::getAkumulasiZakat25Persen();
         $AkumulasiInfaq = penerimaan_zakat::getAkumulasiInfaq();
         $totalAkumulasi = $AkumulasiZakat + $AkumulasiInfaq;
         $Pengurus = $query->orderBy($sortField, $sortDirection)

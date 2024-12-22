@@ -37,11 +37,22 @@ class penerimaan_zakat extends Model
     }
 
 
-    public static function getAkumulasiZakat()
+    public static function getAkumulasiZakat25Persen()
     {
         return self::whereIn('id_jenis_zakat', [1, 2, 3])
             ->whereYear('created_at', now()->year)
             ->sum('jumlah_uang') * 0.25;
+    }
+    public static function getAkumulasiZakatPilihan($value, $type)
+    {
+        $query = self::whereIn('id_jenis_zakat', [$value]);
+
+        if ($type == 1) {
+            $query->whereYear('created_at', now()->year);
+        } elseif ($type == 2) {
+            $query->whereYear('created_at', now()->subYear()->year);
+        }
+        return $query->sum('jumlah_uang') ?? 0;
     }
 
     /**

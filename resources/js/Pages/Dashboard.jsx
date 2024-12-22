@@ -142,7 +142,19 @@ const lineData = {
   ],
 };
 
-const Dashboard = () => {
+const Dashboard = ({
+  totalZakatAll,
+  PersentaseKenaikanTotalZakat,
+  PersentaseKenaikanFitrah,
+  PersentaseKenaikanMal,
+  PersentaseKenaikanFidyah,
+  totalAkumulasiFormatted,
+  AkumulasiMal,
+  AkumulasiFitrah,
+  AkumulasiZakat,
+  AkumulasiFidyah,
+  AkumulasiInfaq,
+}) => {
   const [products, setProducts] = useState([]);
   const menu1 = useRef(null);
   const menu2 = useRef(null);
@@ -226,46 +238,67 @@ const Dashboard = () => {
       <div className="grid">
         <DashboardInfoCard
           title="Total Zakat tahun ini"
-          value="152"
+          value={totalZakatAll + " zakat"}
           icon="map-marker"
           iconColor="blue"
-          descriptionValue="24 new"
-          descriptionText="since last visit"
+          descriptionValue={PersentaseKenaikanTotalZakat + " %"}
+          descriptionText="since last year"
         ></DashboardInfoCard>
         <DashboardInfoCard
           title="Pendapatan zakat fitrah ditahun ini"
-          value="GHS 2.100"
+          value={"Rp " + AkumulasiFitrah}
           icon="map-marker"
           iconColor="orange"
-          descriptionValue="%52+"
-          descriptionText="since last week"
+          descriptionValue={PersentaseKenaikanFitrah + " %"}
+          descriptionText="since last year"
         ></DashboardInfoCard>
         <DashboardInfoCard
           title="Pendapatan zakat mal ditahun ini"
-          value="28441"
-          descriptionValue="520"
+          value={"Rp " + AkumulasiMal}
           icon="inbox"
           iconColor="cyan"
-          descriptionText="since last week"
-        ></DashboardInfoCard>
-        <DashboardInfoCard
-          title="Pendapatan infaq dan shodaqoh ditahun ini"
-          value="152 Unread"
-          descriptionValue="85"
-          icon="comment"
-          iconColor="purple"
-          descriptionText="responded"
-        ></DashboardInfoCard>
-        <DashboardInfoCard
-          title="Pengurus yang aktif"
-          value="152 Unread"
-          descriptionValue="85"
-          icon="comment"
-          iconColor="purple"
-          descriptionText="responded"
+          descriptionValue={PersentaseKenaikanMal + " %"}
+          descriptionText="since last year"
         ></DashboardInfoCard>
 
-        <div className="col-12 xl:col-6">
+        <DashboardInfoCard
+          title="Pendapatan Fidyah"
+          icon="comment"
+          value={"Rp " + AkumulasiFidyah}
+          iconColor="purple"
+          descriptionValue={PersentaseKenaikanFidyah + " %"}
+          descriptionText="since last year"
+        ></DashboardInfoCard>
+
+        <DashboardInfoCard
+          title="Total infaq dan pemasukan amil zakat"
+          value={"Rp " + totalAkumulasiFormatted}
+          icon="sort-numeric-up"
+          col={4}
+          iconColor="blue"
+          descriptionValue=""
+          descriptionText="Pemasukan Total untuk amil zakat + infaq"
+        ></DashboardInfoCard>
+        <DashboardInfoCard
+          title="Pemasukan Utama Total untuk amil dan fisabilillah"
+          value={"Rp " + AkumulasiZakat}
+          icon="sort-numeric-up"
+          col={4}
+          iconColor="blue"
+          descriptionValue=""
+          descriptionText="25% x Zakat Fitrah + Zakat Maal + Fidyah pada tahun ini"
+        ></DashboardInfoCard>
+        <DashboardInfoCard
+          title="Pemasukan Infaq"
+          value={"Rp " + AkumulasiInfaq}
+          icon="sort-numeric-up"
+          col={4}
+          iconColor="blue"
+          descriptionValue=""
+          descriptionText="*Diambil dari keseluruhan data pada tahun ini"
+        ></DashboardInfoCard>
+
+        <div className="col-12 xl:col-12">
           <div className="card">
             <h5>Sales Overview</h5>
             <Chart type="line" data={lineData} options={lineOptions} />

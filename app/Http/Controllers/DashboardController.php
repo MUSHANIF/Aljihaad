@@ -6,6 +6,7 @@ use App\Http\Resources\TaskResource;
 use App\Models\blog;
 use App\Models\Event;
 use App\Models\jadwalUstad;
+use App\Models\penerimaan_zakat;
 use App\Models\Pengurus;
 use App\Models\Task;
 use Carbon\Carbon;
@@ -14,51 +15,68 @@ use Illuminate\Support\Facades\Http;
 
 class DashboardController extends Controller
 {
+    /**
+     * Menghitung persentase kenaikan atau penurunan.
+     *
+     * @param float $current  Nilai saat ini.
+     * @param float $previous Nilai sebelumnya.
+     * @return float Persentase kenaikan atau penurunan.
+     */
+    function calculatePercentageChange($current, $previous)
+    {
+        if ($previous > 0) {
+            return (($current - $previous) / $previous) * 100;
+        } else {
+            return $current > 0 ? 100 : 0;
+        }
+    }
     public function index()
     {
         $user = auth()->user();
-        $totalPendingTasks = Task::query()
-            ->where('status', 'pending')
-            ->count();
-        $myPendingTasks = Task::query()
-            ->where('status', 'pending')
-            ->where('assigned_user_id', $user->id)
-            ->count();
+        $AkumulasiZakatRaw = penerimaan_zakat::getAkumulasiZakat25Persen();
+        $AkumulasiFitrahRaw = penerimaan_zakat::getAkumulasiZakatPilihan(1, 1);
+        $AkumulasiMalRaw = penerimaan_zakat::getAkumulasiZakatPilihan(2, 1) ?? 0;
+        $AkumulasiFidyahRaw = penerimaan_zakat::getAkumulasiZakatPilihan(3, 1) ?? 0;
+        $AkumulasiInfaqRaw = penerimaan_zakat::getAkumulasiInfaq();
 
+        $totalAkumulasi = $AkumulasiZakatRaw + $AkumulasiInfaqRaw;
 
-        $totalProgressTasks = Task::query()
-            ->where('status', 'in_progress')
-            ->count();
-        $myProgressTasks = Task::query()
-            ->where('status', 'in_progress')
-            ->where('assigned_user_id', $user->id)
-            ->count();
+        // Gunakan number_format hanya saat menampilkan hasil
+        $AkumulasiZakat = number_format($AkumulasiZakatRaw);
+        $AkumulasiFitrah = number_format($AkumulasiFitrahRaw);
+        $AkumulasiMal = number_format($AkumulasiMalRaw);
+        $AkumulasiFidyah = number_format($AkumulasiFidyahRaw);
+        $AkumulasiInfaq = number_format($AkumulasiInfaqRaw);
+        $totalAkumulasiFormatted = number_format($totalAkumulasi);
 
+        // Perhitungan persentase kenaikan
+        $totalZakatAll = penerimaan_zakat::whereYear('created_at', Carbon::now()->year)->count();
+        $totalZakatAllTahunKemarin = penerimaan_zakat::whereYear('created_at', Carbon::now()->subYear()->year)->count();
+        $PersentaseKenaikanTotalZakat = $this->calculatePercentageChange($totalZakatAll, $totalZakatAllTahunKemarin);
 
-        $totalCompletedTasks = Task::query()
-            ->where('status', 'completed')
-            ->count();
-        $myCompletedTasks = Task::query()
-            ->where('status', 'completed')
-            ->where('assigned_user_id', $user->id)
-            ->count();
+        $AkumulasiFitrahLastYearRaw = penerimaan_zakat::getAkumulasiZakatPilihan(1, 2);
+        $AkumulasiMalLastYearRaw = penerimaan_zakat::getAkumulasiZakatPilihan(2, 2) ?? 0;
+        $AkumulasiFidyahLastYearRaw = penerimaan_zakat::getAkumulasiZakatPilihan(3, 2) ?? 0;
 
-        $activeTasks = Task::query()
-            ->whereIn('status', ['pending', 'in_progress'])
-            ->where('assigned_user_id', $user->id)
-            ->limit(10)
-            ->get();
-        $activeTasks = TaskResource::collection($activeTasks);
+        $PersentaseKenaikanFitrah = $this->calculatePercentageChange($AkumulasiFitrahRaw, $AkumulasiFitrahLastYearRaw);
+        $PersentaseKenaikanMal = $this->calculatePercentageChange($AkumulasiMalRaw, $AkumulasiMalLastYearRaw);
+        $PersentaseKenaikanFidyah = $this->calculatePercentageChange($AkumulasiFidyahRaw, $AkumulasiFidyahLastYearRaw);
+
         return inertia(
             'Dashboard',
             compact(
-                'totalPendingTasks',
-                'myPendingTasks',
-                'totalProgressTasks',
-                'myProgressTasks',
-                'totalCompletedTasks',
-                'myCompletedTasks',
-                'activeTasks'
+                'AkumulasiMal',
+                'AkumulasiFitrah',
+                'PersentaseKenaikanTotalZakat',
+                'totalZakatAll',
+                'AkumulasiInfaq',
+                'AkumulasiZakat',
+                'totalAkumulasiFormatted',
+                'AkumulasiFidyah',
+                'PersentaseKenaikanFitrah',
+                'PersentaseKenaikanMal',
+                'PersentaseKenaikanFidyah',
+
             )
         );
     }

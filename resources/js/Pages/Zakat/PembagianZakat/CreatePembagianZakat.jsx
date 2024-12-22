@@ -9,15 +9,28 @@ import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import axios from "axios";
 import { InputText } from "primereact/inputtext";
+import { Tooltip } from "primereact/tooltip";
 import Layout from "@/Layouts/layout/layout.jsx";
 export default function CreatePembagianZakat({
   auth,
   jumlah_beras,
   jumlah_zakat,
+  jumlah_zakat_Amil_Fisabilillah,
 }) {
   const [dataRT, setDataRT] = useState([]);
+  const [DataPengambilan, setDataPengambilan] = useState([
+    {
+      nama: "PEMASUKAN TOTAL (ZF + FIDYAH - (25% FII SABILILAH DAN AMIL)",
+      id: "1",
+    },
+    {
+      nama: "PEMASUKAN TOTAL (25% (ZF+FIDYAH+MAAL)) + Total Infaq Shodaqoh",
+      id: "2",
+    },
+  ]);
   const [dataJenisZakat, setDataJenisZakat] = useState([]);
   const [getRT, setRt] = useState("");
+  const [JenisPengambilan, setJenisPengambilan] = useState("");
   const [getIdJenisZakat, setIdJenisZakat] = useState("");
 
   useEffect(() => {
@@ -81,6 +94,7 @@ export default function CreatePembagianZakat({
     setData("id_rt", value.id);
     setRt(value);
   };
+
   const setSelectedWaktuZakat = (value) => {
     setData("waktu_berzakat", value);
   };
@@ -122,7 +136,8 @@ export default function CreatePembagianZakat({
                   options={[
                     { label: "Mustahik Rt Dalam/Luar", value: 1 },
                     { label: "Yayasan", value: 2 },
-                    { label: "Fisabilillah/Amil", value: 3 },
+                    { label: "Fisabilillah", value: 3 },
+                    { label: "Amil", value: 4 },
                   ]}
                 />
               </div>
@@ -157,19 +172,85 @@ export default function CreatePembagianZakat({
                   )}
                 </div>
               )}
-
               <div className="flex flex-column gap-2 my-4">
-                <label htmlFor="jumlah_uang">Total Semua Zakat </label>
-                <div className="p-inputgroup flex-1">
-                  <span className="p-inputgroup-addon">Rp</span>
-                  <InputNumber
-                    placeholder="Masukan Nominal Uang Zakat"
-                    className="bg-gray-200"
-                    value={jumlah_zakat}
-                    disabled
-                  />
-                </div>
+                <label htmlFor="jenisRt">Pengambilan uang total Zakat</label>
+                <Dropdown
+                  value={JenisPengambilan}
+                  onChange={(e) => setJenisPengambilan(e.value)}
+                  options={DataPengambilan}
+                  optionLabel="nama"
+                  placeholder="Select a Status Zakat"
+                  className="w-full"
+                />
+                {errors.id_rt && (
+                  <small className="p-error">{errors.id_rt}</small>
+                )}
               </div>
+              {JenisPengambilan.id == 1 && (
+                <>
+                  <div className="flex flex-column gap-2 my-4">
+                    <span className="flex space-x-2">
+                      <label htmlFor="jumlah_uang">Total Semua Zakat </label>
+                      <Tooltip target=".custom-target-icon" />
+                      <svg
+                        data-pr-tooltip="PEMASUKAN TOTAL 
+                          (ZF + FIDYAH - (25% FII SABILILAH DAN AMIL)"
+                        className="custom-target-icon "
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 15c-.55 0-1-.45-1-1v-4c0-.55.45-1 1-1s1 .45 1 1v4c0 .55-.45 1-1 1m1-8h-2V7h2z"
+                        />
+                      </svg>
+                    </span>
+                    <div className="p-inputgroup flex-1">
+                      <span className="p-inputgroup-addon">Rp</span>
+                      <InputNumber
+                        placeholder="Masukan Nominal Uang Zakat"
+                        className="bg-gray-200"
+                        value={jumlah_zakat}
+                        disabled
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
+              {JenisPengambilan.id == 2 && (
+                <>
+                  <div className="flex flex-column gap-2 my-4">
+                    <span className="flex space-x-2">
+                      <label htmlFor="jumlah_uang">Total Semua Zakat </label>
+                      <Tooltip target=".custom-target-icon" />
+                      <svg
+                        data-pr-tooltip="PEMASUKAN TOTAL (25% (ZF+FIDYAH+MAAL)) + Total Infaq Shodaqoh"
+                        className="custom-target-icon "
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 15c-.55 0-1-.45-1-1v-4c0-.55.45-1 1-1s1 .45 1 1v4c0 .55-.45 1-1 1m1-8h-2V7h2z"
+                        />
+                      </svg>
+                    </span>
+                    <div className="p-inputgroup flex-1">
+                      <span className="p-inputgroup-addon">Rp</span>
+                      <InputNumber
+                        placeholder="Masukan Nominal Uang Zakat"
+                        className="bg-gray-200"
+                        value={jumlah_zakat_Amil_Fisabilillah}
+                        disabled
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
               <div className="flex flex-column gap-2 my-4">
                 <label htmlFor="jumlah_uang">Total Semua Beras </label>
                 <div className="p-inputgroup flex-1">
@@ -189,7 +270,11 @@ export default function CreatePembagianZakat({
                     <span className="p-inputgroup-addon">Rp</span>
                     <InputNumber
                       placeholder="Masukan Nominal Uang Zakat"
-                      max={jumlah_zakat}
+                      max={
+                        data.pilihan == 3
+                          ? jumlah_zakat_Amil_Fisabilillah
+                          : jumlah_zakat
+                      }
                       onChange={(e) => setData("uang", e.target.value)}
                     />
                     <span className="p-inputgroup-addon">.00</span>
@@ -213,8 +298,8 @@ export default function CreatePembagianZakat({
                   )}
                 </div>
               </div>
-              <div>
-                {/* {MustahikData.map((entry, index) => (
+              {/* <div>
+                {MustahikData.map((entry, index) => (
                   <div
                     key={index}
                     className="border border-gray-400 border-separate p-5 mb-4"
@@ -298,9 +383,9 @@ export default function CreatePembagianZakat({
                       </button>
                     )}
                   </div>
-                ))} */}
+                ))}
 
-                {/* <div className="mt-3 flex justify-start">
+                <div className="mt-3 flex justify-start">
                   <button
                     type="button"
                     className="bg-green-500 py-2 px-3 text-white rounded-xl shadow transition-all hover:bg-green-600"
@@ -308,8 +393,8 @@ export default function CreatePembagianZakat({
                   >
                     Tambah Data
                   </button>
-                </div> */}
-              </div>
+                </div>
+              </div> */}
               <div className="mt-4 text-right">
                 <Link
                   href={route("zakat.RekapGabungan")}

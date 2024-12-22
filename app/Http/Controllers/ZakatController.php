@@ -19,6 +19,21 @@ use Illuminate\Support\Facades\Storage;
 
 class ZakatController extends Controller
 {
+    /**
+     * Menghitung persentase kenaikan atau penurunan.
+     *
+     * @param float $current  Nilai saat ini.
+     * @param float $previous Nilai sebelumnya.
+     * @return float Persentase kenaikan atau penurunan.
+     */
+    function calculatePercentageChange($current, $previous)
+    {
+        if ($previous > 0) {
+            return (($current - $previous) / $previous) * 100;
+        } else {
+            return $current > 0 ? 100 : 0;
+        }
+    }
     public function index()
     {
         $TotalHariIni = penerimaan_zakat::whereDate('tanggal', now()->format('Y-m-d'))->count();
@@ -29,7 +44,7 @@ class ZakatController extends Controller
 
         $PersentaseKenaikan = $TotalKemarin > 0 ? (($TotalHariIni - $TotalKemarin) / $TotalKemarin) * 100 : ($TotalHariIni > 0 ? 100 : 0);
 
-        $PersentaseKenaikanUang = $TotalKemarinUangZakat > 0 ? (($TotalUangZakatToday - $TotalKemarinUangZakat) / $TotalKemarinUangZakat) * 100 : ($TotalUangZakatToday > 0 ? 100 : 0);
+        $PersentaseKenaikanUang = $this->calculatePercentageChange($TotalUangZakatToday, $TotalKemarinUangZakat);
 
         return inertia("Zakat/RekapGabungan", [
             'queryParams' => request()->query() ?: null,
@@ -147,12 +162,16 @@ class ZakatController extends Controller
     }
     public function CreatePembagianZakat()
     {
-        $allZakat = penerimaan_zakat::whereYear('created_at', now()->year)->get();
+        $allZakat = penerimaan_zakat::whereYear('created_at', now()->year)->where('id_jenis_zakat', '!=', 4)->get();
+        $InfaqShodaqoh = penerimaan_zakat::whereYear('created_at', now()->year)->where('id_jenis_zakat', 4)->get();
         $jumlah_zakat = $allZakat->sum('jumlah_uang');
+        $jumlah_Shadaqoh = $InfaqShodaqoh->sum('jumlah_uang');
         $jumlah_beras = $allZakat->sum('jumlah_beras');
+        $jumlah_zakat_Amil_Fisabilillah = penerimaan_zakat::getAkumulasiZakat25Persen();
 
         return inertia("Zakat/PembagianZakat/CreatePembagianZakat", [
-            'jumlah_zakat' => $jumlah_zakat,
+            'jumlah_zakat_Amil_Fisabilillah' => $jumlah_zakat_Amil_Fisabilillah + $jumlah_Shadaqoh,
+            'jumlah_zakat' => $jumlah_zakat - $jumlah_zakat_Amil_Fisabilillah,
             'jumlah_beras' => $jumlah_beras,
             'allZakat' => $allZakat
         ]);
