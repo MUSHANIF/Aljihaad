@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use App\Models\penerimaan_zakat;
 use App\Models\Pengurus;
 use App\Models\per_rt;
+use App\Models\Total_sum_zakat;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -158,7 +159,12 @@ class ZakatController extends Controller
     }
     public function PembagianZakat()
     {
-        return inertia("Zakat/PembagianZakat");
+
+        return inertia("Zakat/PembagianZakat", [
+            'dataRT' => per_rt::all(),
+            'amil' => Pengurus::all(),
+            'dataJenisZakat' => jenis_zakat::all(),
+        ]);
     }
     public function CreatePembagianZakat()
     {
@@ -166,13 +172,13 @@ class ZakatController extends Controller
         $InfaqShodaqoh = penerimaan_zakat::whereYear('created_at', now()->year)->where('id_jenis_zakat', 4)->get();
         $jumlah_zakat = $allZakat->sum('jumlah_uang');
         $jumlah_Shadaqoh = $InfaqShodaqoh->sum('jumlah_uang');
-        $jumlah_beras = $allZakat->sum('jumlah_beras');
+        $Total_beras = $allZakat->sum('jumlah_beras');
         $jumlah_zakat_Amil_Fisabilillah = penerimaan_zakat::getAkumulasiZakat25Persen();
 
         return inertia("Zakat/PembagianZakat/CreatePembagianZakat", [
             'jumlah_zakat_Amil_Fisabilillah' => $jumlah_zakat_Amil_Fisabilillah + $jumlah_Shadaqoh,
             'jumlah_zakat' => $jumlah_zakat - $jumlah_zakat_Amil_Fisabilillah,
-            'jumlah_beras' => $jumlah_beras,
+            'Total_beras' => $Total_beras,
             'allZakat' => $allZakat
         ]);
     }
@@ -212,7 +218,9 @@ class ZakatController extends Controller
     {
         try {
             $data = $request->validated();
+            $currentYear = now()->year;
             foreach ($data['dataJenisZakat'] as $key) {
+
                 $no_invoice = str_pad(penerimaan_zakat::max('id') + 1, 4, '0', STR_PAD_LEFT) . '/INV/' . now()->format('Y') . '/' . \Carbon\Carbon::now()->format('Y') - 580;
 
                 penerimaan_zakat::create([
@@ -230,18 +238,94 @@ class ZakatController extends Controller
                     'created_by' => $data['created_by'],
                     'updated_by' => $data['updated_by']
                 ]);
+                $getTotalZakat = Total_sum_zakat::whereYear('created_at', $currentYear)
+                    ->first();
+                if ($key['id_jenis_zakat'] != 4) {
+                    if ($getTotalZakat) {
+                        $totalZakat = $getTotalZakat->total_pemasukan_total + $key['jumlah_uang'];
+                        $uangMasuk25Percent = $key['jumlah_uang'] * 0.25;
+                        $perhitungan25percentTotal = $totalZakat * 0.25;
+                        $perhitunganNetTotal = $totalZakat - $perhitungan25percentTotal;
+                        $jumlahPemasukanSisaNet = $key['jumlah_uang'] - $uangMasuk25Percent;
+                        $getTotalZakat->update([
+                            'total_pemasukan_total' => $totalZakat,
+                            'sisa_pemasukan_total' => $getTotalZakat->sisa_pemasukan_total + $key['jumlah_uang'],
+                            'total_pemasukan_25_percent' => $perhitungan25percentTotal,
+                            'sisa_pemasukan_25_percent' => $getTotalZakat->sisa_pemasukan_25_percent + $uangMasuk25Percent,
+                            'net_pemasukan_total' => $perhitunganNetTotal,
+                            'sisa_net_pemasukan_total' => $getTotalZakat->sisa_net_pemasukan_total + $jumlahPemasukanSisaNet,
+                            'total_beras' => $getTotalZakat->total_beras + $key['jumlah_beras'],
+                            'sisa_beras' => $getTotalZakat->total_beras + $key['jumlah_beras'],
+                            'total_25percent_infaq' => $getTotalZakat->sisa_pemasukan_25_percent + $uangMasuk25Percent,
+
+                        ]);
+                    } else {
+                        Total_sum_zakat::create([
+                            'total_pemasukan_total' => $key['jumlah_uang'],
+                            'sisa_pemasukan_total' => $key['jumlah_uang'],
+                            'total_pemasukan_25_percent' => $key['jumlah_uang'] * 0.25,
+                            'sisa_pemasukan_25_percent' =>  $key['jumlah_uang'] * 0.25,
+                            'net_pemasukan_total' => $key['jumlah_uang'] - ($key['jumlah_uang'] * 0.25),
+                            'sisa_net_pemasukan_total' =>  $key['jumlah_uang'] - ($key['jumlah_uang'] * 0.25),
+                            'total_beras' => $key['jumlah_beras'],
+                            'sisa_beras' => $key['jumlah_beras'],
+
+                        ]);
+                    }
+                } else {
+                    $this->logicPostJenisZakatInfaq($getTotalZakat, $key);
+                }
             }
             return redirect()->route('zakat.RekapGabungan')->with('success', 'Muzaaki atas nama ' . $data['nama_muzakki'] . ' berhasil ditambahkan');
         } catch (\Exception $e) {
             dd($e->getMessage());
         }
     }
+    private function logicPostJenisZakatInfaq($getTotalZakat, $key)
+    {
+        if ($getTotalZakat) {
+            $totalZakat = $getTotalZakat->total_infaq_shodaqoh + $key['jumlah_uang'];
+            $getTotalZakat->update([
+                'total_infaq_shodaqoh' => $totalZakat,
+                'sisa_infaq_shodaqoh' => $getTotalZakat->sisa_infaq_shodaqoh + $key['jumlah_uang'],
+                'total_25percent_infaq' => $getTotalZakat->sisa_pemasukan_25_percent + $key['jumlah_uang'],
+            ]);
+        } else {
+            Total_sum_zakat::create([
+                'total_infaq_shodaqoh' => $key['jumlah_uang'],
+                'sisa_infaq_shodaqoh' => $key['jumlah_uang'],
+                'created_by' => $key['created_by'],
+            ]);
+        }
+    }
+
     public function PutZakat(Updatepenerimaan_zakatRequest $request, $zakat)
     {
+
         try {
             $Datazakat = penerimaan_zakat::find($zakat);
+            $YearData = $Datazakat->created_at->format('Y');
             $data = $request->validated();
             $data['updated_by'] = Auth::id();
+            $getTotalZakat = Total_sum_zakat::whereYear('created_at', $YearData)
+                ->first();
+            if ($Datazakat->id_jenis_zakat != 4) {
+
+                $totalZakat = $getTotalZakat->total_pemasukan_total - $Datazakat->jumlah_uang + $data['jumlah_uang'];
+                $getTotalZakat->update([
+                    'total_pemasukan_total' => $totalZakat,
+                    'sisa_pemasukan_total' => $getTotalZakat->sisa_pemasukan_total - $Datazakat->jumlah_uang + $data['jumlah_uang'],
+                    'total_pemasukan_25_percent' =>  $getTotalZakat->total_pemasukan_25_percent - $Datazakat->jumlah_uang + $data['jumlah_uang'],
+                    'sisa_pemasukan_25_percent' => $getTotalZakat->sisa_pemasukan_25_percent - $Datazakat->jumlah_uang + $data['jumlah_uang'],
+                    'net_pemasukan_total' => $getTotalZakat->net_pemasukan_total - $Datazakat->jumlah_uang + $data['jumlah_uang'],
+                    'sisa_net_pemasukan_total' => $getTotalZakat->sisa_net_pemasukan_total  - $Datazakat->jumlah_uang + $data['jumlah_uang'],
+                    'total_beras' => $getTotalZakat->total_beras - $Datazakat->jumlah_beras   + $data['jumlah_beras'],
+                    'sisa_beras' => $getTotalZakat->total_beras - $Datazakat->jumlah_beras  + $data['jumlah_beras'],
+                    'total_25percent_infaq' => $getTotalZakat->total_25percent_infaq - $Datazakat->jumlah_uang + $data['jumlah_uang'],
+
+                ]);
+            } else {
+            }
             $Datazakat->update($data);
             return redirect()->route('zakat.RekapGabungan')->with('success', 'Muzaaki atas nama ' . $Datazakat->nama_muzakki . ' berhasil diupdate');
         } catch (\Exception $e) {

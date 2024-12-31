@@ -14,11 +14,13 @@ return new class extends Migration
         Schema::create('pembagian_zakats', function (Blueprint $table) {
             $table->id();
             $table->string('nama_yayasan')->nullable();
-            $table->string('jenis_penyaluran')->nullable();
+            $table->string('jenis_pengambilan')->nullable();
             $table->string('alamat')->nullable();
             $table->string('no_hp')->nullable();
             $table->integer('jumlah_uang')->nullable();
+            $table->integer('jenis_pemilihan')->nullable();
             $table->integer('jumlah_beras')->nullable();
+            $table->integer('created_by')->nullable();
             $table->foreignId('id_rt')->constrained('per_rts')->nullable();
             $table->timestamps();
         });

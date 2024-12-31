@@ -64,6 +64,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('zakat.PembagianZakat');
         Route::get('/CreatePembagianZakat', [ZakatController::class, 'CreatePembagianZakat'])
             ->name('zakat.CreatePembagianZakat');
+        Route::post('/PostPembagianZakat', [MustahikController::class, 'PostPembagianZakat'])
+            ->name('zakat.PostPembagianZakat');
     });
     Route::prefix('PengurusZakat')->group(function () {
         Route::get('/AmilZakat', [AmilZakatController::class, 'index'])

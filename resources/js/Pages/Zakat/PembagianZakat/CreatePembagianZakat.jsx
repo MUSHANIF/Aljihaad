@@ -13,7 +13,7 @@ import { Tooltip } from "primereact/tooltip";
 import Layout from "@/Layouts/layout/layout.jsx";
 export default function CreatePembagianZakat({
   auth,
-  jumlah_beras,
+  Total_beras,
   jumlah_zakat,
   jumlah_zakat_Amil_Fisabilillah,
 }) {
@@ -94,15 +94,22 @@ export default function CreatePembagianZakat({
     setData("id_rt", value.id);
     setRt(value);
   };
+  const setSelectDataPilihan = (value) => {
+    setData("nama_yayasan", "");
+    setData("pilihan", value);
+    setRt("");
+  };
 
   const setSelectedWaktuZakat = (value) => {
     setData("waktu_berzakat", value);
   };
   const { data, setData, post, errors, reset } = useForm({
-    tanggal: "",
+    alamat: "",
+    telepon: "",
     pilihan: 1,
     jumlah_beras: "",
     uang: "",
+    jenis_pengambilan: "",
     Mustahik: MustahikData,
     id_rt: "",
     updated_by: auth.user.id,
@@ -110,13 +117,23 @@ export default function CreatePembagianZakat({
   });
   const onSubmit = (e) => {
     e.preventDefault();
-    post(route("zakat.PostMustahik"));
+    console.log("Data yang dikirim:", errors);
+    post(route("zakat.PostPembagianZakat"));
   };
   const items = [{ label: "Zakat" }, { label: "Create Data Mustahik" }];
   const home = { icon: "pi pi-home", url: "" };
   const options = ["Yayasan", "Mustahik Dalam"];
   const [value, setValue] = useState(options[0]);
+  useEffect(() => {
+    setData((prevData) => ({
+      ...prevData,
+      nama_yayasan: data.pilihan === "2" ? prevData.nama_yayasan : "",
+      uang: "",
+      jumlah_beras: "",
+    }));
 
+    setJenisPengambilan("");
+  }, [data.pilihan]);
   return (
     <Layout>
       <Head title="Users" />
@@ -132,7 +149,7 @@ export default function CreatePembagianZakat({
               <div className="mx-auto flex justify-center">
                 <SelectButton
                   value={data.pilihan}
-                  onChange={(e) => setData("pilihan", e.value)}
+                  onChange={(e) => setSelectDataPilihan(e.value)}
                   options={[
                     { label: "Mustahik Rt Dalam/Luar", value: 1 },
                     { label: "Yayasan", value: 2 },
@@ -159,31 +176,61 @@ export default function CreatePembagianZakat({
                 </div>
               )}
               {data.pilihan == 2 && (
-                <div className="flex flex-column gap-2 my-4">
-                  <label htmlFor="namaYayasan">Nama Yayasan</label>
-                  <InputText
-                    id="namaYayasan"
-                    onChange={(e) => setData("nama_yayasan", e.target.value)}
-                    value={data.nama_yayasan}
-                    placeholder="Masukan Nama Yayasan"
-                  />
-                  {errors.nama_yayasan && (
-                    <small className="p-error">{errors.nama_yayasan}</small>
-                  )}
-                </div>
+                <>
+                  <div className="flex flex-column gap-2 my-4">
+                    <label htmlFor="namaYayasan">Nama Yayasan</label>
+                    <InputText
+                      id="namaYayasan"
+                      onChange={(e) => setData("nama_yayasan", e.target.value)}
+                      value={data.nama_yayasan}
+                      placeholder="Masukan Nama Yayasan"
+                    />
+                    {errors.nama_yayasan && (
+                      <small className="p-error">{errors.nama_yayasan}</small>
+                    )}
+                  </div>
+                  <div className="flex flex-column gap-2 my-4">
+                    <label htmlFor="namaYayasan">Alamat</label>
+                    <InputText
+                      id="namaYayasan"
+                      onChange={(e) => setData("alamat", e.target.value)}
+                      value={data.alamat}
+                      placeholder="Masukan Alamat"
+                    />
+                    {errors.alamat && (
+                      <small className="p-error">{errors.alamat}</small>
+                    )}
+                  </div>
+                  <div className="flex flex-column gap-2 my-4">
+                    <label htmlFor="namaYayasan">No Telp</label>
+                    <InputNumber
+                      id="namaYayasan"
+                      onChange={(e) => setData("telepon", e.value)}
+                      value={data.telepon}
+                      useGrouping={false}
+                      placeholder="Masukan No Telp"
+                    />
+                    {errors.telepon && (
+                      <small className="p-error">{errors.telepon}</small>
+                    )}
+                  </div>
+                </>
               )}
               <div className="flex flex-column gap-2 my-4">
                 <label htmlFor="jenisRt">Pengambilan uang total Zakat</label>
                 <Dropdown
                   value={JenisPengambilan}
-                  onChange={(e) => setJenisPengambilan(e.value)}
+                  onChange={(e) => {
+                    setJenisPengambilan(e.value);
+                    setData("jenis_pengambilan", e.value.id);
+                  }}
                   options={DataPengambilan}
                   optionLabel="nama"
                   placeholder="Select a Status Zakat"
                   className="w-full"
                 />
-                {errors.id_rt && (
-                  <small className="p-error">{errors.id_rt}</small>
+                {errors.jenis_pengambilan && (
+                  <small className="p-error">{errors.jenis_pengambilan}</small>
                 )}
               </div>
               {JenisPengambilan.id == 1 && (
@@ -257,7 +304,7 @@ export default function CreatePembagianZakat({
                   <InputNumber
                     placeholder="Masukan Nominal Uang Zakat"
                     className="bg-gray-200"
-                    value={jumlah_beras}
+                    value={Total_beras}
                     disabled
                   />
                   <span className="p-inputgroup-addon">.Liter</span>
@@ -265,31 +312,33 @@ export default function CreatePembagianZakat({
               </div>
               <div className="border border-gray-400 border-separate p-5 mb-4">
                 <div className="flex flex-column gap-2 my-4">
-                  <label htmlFor="jumlah_uang">Uang</label>
+                  <label htmlFor="uang">Uang</label>
                   <div className="p-inputgroup flex-1">
                     <span className="p-inputgroup-addon">Rp</span>
                     <InputNumber
+                      value={data.uang}
                       placeholder="Masukan Nominal Uang Zakat"
                       max={
                         data.pilihan == 3
                           ? jumlah_zakat_Amil_Fisabilillah
                           : jumlah_zakat
                       }
-                      onChange={(e) => setData("uang", e.target.value)}
+                      onChange={(e) => setData("uang", e.value)}
                     />
                     <span className="p-inputgroup-addon">.00</span>
                   </div>
-                  {errors.jumlah_uang && (
-                    <small className="p-error">{errors.jumlah_uang}</small>
+                  {errors.uang && (
+                    <small className="p-error">{errors.uang}</small>
                   )}
                 </div>
                 <div className="flex flex-column gap-2 my-4">
                   <label htmlFor="jumlah_beras">Beras</label>
                   <div className="p-inputgroup flex-1">
                     <InputNumber
+                      value={data.jumlah_beras}
                       placeholder="Masukan Nominal Beras Zakat"
-                      max={jumlah_beras}
-                      onChange={(e) => setData("jumlah_beras", e.target.value)}
+                      max={Total_beras}
+                      onChange={(e) => setData("jumlah_beras", e.value)}
                     />
                     <span className="p-inputgroup-addon">.Liter</span>
                   </div>

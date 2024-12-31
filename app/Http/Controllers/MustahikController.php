@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreMustahikRequest;
+use App\Http\Requests\Storepembagian_zakatRequest;
 use App\Http\Resources\MustahikResource;
 use App\Models\jenis_zakat;
 use App\Models\Mustahik;
+use App\Models\pembagian_zakat;
 use App\Models\per_rt;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class MustahikController extends Controller
@@ -60,6 +63,30 @@ class MustahikController extends Controller
                 ]);
             }
             return redirect()->route('zakat.RekapMustahik')->with('success', 'Para Muzaaki berhasil ditambahkan');
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+        }
+    }
+    public function PostPembagianZakat(Storepembagian_zakatRequest $request)
+    {
+        try {
+            $data = $request->validated();
+
+            pembagian_zakat::create([
+                'nama_yayasan' => $data['pilihan'] == 2 ? $data['nama_yayasan'] : null,
+                'id_rt' => $data['pilihan'] == 1 ? $data['id_rt'] : null,
+                'jenis_pemilihan' => $data['pilihan'],
+                'jenis_pengambilan' => $data['jenis_pengambilan'],
+                'alamat' => $data['pilihan'] == 2 ? $data['alamat'] : null,
+                'no_hp' => $data['pilihan'] == 2  ? $data['telepon'] : null,
+                'jumlah_uang' => $data['uang'],
+                'jumlah_beras' => $data['jumlah_beras'] ?? null,
+                'created_by' =>  Auth::user()->id,
+            ]);
+
+
+
+            return redirect()->route('zakat.PembagianZakat')->with('success', 'Para Muzaaki berhasil ditambahkan');
         } catch (\Exception $e) {
             dd($e->getMessage());
         }

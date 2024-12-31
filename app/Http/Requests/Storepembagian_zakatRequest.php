@@ -6,12 +6,9 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class Storepembagian_zakatRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,8 +18,22 @@ class Storepembagian_zakatRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            //
+        $rules = [
+            "pilihan" => ['required'],
+            "uang" => ['required'],
+            "jumlah_beras" => [],
+            "jenis_pengambilan" => ['required'],
+            "created_by" => ['nullable'],
+            "updated_by" => ['nullable'],
         ];
+
+        if ($this->pilihan == 2) {
+            $rules['nama_yayasan'] = ['required'];
+            $rules['alamat'] = ['required'];
+            $rules['telepon'] = ['required'];
+        } else if ($this->pilihan == 1) {
+            $rules['id_rt'] = ['required'];
+        }
+        return $rules;
     }
 }

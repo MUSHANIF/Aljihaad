@@ -264,7 +264,9 @@ export default function Create({ auth }) {
                             </div>
 
                             {/* Kondisional untuk status Zakat Uang */}
-                            {["Uang"].includes(entry.status_zakat) && (
+                            {["Uang", "Beras + Uang"].includes(
+                              entry.status_zakat
+                            ) && (
                               <div className="flex flex-column gap-2 my-4">
                                 <label htmlFor="jumlah_uang">Uang</label>
                                 <div className="p-inputgroup flex-1">

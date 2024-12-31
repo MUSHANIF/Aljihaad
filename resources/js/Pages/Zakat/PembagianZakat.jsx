@@ -90,13 +90,25 @@ const PembagianZakat = ({
   const colDefs = useMemo(
     () => [
       {
-        field: "jenis_penyaluran",
-        headerName: "Jenis Penyaluran",
+        field: "jenis_pemilihan",
+        headerName: "Jenis Pemilihan Pembagian",
+        valueFormatter: (params) => {
+          return params.value == 1
+            ? "Mustahik Rt dalam/luar"
+            : params.value == 2
+            ? "Yayasan"
+            : params.value == 3
+            ? "Fisabilillah"
+            : "Amil";
+        },
         minWidth: 200,
       },
       {
         field: "nama_yayasan",
         headerName: "Nama Yayasan",
+        valueFormatter: (params) => {
+          return params.value == null ? " - " : params.value;
+        },
         minWidth: 200,
       },
       {
@@ -123,7 +135,7 @@ const PembagianZakat = ({
         headerName: "Rt",
         valueFormatter: (params) => {
           const item = dataRT.find((item) => item.id == params.value);
-          return item ? item.nama_rt : "din";
+          return item ? item.nama_rt : " - ";
         },
         minWidth: 200,
         aggFunc: "sum",
