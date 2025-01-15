@@ -16,16 +16,21 @@ export default function CreatePembagianZakat({
   Total_beras,
   jumlah_zakat,
   jumlah_zakat_Amil_Fisabilillah,
+  jumlah_infaq,
 }) {
   const [dataRT, setDataRT] = useState([]);
   const [DataPengambilan, setDataPengambilan] = useState([
     {
-      nama: "PEMASUKAN TOTAL (ZF + FIDYAH - (25% FII SABILILAH DAN AMIL)",
+      nama: "PEMASUKAN TOTAL (ZF + FIDYAH + MAAL - (25% FII SABILILAH DAN AMIL)",
       id: "1",
     },
     {
-      nama: "PEMASUKAN TOTAL (25% (ZF+FIDYAH+MAAL)) + Total Infaq Shodaqoh",
+      nama: "PEMASUKAN TOTAL (25% (ZF + FIDYAH + MAAL))",
       id: "2",
+    },
+    {
+      nama: "PEMASUKAN INFAQ SHODAQOH",
+      id: "3",
     },
   ]);
   const [dataJenisZakat, setDataJenisZakat] = useState([]);
@@ -298,6 +303,38 @@ export default function CreatePembagianZakat({
                   </div>
                 </>
               )}
+              {JenisPengambilan.id == 3 && (
+                <>
+                  <div className="flex flex-column gap-2 my-4">
+                    <span className="flex space-x-2">
+                      <label htmlFor="jumlah_uang">Total Semua Zakat </label>
+                      <Tooltip target=".custom-target-icon" />
+                      <svg
+                        data-pr-tooltip="PEMASUKAN TOTAL (25% (ZF+FIDYAH+MAAL)) + Total Infaq Shodaqoh"
+                        className="custom-target-icon "
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 15c-.55 0-1-.45-1-1v-4c0-.55.45-1 1-1s1 .45 1 1v4c0 .55-.45 1-1 1m1-8h-2V7h2z"
+                        />
+                      </svg>
+                    </span>
+                    <div className="p-inputgroup flex-1">
+                      <span className="p-inputgroup-addon">Rp</span>
+                      <InputNumber
+                        placeholder="Masukan Nominal Uang Zakat"
+                        className="bg-gray-200"
+                        value={jumlah_infaq}
+                        disabled
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
               <div className="flex flex-column gap-2 my-4">
                 <label htmlFor="jumlah_uang">Total Semua Beras </label>
                 <div className="p-inputgroup flex-1">
@@ -319,9 +356,11 @@ export default function CreatePembagianZakat({
                       value={data.uang}
                       placeholder="Masukan Nominal Uang Zakat"
                       max={
-                        data.pilihan == 3
+                        JenisPengambilan.id == 1
+                          ? jumlah_zakat
+                          : JenisPengambilan.id == 2
                           ? jumlah_zakat_Amil_Fisabilillah
-                          : jumlah_zakat
+                          : jumlah_infaq
                       }
                       onChange={(e) => setData("uang", e.value)}
                     />

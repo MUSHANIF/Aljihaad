@@ -9,6 +9,7 @@ use App\Models\jenis_zakat;
 use App\Models\Mustahik;
 use App\Models\pembagian_zakat;
 use App\Models\per_rt;
+use App\Models\Total_sum_zakat;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -71,7 +72,7 @@ class MustahikController extends Controller
     {
         try {
             $data = $request->validated();
-
+            $currentYear = date('Y');
             pembagian_zakat::create([
                 'nama_yayasan' => $data['pilihan'] == 2 ? $data['nama_yayasan'] : null,
                 'id_rt' => $data['pilihan'] == 1 ? $data['id_rt'] : null,
@@ -83,6 +84,29 @@ class MustahikController extends Controller
                 'jumlah_beras' => $data['jumlah_beras'] ?? null,
                 'created_by' =>  Auth::user()->id,
             ]);
+
+            $getTotalZakat = Total_sum_zakat::whereYear('created_at', $currentYear)
+                ->first();
+
+            if ($getTotalZakat) {
+                if ($data['jenis_pengambilan'] != 3) {
+                    $jumlah25Percent = $data['uang'] * 0.25;
+                    $jumlahNet = $data['uang'] - $jumlah25Percent;
+                    $getTotalZakat->update([
+                        'sisa_pemasukan_total' => $getTotalZakat->sisa_pemasukan_total - $data['uang'],
+                        'sisa_pemasukan_25_percent' => $getTotalZakat->sisa_pemasukan_25_percent - $jumlah25Percent,
+                        'sisa_net_pemasukan_total' => $getTotalZakat->sisa_net_pemasukan_total - $jumlahNet,
+                        'sisa_beras' => $getTotalZakat->sisa_beras - $data['jumlah_beras'] ?? 0,
+                    ]);
+                } else {
+                    $jumlah25Percent = $$data['uang'] * 0.25;
+                    $jumlahNet = $data['uang'] - $jumlah25Percent;
+                    $getTotalZakat->update([
+                        'sisa_infaq_shodaqoh' => $getTotalZakat->sisa_infaq_shodaqoh - $data['uang'],
+                        'sisa_beras' => $getTotalZakat->sisa_beras - $data['jumlah_beras'] ?? 0,
+                    ]);
+                }
+            }
 
 
 

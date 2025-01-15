@@ -83,7 +83,8 @@ class DashboardController extends Controller
     public function welcome()
     {
         $bulanSekarang = date('m');
-        $response = Http::get('http://api.aladhan.com/v1/calendarByAddress/2024/' . $bulanSekarang . '?address=Bekasi, indonesia&method=2');
+        $tahunSekarang = date('Y');
+        $response = Http::get('http://api.aladhan.com/v1/calendarByAddress/' . $tahunSekarang . '/' . $bulanSekarang . '?address=Bekasi, indonesia&method=2');
         $statusCode = $response->getStatusCode(); // Status code
         $data = json_decode($response->getBody()->getContents(), true)['data']; // Decode JSON response
         foreach ($data as $key => $value) {

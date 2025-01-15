@@ -9,6 +9,7 @@ use App\Http\Resources\AtkResource;
 use App\Http\Resources\PengurusResource;
 use App\Models\Atk;
 use App\Models\jenis_zakat;
+use App\Models\pembagian_zakat;
 use Illuminate\Support\Str;
 use App\Models\penerimaan_zakat;
 use App\Models\Pengurus;
@@ -169,15 +170,13 @@ class ZakatController extends Controller
     public function CreatePembagianZakat()
     {
         $allZakat = penerimaan_zakat::whereYear('created_at', now()->year)->where('id_jenis_zakat', '!=', 4)->get();
-        $InfaqShodaqoh = penerimaan_zakat::whereYear('created_at', now()->year)->where('id_jenis_zakat', 4)->get();
-        $jumlah_zakat = $allZakat->sum('jumlah_uang');
-        $jumlah_Shadaqoh = $InfaqShodaqoh->sum('jumlah_uang');
+        $jumlah_zakat = Total_sum_zakat::whereYear('created_at', now()->year)->first();
         $Total_beras = $allZakat->sum('jumlah_beras');
-        $jumlah_zakat_Amil_Fisabilillah = penerimaan_zakat::getAkumulasiZakat25Persen();
 
         return inertia("Zakat/PembagianZakat/CreatePembagianZakat", [
-            'jumlah_zakat_Amil_Fisabilillah' => $jumlah_zakat_Amil_Fisabilillah + $jumlah_Shadaqoh,
-            'jumlah_zakat' => $jumlah_zakat - $jumlah_zakat_Amil_Fisabilillah,
+            'jumlah_zakat_Amil_Fisabilillah' => $jumlah_zakat->sisa_pemasukan_25_percent,
+            'jumlah_zakat' => $jumlah_zakat->sisa_net_pemasukan_total,
+            'jumlah_infaq' => $jumlah_zakat->sisa_infaq_shodaqoh ?? '0',
             'Total_beras' => $Total_beras,
             'allZakat' => $allZakat
         ]);
@@ -310,21 +309,32 @@ class ZakatController extends Controller
             $getTotalZakat = Total_sum_zakat::whereYear('created_at', $YearData)
                 ->first();
             if ($Datazakat->id_jenis_zakat != 4) {
-
                 $totalZakat = $getTotalZakat->total_pemasukan_total - $Datazakat->jumlah_uang + $data['jumlah_uang'];
+                $uangLama25Percent = $Datazakat->jumlah_uang * 0.25;
+                $uangMasuk25Percent = $data['jumlah_uang'] * 0.25;
+                $uangNetLama = $Datazakat->jumlah_uang - $uangLama25Percent;
+                $uangNetMasuk = $data['jumlah_uang'] - $uangMasuk25Percent;
                 $getTotalZakat->update([
                     'total_pemasukan_total' => $totalZakat,
                     'sisa_pemasukan_total' => $getTotalZakat->sisa_pemasukan_total - $Datazakat->jumlah_uang + $data['jumlah_uang'],
-                    'total_pemasukan_25_percent' =>  $getTotalZakat->total_pemasukan_25_percent - $Datazakat->jumlah_uang + $data['jumlah_uang'],
-                    'sisa_pemasukan_25_percent' => $getTotalZakat->sisa_pemasukan_25_percent - $Datazakat->jumlah_uang + $data['jumlah_uang'],
-                    'net_pemasukan_total' => $getTotalZakat->net_pemasukan_total - $Datazakat->jumlah_uang + $data['jumlah_uang'],
-                    'sisa_net_pemasukan_total' => $getTotalZakat->sisa_net_pemasukan_total  - $Datazakat->jumlah_uang + $data['jumlah_uang'],
+                    'total_pemasukan_25_percent' =>  $getTotalZakat->total_pemasukan_25_percent - $uangLama25Percent + $uangMasuk25Percent,
+                    'sisa_pemasukan_25_percent' => $getTotalZakat->sisa_pemasukan_25_percent - $uangLama25Percent + $uangMasuk25Percent,
+                    'net_pemasukan_total' => $getTotalZakat->net_pemasukan_total - $uangNetLama + $uangNetMasuk,
+                    'sisa_net_pemasukan_total' => $getTotalZakat->sisa_net_pemasukan_total  - $uangNetLama + $uangNetMasuk,
                     'total_beras' => $getTotalZakat->total_beras - $Datazakat->jumlah_beras   + $data['jumlah_beras'],
                     'sisa_beras' => $getTotalZakat->total_beras - $Datazakat->jumlah_beras  + $data['jumlah_beras'],
-                    'total_25percent_infaq' => $getTotalZakat->total_25percent_infaq - $Datazakat->jumlah_uang + $data['jumlah_uang'],
-
                 ]);
             } else {
+                $totalZakat = $getTotalZakat->total_infaq_shodaqoh - $Datazakat->jumlah_uang + $data['jumlah_uang'];
+                $uangLama25Percent = $Datazakat->jumlah_uang * 0.25;
+                $uangMasuk25Percent = $data['jumlah_uang'] * 0.25;
+                $getTotalZakat->update([
+                    'total_infaq_shodaqoh' => $totalZakat,
+                    'sisa_infaq_shodaqoh' => $getTotalZakat->sisa_pemasukan_total - $Datazakat->jumlah_uang + $data['jumlah_uang'],
+                    'total_25percent_infaq' =>  $getTotalZakat->total_pemasukan_25_percent - $uangLama25Percent + $uangMasuk25Percent,
+                    'total_beras' => $getTotalZakat->total_beras - $Datazakat->jumlah_beras   + $data['jumlah_beras'],
+                    'sisa_beras' => $getTotalZakat->total_beras - $Datazakat->jumlah_beras  + $data['jumlah_beras'],
+                ]);
             }
             $Datazakat->update($data);
             return redirect()->route('zakat.RekapGabungan')->with('success', 'Muzaaki atas nama ' . $Datazakat->nama_muzakki . ' berhasil diupdate');
