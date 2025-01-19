@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreAtkRequest;
 use App\Http\Requests\Storepenerimaan_zakatRequest;
+use App\Http\Requests\UpdateMuzakkiRequest;
 use App\Http\Requests\Updatepenerimaan_zakatRequest;
 use App\Http\Resources\AtkResource;
 use App\Http\Resources\PengurusResource;
 use App\Models\Atk;
 use App\Models\jenis_zakat;
+use App\Models\Muzakki;
 use App\Models\pembagian_zakat;
 use Illuminate\Support\Str;
 use App\Models\penerimaan_zakat;
@@ -16,7 +18,9 @@ use App\Models\Pengurus;
 use App\Models\per_rt;
 use App\Models\Total_sum_zakat;
 use Barryvdh\DomPDF\Facade\Pdf;
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class ZakatController extends Controller
@@ -40,7 +44,7 @@ class ZakatController extends Controller
     {
         $TotalHariIni = penerimaan_zakat::whereDate('tanggal', now()->format('Y-m-d'))->count();
         $TotalKemarin = penerimaan_zakat::whereDate('tanggal', now()->subDay()->format('Y-m-d'))->count();
-
+        $getDataMuzakki = Muzakki::with(['RelationMuzzaki', 'RelationRt', 'RelationMuzzaki.RelationJenisZakat'])->whereYear('created_at', now()->year)->get();
         $TotalKemarinUangZakat = penerimaan_zakat::whereDate('tanggal', now()->subDay()->format('Y-m-d'))->sum('jumlah_uang');
         $TotalUangZakatToday = penerimaan_zakat::whereDate('tanggal', now()->format('Y-m-d'))->sum('jumlah_uang');
 
@@ -54,6 +58,7 @@ class ZakatController extends Controller
             'dataJenisZakat' => jenis_zakat::all(),
             'success' => session('success'),
             'TotalHariIni' => $TotalHariIni,
+            'getDataMuzakki' => $getDataMuzakki,
             'PersentaseKenaikan' => $PersentaseKenaikan,
             'TotalUangZakatToday' => number_format($TotalUangZakatToday, 2, ',', '.'),
             'PersentaseKenaikanUang' => $PersentaseKenaikanUang,
@@ -134,25 +139,45 @@ class ZakatController extends Controller
     }
     public function downloadPDF($id)
     {
-        $dataZakat = penerimaan_zakat::with(['RelationRt', 'createdByUser', 'RelationJenisZakat'])->where('id', $id)->first();
+        $getDataMuzakki = Muzakki::with(['RelationMuzzaki', 'RelationRt', 'RelationMuzzaki.RelationJenisZakat', 'RelationMuzzaki.createdByUser', 'RelationMuzzaki.createdByUser.pengurus_user'])
+            ->withSum(['RelationMuzzaki as total_jumlah_uang' => function ($query) {}], 'jumlah_uang')->withSum(['RelationMuzzaki as total_jumlah_beras' => function ($query) {}], 'jumlah_beras')
+            ->where('id', $id)->whereYear('created_at', now()->year)->first();
+        $getDataKetua = Pengurus::where('status', 'ketua')->first();
+
+        $jenisZakat  = [];
+        $petugasZakat  = [];
+        $imagePetugas  = '';
+        foreach ($getDataMuzakki->RelationMuzzaki as $key) {
+            $jenisZakat[] = $key->RelationJenisZakat->nama_zakat;
+            $petugasZakat[] = $key->createdByUser->name;
+            $imagePetugas = $key->createdByUser->pengurus_user->imageTandaTangan;
+        }
+        $jenisZakatString = implode(', ', $jenisZakat);
+        $filePath = public_path('storage/' . $imagePetugas);
+        $filePathKetua = public_path('storage/' . $getDataKetua->imageTandaTangan);
         $invoice = [
-            'no' => $dataZakat->no_invoice,
-            'tanggal' => \Carbon\Carbon::parse($dataZakat->tanggal)->locale('id')->translatedFormat('d F Y'),
-            'nama' => $dataZakat->nama_muzakki,
-            'alamat' => 'Pondok Cipta Blok C ' . $dataZakat->RelationRt->nama_rt,
-            'uang' => number_format($dataZakat->jumlah_uang, 2, ',', '.'),
-            'beras' => $dataZakat->jumlah_beras,
-            'jenis' => $dataZakat->RelationJenisZakat->jenis_zakat,
-            'jiwa' => $dataZakat->jiwa,
-            'namaPetugas' => $dataZakat->createdByUser->name,
+            'no' => $getDataMuzakki->no_invoice,
+            'getDataMuzakki' => $getDataMuzakki,
+            'tanggal' => \Carbon\Carbon::parse($getDataMuzakki->created_at)->locale('id')->translatedFormat('d F Y'),
+            'nama' => $getDataMuzakki->nama_muzakki,
+            'alamat' => 'Pondok Cipta Blok C ' . $getDataMuzakki->RelationRt->nama_rt,
+            'uang' => number_format($getDataMuzakki->total_jumlah_uang, 2, ',', '.'),
+            'beras' => $getDataMuzakki->total_jumlah_beras ?? 0,
+            'jenis' => $jenisZakatString,
+            'jiwa' => $getDataMuzakki->jiwa,
+            'namaPetugas' => $petugasZakat[0],
+            'imagesTandaTanganPetugas' => $filePath,
+            'imagesTandaTanganKetua' => $filePathKetua ?? '',
         ];
 
 
         $pdf = Pdf::loadView('invoicePageZakat', compact('invoice'))->setPaper('a4', 'portrait')->setOption('height', '1in');
 
-        // Tampilkan PDF di browser
-        return $pdf->stream('invoice_' . $id . '.pdf');
-        // return $pdf->download('invoice_' . $id . '.pdf');
+
+        $noInvoice = str_replace(['/', '\\'], '_', $getDataMuzakki->no_invoice);
+        $namaMuzakki = str_replace(['/', '\\'], '_', $getDataMuzakki->nama_muzakki);
+
+        return $pdf->stream('invoice_' . $noInvoice . '_' . $namaMuzakki . '.pdf');
     }
     public function CreateZakat()
     {
@@ -161,7 +186,7 @@ class ZakatController extends Controller
     public function PembagianZakat()
     {
 
-        return inertia("Zakat/PembagianZakat", [
+        return inertia("Zakat/PembagianZakat/PembagianZakat", [
             'dataRT' => per_rt::all(),
             'amil' => Pengurus::all(),
             'dataJenisZakat' => jenis_zakat::all(),
@@ -181,9 +206,24 @@ class ZakatController extends Controller
             'allZakat' => $allZakat
         ]);
     }
-    public function EditZakat($penerimaan_zakat)
+    public function EditPembagianZakat($id)
     {
-        $EditZakat = penerimaan_zakat::find($penerimaan_zakat);
+        $getDataZakat = pembagian_zakat::whereYear('created_at', now()->year)->where('id', $id)->first();
+        $allZakat = penerimaan_zakat::whereYear('created_at', now()->year)->where('id_jenis_zakat', '!=', 4)->get();
+        $jumlah_zakat = Total_sum_zakat::whereYear('created_at', now()->year)->first();
+        $Total_beras = $allZakat->sum('jumlah_beras');
+        return inertia("Zakat/PembagianZakat/UpdatePembagianZakat", [
+            'getDataZakat' => $getDataZakat,
+            'jumlah_zakat_Amil_Fisabilillah' => $jumlah_zakat->sisa_pemasukan_25_percent,
+            'jumlah_zakat' => $jumlah_zakat->sisa_net_pemasukan_total,
+            'jumlah_infaq' => $jumlah_zakat->sisa_infaq_shodaqoh ?? '0',
+            'Total_beras' => $Total_beras,
+            'allZakat' => $allZakat
+        ]);
+    }
+    public function EditZakat($sortField)
+    {
+        $EditZakat = penerimaan_zakat::with(['RelationManyDataMuzakki', 'RelationRt', 'RelationJenisZakat', 'createdByUser', 'createdByUser.pengurus_user'])->where('id', $sortField)->first();
         return inertia("Zakat/Edit", [
             'penerimaan_zakat' => $EditZakat
         ]);
@@ -216,18 +256,21 @@ class ZakatController extends Controller
     public function PostZakat(Storepenerimaan_zakatRequest $request)
     {
         try {
+            DB::beginTransaction();
             $data = $request->validated();
             $currentYear = now()->year;
+            $no_invoice = str_pad(penerimaan_zakat::max('id') + 1, 4, '0', STR_PAD_LEFT) . '/INV/' . now()->format('Y') . '/' . \Carbon\Carbon::now()->format('Y') - 580;
+            $getDataMuzakki =  Muzakki::create([
+                'no_invoice' => $no_invoice,
+                'nama_muzakki' => $data['nama_muzakki'],
+                'id_rt' => $data['id_rt'],
+                'jiwa' => $data['jiwa'],
+            ]);
             foreach ($data['dataJenisZakat'] as $key) {
-
-                $no_invoice = str_pad(penerimaan_zakat::max('id') + 1, 4, '0', STR_PAD_LEFT) . '/INV/' . now()->format('Y') . '/' . \Carbon\Carbon::now()->format('Y') - 580;
-
                 penerimaan_zakat::create([
-                    'no_invoice' => $no_invoice,
+                    'id_muzakki' => $getDataMuzakki->id,
                     'nama_muzakki' => $data['nama_muzakki'],
-                    'id_rt' => $data['id_rt'],
                     'tanggal' => $data['tanggal'],
-                    'jiwa' => $data['jiwa'],
                     'id_jenis_zakat' => $key['id_jenis_zakat'],
                     'status_zakat' => $key['status_zakat'],
                     'jumlah_uang' => $key['jumlah_uang'],
@@ -255,7 +298,6 @@ class ZakatController extends Controller
                             'sisa_net_pemasukan_total' => $getTotalZakat->sisa_net_pemasukan_total + $jumlahPemasukanSisaNet,
                             'total_beras' => $getTotalZakat->total_beras + $key['jumlah_beras'],
                             'sisa_beras' => $getTotalZakat->total_beras + $key['jumlah_beras'],
-                            'total_25percent_infaq' => $getTotalZakat->sisa_pemasukan_25_percent + $uangMasuk25Percent,
 
                         ]);
                     } else {
@@ -275,24 +317,26 @@ class ZakatController extends Controller
                     $this->logicPostJenisZakatInfaq($getTotalZakat, $key);
                 }
             }
+            DB::commit();
             return redirect()->route('zakat.RekapGabungan')->with('success', 'Muzaaki atas nama ' . $data['nama_muzakki'] . ' berhasil ditambahkan');
         } catch (\Exception $e) {
-            dd($e->getMessage());
+            DB::rollBack();
+            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
     }
     private function logicPostJenisZakatInfaq($getTotalZakat, $key)
     {
+        $totalZakat = $getTotalZakat->total_infaq_shodaqoh + $key['jumlah_uang'];
         if ($getTotalZakat) {
-            $totalZakat = $getTotalZakat->total_infaq_shodaqoh + $key['jumlah_uang'];
             $getTotalZakat->update([
                 'total_infaq_shodaqoh' => $totalZakat,
                 'sisa_infaq_shodaqoh' => $getTotalZakat->sisa_infaq_shodaqoh + $key['jumlah_uang'],
-                'total_25percent_infaq' => $getTotalZakat->sisa_pemasukan_25_percent + $key['jumlah_uang'],
+
             ]);
         } else {
             Total_sum_zakat::create([
                 'total_infaq_shodaqoh' => $key['jumlah_uang'],
-                'sisa_infaq_shodaqoh' => $key['jumlah_uang'],
+                'sisa_infaq_shodaqoh' =>  $key['jumlah_uang'],
                 'created_by' => $key['created_by'],
             ]);
         }
@@ -302,6 +346,7 @@ class ZakatController extends Controller
     {
 
         try {
+            DB::beginTransaction();
             $Datazakat = penerimaan_zakat::find($zakat);
             $YearData = $Datazakat->created_at->format('Y');
             $data = $request->validated();
@@ -330,15 +375,31 @@ class ZakatController extends Controller
                 $uangMasuk25Percent = $data['jumlah_uang'] * 0.25;
                 $getTotalZakat->update([
                     'total_infaq_shodaqoh' => $totalZakat,
-                    'sisa_infaq_shodaqoh' => $getTotalZakat->sisa_pemasukan_total - $Datazakat->jumlah_uang + $data['jumlah_uang'],
-                    'total_25percent_infaq' =>  $getTotalZakat->total_pemasukan_25_percent - $uangLama25Percent + $uangMasuk25Percent,
+                    'sisa_infaq_shodaqoh' => $getTotalZakat->sisa_infaq_shodaqoh - $Datazakat->jumlah_uang + $data['jumlah_uang'],
                     'total_beras' => $getTotalZakat->total_beras - $Datazakat->jumlah_beras   + $data['jumlah_beras'],
-                    'sisa_beras' => $getTotalZakat->total_beras - $Datazakat->jumlah_beras  + $data['jumlah_beras'],
+                    'sisa_beras' => $getTotalZakat->sisa_beras - $Datazakat->jumlah_beras  + $data['jumlah_beras'],
                 ]);
             }
             $Datazakat->update($data);
+            DB::commit();
             return redirect()->route('zakat.RekapGabungan')->with('success', 'Muzaaki atas nama ' . $Datazakat->nama_muzakki . ' berhasil diupdate');
         } catch (\Exception $e) {
+            DB::rollBack();
+            dd($e->getMessage());
+        }
+    }
+    public function PutZakatMuzakki(UpdateMuzakkiRequest $request, $muzaki)
+    {
+
+        try {
+            DB::beginTransaction();
+            $Datazakat = Muzakki::find($muzaki);
+            $data = $request->validated();
+            $Datazakat->update($data);
+            DB::commit();
+            return redirect()->route('zakat.RekapGabungan')->with('success', 'Muzaaki atas nama ' . $Datazakat->nama_muzakki . ' berhasil diupdate');
+        } catch (\Exception $e) {
+            DB::rollBack();
             dd($e->getMessage());
         }
     }

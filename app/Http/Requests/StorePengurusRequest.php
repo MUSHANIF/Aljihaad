@@ -21,10 +21,12 @@ class StorePengurusRequest extends FormRequest
         return [
             "name" => ['required', 'max:255'],
             'image' => ['nullable', 'image'],
+            'imageTandaTangan' => ['nullable', 'image'],
+            'user_id' => ['nullable'],
             "description" => ['nullable', 'string'],
             "no_telp" => ['nullable', 'string'],
             "gender" => ['nullable', 'string'],
-            "status" => ['nullable', 'string'],
+            "status" => ['required', 'string'],
             "umur" => ['nullable', 'string'],
         ];
     }

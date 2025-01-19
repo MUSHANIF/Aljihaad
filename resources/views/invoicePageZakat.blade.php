@@ -18,6 +18,11 @@
         }
 
         .images {
+            width: 300px;
+            margin-bottom: 20px;
+        }
+
+        .imagesDoa {
             margin-left: 200px;
         }
 
@@ -101,10 +106,10 @@
             </strong>
             untuk pembayaran <strong>{{ $invoice['jenis'] }}</strong> sebesar Rp {{ $invoice['uang'] ?? '.....' }} /
             {{ $invoice['beras'] ?? '.....' }} Liter
-            beras sejumlah {{ $invoice['jiwa'] }} Jiwa.
+            sejumlah {{ $invoice['jiwa'] }} Jiwa.
         </p>
         <span>
-            <img class="images"
+            <img class="imagesDoa"
                 src="{{ 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('assets/images/doazakat.png'))) }}">
         </span>
         <i>Ajarakallahu fiima a'thaita wa baaraka fima abqoita wa ja'alallahu laka thahuuran</i>
@@ -118,24 +123,19 @@
         <div class="subfooter">
             <p>Mengetahui,</p>
             <p>DKM Musholla Al Jihaad</p>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
+            <img class="images"
+                src="{{ 'data:image/png;base64,' . base64_encode(file_get_contents($invoice['imagesTandaTanganKetua'])) }}">
             <p><strong>Harmen Mardjunin</strong></p>
             <p>Ketua DKM</p>
         </div>
         <div class="subfooter">
             <p>Hormat kami,</p>
-            <p>DKM Musholla Al Jihaad</p>
             <br>
             <br>
-            <br>
-            <br>
-            <br>
+            <img class="images"
+                src="{{ 'data:image/png;base64,' . base64_encode(file_get_contents($invoice['imagesTandaTanganPetugas'])) }}">
             <p><strong>{{ $invoice['namaPetugas'] }}</strong></p>
-            <p>Petugas Panitiz ZIS 1445H</p>
+            <p>Petugas Panitia ZIS 1445H</p>
         </div>
     </div>
 

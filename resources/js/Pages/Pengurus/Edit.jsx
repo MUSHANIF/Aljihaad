@@ -9,8 +9,13 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { BreadCrumb } from "primereact/breadcrumb";
 import Layout from "@/Layouts/layout/layout.jsx";
-
-export default function Edit({ auth, Pengurus }) {
+import Select from "react-select";
+export default function Edit({
+  auth,
+  Pengurus,
+  getDataUser,
+  getDataUserSelected,
+}) {
   const { data, setData, post, errors, reset } = useForm({
     name: Pengurus.name || "",
     description: Pengurus.description || "",
@@ -29,6 +34,9 @@ export default function Edit({ auth, Pengurus }) {
   };
   const handleDescriptionChange = (value) => {
     setData("description", value);
+  };
+  const handleChange = (selectedOption) => {
+    setData("user_id", selectedOption.value);
   };
   const items = [{ label: "Pengurus" }, { label: "Edit Pengurus" }];
   const home = { icon: "pi pi-home", url: "" };
@@ -80,6 +88,18 @@ export default function Edit({ auth, Pengurus }) {
                   <option value="bendahara2">Bendahara 2</option>
                   <option value="jamaah">Jamaah</option>
                 </SelectInput>
+              </div>
+              <div className="mt-4">
+                <InputLabel
+                  htmlFor="status"
+                  className="mb-2"
+                  value="Nama User"
+                />
+                <Select
+                  onChange={handleChange}
+                  defaultValue={getDataUserSelected}
+                  options={getDataUser}
+                />
               </div>
               <div className="mt-4">
                 <InputLabel htmlFor="gender" value="Gender" />
@@ -184,8 +204,30 @@ export default function Edit({ auth, Pengurus }) {
                 <InputError message={errors.image} className="mt-2" />
               </div>
               {Pengurus.image_path && (
-                <div className="my-5">
+                <div className="my-5 border border-gray-300 p-3 w-max">
                   <img src={Pengurus.image_path} className="w-64" />
+                </div>
+              )}
+              <div className="mt-4">
+                <InputLabel
+                  htmlFor="project_image_path"
+                  value="Image Tanda Tangan"
+                />
+                <TextInput
+                  id="project_image_path"
+                  type="file"
+                  name="image"
+                  className="mt-1 block w-full"
+                  onChange={(e) =>
+                    setData("imageTandaTangan", e.target.files[0])
+                  }
+                />
+                <InputError message={errors.image} className="mt-2" />
+              </div>
+
+              {Pengurus.imageTandaTangan && (
+                <div className="my-5 border border-gray-300 p-3 w-max">
+                  <img src={Pengurus.imageTandaTangan} className="w-64" />
                 </div>
               )}
               <div className="mt-4 text-right">

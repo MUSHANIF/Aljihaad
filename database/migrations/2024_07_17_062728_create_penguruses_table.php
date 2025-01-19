@@ -19,7 +19,9 @@ return new class extends Migration
             $table->string('gender')->nullable();
             $table->string('status')->nullable();
             $table->string('image_path')->nullable();
+            $table->string('imageTandaTangan')->nullable();
             $table->longText('description')->nullable();
+            $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
         });
     }

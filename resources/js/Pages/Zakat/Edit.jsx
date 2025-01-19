@@ -12,16 +12,16 @@ import { InputText } from "primereact/inputtext";
 import Layout from "@/Layouts/layout/layout.jsx";
 export default function Edit({ auth, penerimaan_zakat }) {
   const { data, setData, post, errors, reset } = useForm({
-    nama_muzakki: penerimaan_zakat.nama_muzakki,
+    nama_muzakki: penerimaan_zakat.relation_many_data_muzakki.nama_muzakki,
     // tanggal: penerimaan_zakat.tanggal,
-    jiwa: penerimaan_zakat.jiwa,
+    jiwa: penerimaan_zakat.relation_many_data_muzakki.jiwa,
     jumlah_uang: penerimaan_zakat.jumlah_uang,
     jumlah_beras: penerimaan_zakat.jumlah_beras,
     status_zakat: penerimaan_zakat.status_zakat,
     waktu_berzakat: penerimaan_zakat.waktu_berzakat,
     metode_pembayaran: penerimaan_zakat.metode_pembayaran,
     id_jenis_zakat: penerimaan_zakat.id_jenis_zakat,
-    id_rt: penerimaan_zakat.id_rt,
+    id_rt: penerimaan_zakat.relation_many_data_muzakki.id_rt,
     updated_by: penerimaan_zakat.updated_by,
     _method: "PUT",
   });
@@ -47,7 +47,7 @@ export default function Edit({ auth, penerimaan_zakat }) {
         const data = response.data.data;
         setDataRT(response.data.data);
         data.map((item) => {
-          if (item.id === penerimaan_zakat.id_rt) {
+          if (item.id == penerimaan_zakat.relation_many_data_muzakki.id_rt) {
             setRt(item);
           }
         });
@@ -117,10 +117,9 @@ export default function Edit({ auth, penerimaan_zakat }) {
                   aria-describedby="username-help"
                   placeholder="Masukan Username"
                   onChange={(e) => setData("nama_muzakki", e.target.value)}
+                  disabled
                 />
-                <small id="username-help">
-                  Mohon perhatikan nama Muzakki yang akan digunakan
-                </small>
+                <small id="username-help">Hanya Info</small>
                 {errors.nama_muzakki && (
                   <small className="p-error">{errors.nama_muzakki}</small>
                 )}
@@ -143,14 +142,32 @@ export default function Edit({ auth, penerimaan_zakat }) {
                 )}
               </div> */}
               <div className="flex flex-column gap-2 my-4 ">
+                <label htmlFor="username">Jenis Rt </label>
+                <Dropdown
+                  value={getRT}
+                  onChange={(e) => setSelectedRt(e.value)}
+                  options={dataRT}
+                  optionLabel="nama_rt"
+                  placeholder="Select a Status Zakat"
+                  className="w-full "
+                  disabled
+                />
+                {errors.id_rt && (
+                  <small className="p-error">{errors.id_rt}</small>
+                )}
+                <small id="username-help">Hanya Info</small>
+              </div>
+              <div className="flex flex-column gap-2 my-4 ">
                 <label htmlFor="username">Jumlah jiwa</label>
 
                 <InputText
                   keyfilter="int"
                   placeholder="Masukan Jumlah Jiwa"
                   value={data.jiwa}
+                  disabled
                   onChange={(e) => setData("jiwa", e.target.value)}
                 />
+                <small id="username-help">Hanya Info</small>
                 {errors.jiwa && (
                   <small className="p-error">{errors.jiwa}</small>
                 )}
@@ -165,6 +182,7 @@ export default function Edit({ auth, penerimaan_zakat }) {
                   placeholder="Select a Status Zakat"
                   className="w-full "
                 />
+
                 {errors.id_jenis_zakat && (
                   <small className="p-error">{errors.id_jenis_zakat}</small>
                 )}
@@ -245,20 +263,7 @@ export default function Edit({ auth, penerimaan_zakat }) {
                   <small className="p-error">{errors.metode_pembayaran}</small>
                 )}
               </div>
-              <div className="flex flex-column gap-2 my-4 ">
-                <label htmlFor="username">Jenis Rt </label>
-                <Dropdown
-                  value={getRT}
-                  onChange={(e) => setSelectedRt(e.value)}
-                  options={dataRT}
-                  optionLabel="nama_rt"
-                  placeholder="Select a Status Zakat"
-                  className="w-full "
-                />
-                {errors.id_rt && (
-                  <small className="p-error">{errors.id_rt}</small>
-                )}
-              </div>
+
               <div className="mt-4 text-right">
                 <Link
                   href={route("zakat.RekapGabungan")}

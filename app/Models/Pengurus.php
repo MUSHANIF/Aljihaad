@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Pengurus extends Model
 {
     use HasFactory;
-    protected $fillable = ['image_path', 'gender', 'umur', 'name', 'description', 'status', 'no_telp'];
+    protected $fillable = ['image_path', 'user_id', 'imageTandaTangan', 'gender', 'umur', 'name', 'description', 'status', 'no_telp'];
 
 
     public function scopeFilter($query, array $filters)

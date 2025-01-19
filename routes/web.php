@@ -56,12 +56,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('zakat.PostZakat');
         Route::put('/PutZakat/{id}', [ZakatController::class, 'PutZakat'])
             ->name('zakat.PutZakat');
+        Route::put('/PutZakatMuzakki/{id}', [ZakatController::class, 'PutZakatMuzakki'])
+            ->name('zakat.PutZakatMuzakki');
         Route::delete('/DeleteZakat/{id}', [ZakatController::class, 'DeleteZakat'])
             ->name('zakat.DeleteZakat');
         Route::delete('/DeleteAtk/{id}', [ZakatController::class, 'DeleteAtk'])
             ->name('zakat.DeleteAtk');
         Route::get('/PembagianZakat', [ZakatController::class, 'PembagianZakat'])
             ->name('zakat.PembagianZakat');
+        Route::get('/EditPembagianZakat/{id}', [ZakatController::class, 'EditPembagianZakat'])
+            ->name('zakat.EditPembagianZakat');
         Route::get('/CreatePembagianZakat', [ZakatController::class, 'CreatePembagianZakat'])
             ->name('zakat.CreatePembagianZakat');
         Route::post('/PostPembagianZakat', [MustahikController::class, 'PostPembagianZakat'])

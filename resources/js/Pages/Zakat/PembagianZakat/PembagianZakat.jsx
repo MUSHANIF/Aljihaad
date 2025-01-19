@@ -31,7 +31,7 @@ import React, {
   useState,
 } from "react";
 
-import styles from "./../../../css/FinanceExample.module.css";
+import styles from "./../../../../css/FinanceExample.module.css";
 
 ModuleRegistry.registerModules([
   ClientSideRowModelModule,
@@ -61,16 +61,9 @@ const PembagianZakat = ({
   gridTheme = "ag-theme-quartz",
   isDarkMode = false,
   success,
-  dataJenisZakat,
   dataRT,
   TotalHariIniRt3,
-  TotalHariIniRt4,
-  TotalHariIniRt4Atas,
   TotalHariIniRt5,
-  CountHariIniRt3,
-  CountHariIniRt4,
-  CountHariIniRt4Atas,
-  CountHariIniRt5,
 }) => {
   const gridRef = useRef(null);
 
@@ -322,7 +315,7 @@ const ActionButtons = ({ data }) => {
   return (
     <div className="flex space-x-2 my-auto mb-5">
       <Link
-        href={route("zakat.EditZakat", data)}
+        href={route("zakat.EditPembagianZakat", data.id)}
         className="bg-blue-500 rounded-md text-white px-3 py-1 "
       >
         Edit

@@ -10,15 +10,19 @@ import SelectInput from "@/Components/SelectInput";
 import { BreadCrumb } from "primereact/breadcrumb";
 import { useState } from "react";
 import Layout from "@/Layouts/layout/layout.jsx";
-export default function Create({ auth }) {
+import Select from "react-select";
+
+export default function Create({ auth, getDataUser }) {
   const { data, setData, post, errors, reset } = useForm({
     name: "",
     status: "",
     gender: "",
+    user_id: 1,
     no_telp: "",
     umur: "",
     description: "",
     image: "",
+    imageTandaTangan: "",
   });
 
   const onSubmit = (e) => {
@@ -31,6 +35,10 @@ export default function Create({ auth }) {
   };
   const items = [{ label: "Pengurus" }, { label: "Create Pengurus" }];
   const home = { icon: "pi pi-home", url: "" };
+  const handleChange = (selectedOption) => {
+    setData("user_id", selectedOption.value);
+  };
+
   return (
     <Layout>
       <Head title="Users" />
@@ -52,6 +60,7 @@ export default function Create({ auth }) {
                   name="name"
                   value={data.name}
                   className="mt-1 block w-full"
+                  placeholder="Input Name"
                   isFocused={true}
                   onChange={(e) => setData("name", e.target.value)}
                 />
@@ -76,7 +85,16 @@ export default function Create({ auth }) {
                   <option value="bendahara2">Bendahara 2</option>
                   <option value="amil">Amil Zakat</option>
                 </SelectInput>
+                <InputError message={errors.status} className="mt-2" />
               </div>
+              {/* <div className="mt-4">
+                <InputLabel
+                  htmlFor="status"
+                  className="mb-2"
+                  value="Nama User"
+                />
+                <Select onChange={handleChange} options={getDataUser} />
+              </div> */}
               <div className="mt-4">
                 <InputLabel htmlFor="gender" value="Gender" />
 
@@ -90,15 +108,17 @@ export default function Create({ auth }) {
                   <option value="Laki - laki">Laki - laki</option>
                   <option value="Perempuan">Perempuan</option>
                 </SelectInput>
+                <InputError message={errors.gender} className="mt-2" />
               </div>
               <div className="mt-4">
                 <InputLabel htmlFor="user_name" value="Umur" />
 
                 <TextInput
                   id="user_name"
-                  type="text"
+                  type="number"
                   name="umur"
                   value={data.umur}
+                  placeholder="Input Umur"
                   className="mt-1 block w-full"
                   isFocused={true}
                   onChange={(e) => setData("umur", e.target.value)}
@@ -114,12 +134,13 @@ export default function Create({ auth }) {
                   type="number"
                   name="no_telp"
                   value={data.no_telp}
+                  placeholder="Input Telepon"
                   className="mt-1 block w-full"
                   isFocused={true}
                   onChange={(e) => setData("no_telp", e.target.value)}
                 />
 
-                <InputError message={errors.name} className="mt-2" />
+                <InputError message={errors.no_telp} className="mt-2" />
               </div>
               <div className="mt-4">
                 <InputLabel htmlFor="event_description" value="description" />
@@ -178,7 +199,27 @@ export default function Create({ auth }) {
                 />
                 <InputError message={errors.image} className="mt-2" />
               </div>
-
+              {(data.status == "amil" || data.status == "ketua") && (
+                <div className="mt-4">
+                  <InputLabel
+                    htmlFor="project_image_tanda_path"
+                    value="Image Tanda Tangan"
+                  />
+                  <TextInput
+                    id="project_image_tanda_path"
+                    type="file"
+                    name="image"
+                    className="mt-1 block w-full"
+                    onChange={(e) =>
+                      setData("imageTandaTangan", e.target.files[0])
+                    }
+                  />
+                  <InputError
+                    message={errors.imageTandaTangan}
+                    className="mt-2"
+                  />
+                </div>
+              )}
               <div className="mt-4 text-right">
                 <Link
                   href={route("Pengurus.index")}

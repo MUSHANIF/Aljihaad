@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class penerimaan_zakat extends Model
 {
     use HasFactory;
-    protected $fillable = ['nama_muzakki', 'no_invoice', 'tanggal', 'jiwa', 'status_zakat', 'jumlah_uang', 'jumlah_beras', 'waktu_berzakat', 'id_jenis_zakat', 'metode_pembayaran', 'id_rt', 'created_by', 'updated_by', 'created_at', 'updated_at'];
+    protected $fillable = ['id_muzakki', 'tanggal', 'jiwa', 'status_zakat', 'jumlah_uang', 'jumlah_beras', 'waktu_berzakat', 'id_jenis_zakat', 'metode_pembayaran', 'created_by', 'updated_by', 'created_at', 'updated_at'];
 
     public function RelationRt()
     {
@@ -17,6 +17,10 @@ class penerimaan_zakat extends Model
     public function RelationJenisZakat()
     {
         return $this->belongsTo(jenis_zakat::class, 'id_jenis_zakat', 'id');
+    }
+    public function RelationManyDataMuzakki()
+    {
+        return $this->belongsTo(Muzakki::class, 'id_muzakki', 'id');
     }
     public function createdByUser()
     {

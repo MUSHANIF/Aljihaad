@@ -19,9 +19,7 @@ class Updatepenerimaan_zakatRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "nama_muzakki" => ['required', 'max:255'],
             'tanggal' => ['date'],
-            "jiwa" => ['required'],
             "jumlah_uang" => ['nullable'],
             "jumlah_beras" => ['nullable'],
             "status_zakat" => ['required', 'string'],
@@ -29,7 +27,6 @@ class Updatepenerimaan_zakatRequest extends FormRequest
             "metode_pembayaran" => ['required'],
             "updated_by" => ['required'],
             "id_jenis_zakat" => ['required'],
-            "id_rt" => ['required'],
         ];
     }
 }

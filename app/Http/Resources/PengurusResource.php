@@ -27,6 +27,8 @@ class PengurusResource extends JsonResource
             'description' => $this->description,
             'image_path' => $this->image_path && !(str_starts_with($this->image_path, 'http')) ?
                 Storage::url($this->image_path) : $this->image_path,
+            'imageTandaTangan' => $this->imageTandaTangan && !(str_starts_with($this->imageTandaTangan, 'http')) ?
+                Storage::url($this->imageTandaTangan) : $this->imageTandaTangan,
         ];
     }
 }

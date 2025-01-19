@@ -54,6 +54,7 @@
         "react-apexcharts": "^1.4.1",
         "react-gauge-chart": "^0.5.1",
         "react-quill": "^2.0.0",
+        "react-select": "^5.9.0",
         "react-slick": "^0.30.2",
         "react-text-loop": "^2.3.0",
         "slick-carousel": "^1.8.1",

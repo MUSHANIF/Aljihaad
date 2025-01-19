@@ -13,10 +13,7 @@ return new class extends Migration
     {
         Schema::create('penerimaan_zakats', function (Blueprint $table) {
             $table->id();
-            $table->string('no_invoice')->nullable();
-            $table->string('nama_muzakki')->nullable();
             $table->date('tanggal')->nullable();
-            $table->integer('jiwa')->nullable();
             $table->string('status_zakat')->nullable();
             $table->integer('jumlah_uang')->nullable();
             $table->string('jumlah_beras')->nullable();
@@ -24,8 +21,8 @@ return new class extends Migration
             $table->string('waktu_berzakat')->nullable();
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
+            $table->foreignId('id_muzakki')->constrained('muzakkis');
             $table->foreignId('id_jenis_zakat')->constrained('jenis_zakats');
-            $table->foreignId('id_rt')->constrained('per_rts');
             $table->timestamps();
         });
     }
